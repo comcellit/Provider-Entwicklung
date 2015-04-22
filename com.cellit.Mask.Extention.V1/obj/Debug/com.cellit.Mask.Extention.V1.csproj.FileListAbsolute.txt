@@ -1,0 +1,11 @@
+C:\Users\admin\Desktop\Provider.Schulung\com.cellit.Mask.Extention.V1\bin\Debug\com.cellit.Mask.Extention.V1.dll
+C:\Users\admin\Desktop\Provider.Schulung\com.cellit.Mask.Extention.V1\bin\Debug\com.cellit.Mask.Extention.V1.pdb
+C:\Users\admin\Desktop\Provider.Schulung\com.cellit.Mask.Extention.V1\bin\Debug\ACD.Interface.V1.dll
+C:\Users\admin\Desktop\Provider.Schulung\com.cellit.Mask.Extention.V1\obj\Debug\com.cellit.Mask.Extention.V1.dll
+C:\Users\admin\Desktop\Provider.Schulung\com.cellit.Mask.Extention.V1\obj\Debug\com.cellit.Mask.Extention.V1.pdb
+C:\Users\admin\Desktop\Provider.Schulung\com.cellit.Mask.Extention.V1\obj\Debug\com.cellit.Mask.Extention.V1.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Mask.Extention.V1\bin\Debug\com.cellit.Mask.Extention.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Mask.Extention.V1\bin\Debug\com.cellit.Mask.Extention.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Mask.Extention.V1\obj\Debug\com.cellit.Mask.Extention.V1.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Mask.Extention.V1\obj\Debug\com.cellit.Mask.Extention.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Mask.Extention.V1\obj\Debug\com.cellit.Mask.Extention.V1.pdb

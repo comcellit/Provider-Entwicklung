@@ -1,0 +1,8 @@
+C:\Users\admin\Desktop\Provider.Schulung\Helper-Projects\ServiceLoader\bin\Debug\ServiceLoader.dll
+C:\Users\admin\Desktop\Provider.Schulung\Helper-Projects\ServiceLoader\bin\Debug\ServiceLoader.pdb
+C:\Users\admin\Desktop\Provider.Schulung\Helper-Projects\ServiceLoader\obj\Debug\ServiceLoader.dll
+C:\Users\admin\Desktop\Provider.Schulung\Helper-Projects\ServiceLoader\obj\Debug\ServiceLoader.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\Helper-Projects\ServiceLoader\bin\Debug\ServiceLoader.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\Helper-Projects\ServiceLoader\bin\Debug\ServiceLoader.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\Helper-Projects\ServiceLoader\obj\Debug\ServiceLoader.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\Helper-Projects\ServiceLoader\obj\Debug\ServiceLoader.pdb
