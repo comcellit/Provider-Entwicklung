@@ -46,6 +46,8 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
                 
                 voicecount = remote.GetVoiceAnzahl(ttCall4.Hook.CustomerFields.id.getValue());
                 //Soundfile Pfad mit prüfung
+                    
+                
 
                 if (voicecount == 0) {
                     alert("Kein VoiceFile vorhanden");
@@ -88,6 +90,19 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
                                     ];
                                     GetGrid(myStore);
                                 }
+                                else {
+                                    if (voicecount == 5) {
+                                        voicepfad = remote.GetVoicepfad(ttCall4.Hook.CustomerFields.id.getValue(), voicecount);
+                                        myStore = [
+                                        [voicepfad[0], voicepfad[1], voicepfad[2], voicepfad[3]],
+                                        [voicepfad[4], voicepfad[5], voicepfad[6], voicepfad[7]],
+                                        [voicepfad[8], voicepfad[9], voicepfad[10], voicepfad[11]],
+                                        [voicepfad[12], voicepfad[13], voicepfad[14], voicepfad[15]],
+                                        [voicepfad[16], voicepfad[17], voicepfad[18], voicepfad[19]]
+                                        ];
+                                        GetGrid(myStore);
+                                    }
+                                }
                             }
 
 
@@ -101,11 +116,11 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
         //Voicerecording Tabelle Anzeigen
         function GetGrid()
         {
+
             var window = new Ext.Window({
-                title: 'VR Auswahl',
                 width: 300,
-                height: 300,
-                layout: 'fit',
+                height: 120 + (voicecount * 25),
+                layout: 'table',
                 modal: true,
                 items: [
                          new Ext.Panel({
@@ -115,7 +130,7 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
                 buttons: [{
                     text: 'Close',
                     handler: function () {
-                        window.hide();
+                        window.close();
                     }
                 }]
 
@@ -136,34 +151,11 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
             var grid = new Ext.grid.GridPanel({
                 store: store,
                 columns: [
+                    {id: 'level', header: 'level', width: 50, sortable: true, dataIndex: 'level'},
+                    {header: 'Datum', width: 100, sortable: true, dataIndex: 'datum'},
+                    {header: 'Uhrzeit', width: 100, sortable: true,dataIndex: 'uhrzeit'},
                     {
-                        id: 'level',
-                        header: 'level',
-                        width: 50,
-                        sortable: true,
-                        //renderer: change,
-                        dataIndex: 'level'
-                    },
-                    {
-                        header: 'Datum',
-                        width: 100,
-                        sortable: true,
-                        //renderer: pctChange,
-                        //renderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                        dataIndex: 'datum',
-                        //xtype: 'datecolumn', format: 'M d, Y'
-                    },
-                    {
-                        header: 'Uhrzeit',
-                        width: 100,
-                        sortable: true,
-                        //renderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                        dataIndex: 'uhrzeit'
-                    },
-                    {
-                        xtype: 'actioncolumn',
-                        width: 25,
-                        items: [{
+                        xtype: 'actioncolumn', width: 25, items: [{
                             icon: 'http://agent.cellit-gruppe.de/ttframework/img/play.png',  // Use a URL in the icon config
                             tooltip: 'Viocerec Play',
                             handler: function (grid, rowIndex, colIndex) {
@@ -174,35 +166,44 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
                     }
                 ],
                 stripeRows: true,
-                height: 350,
+                height: voicecount*100,
                 width: 300,
-                title: 'Array Grid',
+                title: 'VR Auswahl',
                 // config options for stateful behavior
                 stateful: true,
                 stateId: 'grid'
             });
             grid.render('grid1');
         }
-        function change(val) {
-            if (val > 0) {
-                return '<span style="color:green;">' + val + '</span>';
-            } else if (val < 0) {
-                return '<span style="color:red;">' + val + '</span>';
-            }
-            return val;
-        }
-        function pctChange(val) {
-            if (val > 0) {
-                return '<span style="color:green;">' + val + '%</span>';
-            } else if (val < 0) {
-                return '<span style="color:red;">' + val + '%</span>';
-            }
-            return val;
-        }
+        //Loading Voice
         function GetVoice(gridurl)
         {
             var url = remote.GetSoundFile(gridurl);
-            
+            //Loading
+            Ext.MessageBox.show({
+                title: 'Please wait',
+                msg: 'Loading items...',
+                progressText: 'Initializing...',
+                width: 300,
+                progress: true,
+                closable: false,
+            });
+
+            // this hideous block creates the bogus progress
+            var f = function (v) {
+                return function () {
+                    if (v == 12) {
+                        Ext.MessageBox.hide();
+                        Ext.example.msg('Done', 'Your fake items were loaded!');
+                    } else {
+                        var i = v / 11;
+                        Ext.MessageBox.updateProgress(i, Math.round(100 * i) + '% completed');
+                    }
+                };
+            };
+            for (var i = 1; i < 13; i++) {
+                setTimeout(f(i), i * 500);
+            }
             var player = new Ext.Window({
                 //title: 'Player',
                 header: false,
