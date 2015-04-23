@@ -47,6 +47,10 @@ namespace com.cellit.VoiceRecPlay.V1
         [RuntimeSetting(Frame = "Einstellungen", Label = "Button zum Abspielen der Voicefile", FieldType = FieldType.ComboBox, Values = "GetFields")]
         public int playField = 0;
 
+       
+        
+        
+
         public static object GetFields(Dictionary<string, object> settings)
         {
             object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
@@ -144,7 +148,6 @@ namespace com.cellit.VoiceRecPlay.V1
                 List<string> scripts = new List<string>();
                 // zu ladende Scripte müssen als Ressourcen eingebettet sein oder im Pfad als Datei vorliegen
                 scripts.Add(this.GetProviderDatas().UrlDirectory + "js/VoiceRecProvider.js?V=1");
-                scripts.Add(this.GetProviderDatas().UrlDirectory + "js/SimplePlayer.js?V=1");
                 return scripts;
             }
         }
@@ -188,6 +191,7 @@ namespace com.cellit.VoiceRecPlay.V1
         #endregion
 
         #region Provider-Code
+           
 
         //Wenn Campagne Initialisiert Event deregistrieren und Variablen speichern
         private void campagnInitialized(object sender, EventArgs e)
@@ -203,9 +207,7 @@ namespace com.cellit.VoiceRecPlay.V1
         {
             //Souudfile aus Ressource laden 
             byte[] data = System.IO.File.ReadAllBytes(name);
-            //byte[] bild = System.IO.File.ReadAllBytes("js/delete.gif");
             return new WebRessource("Test", "audio/mpeg", data, 300);
-            //return new WebRessource("delete.gif", "image/gif", bild, 300);
         }
         private int GetprojektID(int campaignID)
         {
@@ -230,15 +232,19 @@ namespace com.cellit.VoiceRecPlay.V1
         [ScriptVisible]
         public object GetVoicepfad(int kundenID,int count)
         {
-            object[] pfad = new object[count];
-                       
-            string sql = "SELECT  Aufrufe_tkAnlage From Dat_000" + ttCallProjektID.ToString() + "_Aufrufe (nolock) WHERE Aufrufe_Kunden_ID = " + kundenID.ToString() + " and Aufrufe_TkAnlage is not null order by Aufrufe_ID desc";
+            object[,] pfad = new object[count,4];
+            
+
+            string sql = "SELECT  Aufrufe_tkAnlage,Aufrufe_AnrufNr,Aufrufe_Datum,cast(Aufrufe_Zeit as time) as Aufrufe_Zeit From Dat_000" + ttCallProjektID.ToString() + "_Aufrufe (nolock) WHERE Aufrufe_Kunden_ID = " + kundenID.ToString() + " and Aufrufe_TkAnlage is not null order by Aufrufe_ID ";
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
             try
             {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                for (int i = 0; i < count; i++)
                 {
-                        pfad[i] =   Convert.ToString(ds.Tables[0].Rows[i]["Aufrufe_tkAnlage"]);
+                    pfad[i,0] =  Convert.ToString(ds.Tables[0].Rows[i]["Aufrufe_tkAnlage"]) ;
+                    pfad[i,1] =  Convert.ToString(ds.Tables[0].Rows[i]["Aufrufe_AnrufNr"]);
+                    pfad[i,2] =  Convert.ToString(ds.Tables[0].Rows[i]["Aufrufe_Datum"]).Substring(0, 10) ;
+                    pfad[i,3] =  Convert.ToString(ds.Tables[0].Rows[i]["Aufrufe_Zeit"]);
                 }
                 
             }

@@ -54,10 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="js\VoiceRecProvider.js" />
-    <EmbeddedResource Include="js\SimplePlayer.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="js\delete.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

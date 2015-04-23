@@ -3,8 +3,8 @@ Ext.ns('com.cellit.VoiceRecPlay.V1');
 
 com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
     //Variabeln
-    var voiceStore;
-    var voicepfad;
+    var myStore;
+
     var voicecount;
     
 
@@ -53,46 +53,47 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
                 else {
                     if (voicecount == 1) {
                         voicepfad = remote.GetVoicepfad(ttCall4.Hook.CustomerFields.id.getValue(), voicecount);
-                        //voiceStore= [
-                        //[voicepfad[0]]                        
-                        //];
+                        myStore = [
+                        [voicepfad[0]]
+                        ];
                         GetVoice(voicepfad[0])
                     }
                     else {
-                        if (voicecount==2)
+                        if (voicecount == 2) {
                             voicepfad = remote.GetVoicepfad(ttCall4.Hook.CustomerFields.id.getValue(), voicecount);
-                            voiceStore= [
-                            [voicepfad[0]],
-                            [voicepfad[1]]
+                            myStore = [
+                            [voicepfad[0], voicepfad[1], voicepfad[2], voicepfad[3]],
+                            [voicepfad[4], voicepfad[5], voicepfad[6], voicepfad[7]]
                             ];
-                            GetGrid(voiceStore);
-                    }                    
-                }
-                
+                            GetGrid(myStore);
+                        }
+                        else {
+                            if (voicecount == 3) {
+                                voicepfad = remote.GetVoicepfad(ttCall4.Hook.CustomerFields.id.getValue(), voicecount);
+                                myStore = [
+                                [voicepfad[0], voicepfad[1], voicepfad[2], voicepfad[3]],
+                                [voicepfad[4], voicepfad[5], voicepfad[6], voicepfad[7]],
+                                [voicepfad[8], voicepfad[9], voicepfad[10], voicepfad[11]]
+                                ];
+                                GetGrid(myStore);
+                            }
+                            else {
+                                if (voicecount == 4) {
+                                    voicepfad = remote.GetVoicepfad(ttCall4.Hook.CustomerFields.id.getValue(), voicecount);
+                                    myStore = [
+                                    [voicepfad[0], voicepfad[1], voicepfad[2], voicepfad[3]],
+                                    [voicepfad[4], voicepfad[5], voicepfad[6], voicepfad[7]],
+                                    [voicepfad[8], voicepfad[9], voicepfad[10], voicepfad[11]],
+                                    [voicepfad[12], voicepfad[13], voicepfad[14], voicepfad[15]],
+                                    ];
+                                    GetGrid(myStore);
+                                }
+                            }
 
-                
-                    //Soundfile abrufen
-                   // var url = remote.GetSoundFile(voicepfad[0]);
-                   // //Player anzeigen 
-                   // var player = new Ext.Window({
-                   //     title: 'Player',
-                   //     width: (Ext.isIE || (navigator.userAgent.match(/Trident\/[6]/i)) || (navigator.userAgent.match(/Trident\/[7]/i))) ? 550 : 315,
-                   //     height: (Ext.isIE || (navigator.userAgent.match(/Trident\/[6]/i)) || (navigator.userAgent.match(/Trident\/[7]/i))) ? 110 : 63,
-                   //     minWidth: 275,
-                   //     minHeight: 50,
-                   //     layout: 'fit',
-                   //     modal: true,
-                   //     items: [
-                   //         new Ext.Panel({
-                   //             html: '<audio controls autoplay ><source src="' + url + '" type="audio/mpeg">Your browser does not support the audio element.</audio>'
-                   //         })]
-                   // });
-                   //player.show();
-                    //container = new com.cellit.VoiceRecPlay.V1.SimplePlayer({
-                    //    url: url
-                    //});
-                    //container.show();
-                
+
+                        }
+                    }
+                }
                 break;
             default:
                 break;
@@ -102,19 +103,16 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
         {
             var window = new Ext.Window({
                 title: 'VR Auswahl',
-                width: 800,
-                height: 600,
+                width: 300,
+                height: 300,
                 layout: 'fit',
                 modal: true,
                 items: [
                          new Ext.Panel({
-                             html: '<div id="grid1" ></div><p>' + voicepfad + '</p>'
+                             html: '<div id="grid1" ></div>'
                          })]
                     ,
                 buttons: [{
-                    text: 'Submit',
-                    disabled: true
-                }, {
                     text: 'Close',
                     handler: function () {
                         window.hide();
@@ -126,78 +124,58 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
             //Grid
             var store = new Ext.data.ArrayStore({
                 fields: [
-                    { name: 'company' },
-                    { name: 'change', type: 'float' },
-                    { name: 'pctChange', type: 'float' },
-                    { name: 'lastChange', type: 'date', dateFormat: 'n/j h:ia' }
-                ]
+                    { name: 'url' },
+                    { name: 'level', type: 'float' },
+                    { name: 'datum'},
+                    { name: 'uhrzeit'}
+               ]
             });
             //Store Laden
-            store.loadData(voiceStore);
+            store.loadData(myStore);
             //grid erstellen
             var grid = new Ext.grid.GridPanel({
                 store: store,
                 columns: [
                     {
-                        id: 'company',
-                        header: 'Pfad',
-                        width: 160,
-                        height: 50,
+                        id: 'level',
+                        header: 'level',
+                        width: 50,
                         sortable: true,
-                        dataIndex: 'company'
+                        //renderer: change,
+                        dataIndex: 'level'
                     },
                     {
-                        header: 'Change',
-                        width: 75,
+                        header: 'Datum',
+                        width: 100,
                         sortable: true,
-                        renderer: change,
-                        dataIndex: 'change'
+                        //renderer: pctChange,
+                        //renderer: Ext.util.Format.dateRenderer('m/d/Y'),
+                        dataIndex: 'datum',
+                        //xtype: 'datecolumn', format: 'M d, Y'
                     },
                     {
-                        header: '% Change',
-                        width: 75,
+                        header: 'Uhrzeit',
+                        width: 100,
                         sortable: true,
-                        renderer: pctChange,
-                        dataIndex: 'pctChange'
-                    },
-                    {
-                        header: 'Last Updated',
-                        width: 85,
-                        sortable: true,
-                        renderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                        dataIndex: 'lastChange'
+                        //renderer: Ext.util.Format.dateRenderer('m/d/Y'),
+                        dataIndex: 'uhrzeit'
                     },
                     {
                         xtype: 'actioncolumn',
-                        width: 150,
+                        width: 25,
                         items: [{
-                            icon: 'http://agent.cellit-gruppe.de/ttframework/img/start.gif',  // Use a URL in the icon config
+                            icon: 'http://agent.cellit-gruppe.de/ttframework/img/play.png',  // Use a URL in the icon config
                             tooltip: 'Viocerec Play',
                             handler: function (grid, rowIndex, colIndex) {
                                 var rec = store.getAt(rowIndex);
-                                GetVoice(rec.get('company'));
+                                GetVoice(rec.get('url'));
                             }
-                            //}, {
-                            //    getClass: function (v, meta, rec) {          // Or return a class from a function
-                            //        if (rec.get('change') < 0) {
-                            //            this.items[1].tooltip = 'Do not buy!';
-                            //            return 'alert-col';
-                            //        } else {
-                            //            this.items[1].tooltip = 'Buy stock';
-                            //            return 'buy-col';
-                            //        }
-                            //    },
-                            //    handler: function (grid, rowIndex, colIndex) {
-                            //        var rec = store.getAt(rowIndex);
-                            //        alert("Buy " + rec.get('company'));
-                            //    }
                         }]
                     }
                 ],
                 stripeRows: true,
-                autoExpandColumn: 'company',
                 height: 350,
-                width: 600,
+                width: 300,
                 title: 'Array Grid',
                 // config options for stateful behavior
                 stateful: true,
@@ -223,24 +201,26 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
         }
         function GetVoice(gridurl)
         {
-            var url = remote.GetSoundFile(gridurl);            
+            var url = remote.GetSoundFile(gridurl);
+            
             var player = new Ext.Window({
                 //title: 'Player',
                 header: false,
                 width: (Ext.isIE || (navigator.userAgent.match(/Trident\/[6]/i)) || (navigator.userAgent.match(/Trident\/[7]/i))) ? 550 : 315,
                 height: (Ext.isIE || (navigator.userAgent.match(/Trident\/[6]/i)) || (navigator.userAgent.match(/Trident\/[7]/i))) ? 110 : 63,
                 minWidth: 275,
-                minHeight: 50,
+                minHeight: 55,
                 layout: 'fit',
                 //modal: true,
                 items: [
                     new Ext.Panel({
-                        html: '<audio controls autoplay ><source src="' + url + '" type="audio/mpeg">Your browser does not support the audio element.</audio>'
+                        html: '<audio style="margin-top:5px;" controls autoplay ><source src="' + url + '" type="audio/mpeg">Your browser does not support the audio element.</audio>'
                     })]
             });
             player.show();
             return this;
         }
+       
     }
     return this;
 }
