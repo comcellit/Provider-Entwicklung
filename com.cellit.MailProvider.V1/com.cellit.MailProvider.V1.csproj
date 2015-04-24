@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{51BD7E9E-5D3D-4388-972E-6B88DDF404BA}</ProjectGuid>
+    <ProjectGuid>{27BB9FAA-BF37-4D0B-A414-406D64B539B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>com.cellit.VoiceRecPlay.V1</RootNamespace>
-    <AssemblyName>com.cellit.VoiceRecPlay.V1</AssemblyName>
+    <RootNamespace>com.cellit.MailProvider.V1</RootNamespace>
+    <AssemblyName>com.cellit.MailProvider.V1</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACD.Interface.V1">
-      <HintPath>..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,13 +49,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="VoiceRecPlay.cs" />
+    <Compile Include="MailProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="js\VoiceRecProvider.js" />
-  </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="sql\cmd.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(FrameworkSDKDir)bin\signtool" sign /n "ttDeveloper Code Signing" /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$(TargetPath)"
