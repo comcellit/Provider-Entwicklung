@@ -56,6 +56,9 @@
   <ItemGroup>
     <EmbeddedResource Include="sql\cmd.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="js\MailProvider.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(FrameworkSDKDir)bin\signtool" sign /n "ttDeveloper Code Signing" /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$(TargetPath)"

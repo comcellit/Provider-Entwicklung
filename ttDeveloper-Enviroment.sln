@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{8169640B-83E4-4A3D-9B5D-01324FFEE24F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLoader", "Helper-Projects\ServiceLoader\ServiceLoader.csproj", "{0A32DBBD-2CA6-4E0D-B729-84D546711383}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3A7D93C-6C5D-459B-A333-26DDFAC4A596} = {C3A7D93C-6C5D-459B-A333-26DDFAC4A596}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteLoader", "Helper-Projects\SiteLoader\SiteLoader.csproj", "{C3A7D93C-6C5D-459B-A333-26DDFAC4A596}"
 EndProject

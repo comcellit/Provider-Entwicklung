@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Web;
 using ACD.Interface.V1;
+using System.Net.Mail;
 
 
 namespace com.cellit.MailProvider.V1
@@ -14,6 +15,16 @@ namespace com.cellit.MailProvider.V1
     [Provider(DisplayName = "Com.cellit Mask MailProvider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
     public class MailProvider : IProvider
     {
+        //Globale Variablen
+        private static string _server;
+        private static int _port;
+        private static string _username;
+        private static string _passwort;
+        private static bool _ssl;
+        private static string _bcc;
+        private static string _subject;
+        private static string _body;
+
 
         #region Add/Remove-Provider
 
@@ -37,29 +48,50 @@ namespace com.cellit.MailProvider.V1
         #region Config-Settings
         // Werte, die bei der Konfiguration des Providers für alle Instanzen gesetzt werden können  
 
-        //[ConfigSetting(Frame = "Datenbank", Label = "Verbindung")]
-        //public IDatabaseConnection ConfigConnection = null;
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Smtp Server", FieldType = FieldType.TextField)]
+        public string server
+        {
+            get { return _server; }
+            set { _server = value; }
+        }
+
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Smtp Server", FieldType = FieldType.NumberField)]
+        public int port
+        {
+            get { return _port; }
+            set { _port = value; }
+        }
+
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "User/Mailadresse", FieldType = FieldType.TextField)]
+        public string user
+        {
+            get { return _username; }
+            set { _username = value; }
+        }
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Passwort", FieldType = FieldType.PasswordField)]
+        public string passwort
+        {
+            get { return _passwort; }
+            set { _passwort = value; }
+        }
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "SSL", FieldType = FieldType.CheckBox)]
+        public bool ssl
+        {
+            get { return _ssl; }
+            set { _ssl = value; }
+        }
+
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Einstellung testen", FieldType = FieldType.Method, Values = "testConnect")]
+        
+        
+       
+        
+        
 
         #endregion
 
         #region Runtime-Settings
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Kontoeinstellung", Label = "Smtp Server", FieldType = FieldType.TextField)]
-        public string server;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Kontoeinstellung", Label = "User/Mailadresse", FieldType = FieldType.TextField)]
-        public string user;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Kontoeinstellung", Label = "Passwort", FieldType = FieldType.PasswordField)]
-        public string passwort;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Kontoeinstellung", Label = "SSL", FieldType = FieldType.CheckBox)]
-        public bool ssl;
-
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Feld zum versenden", FieldType = FieldType.ComboBox, Values = "GetFields")]
         public int send;
@@ -70,15 +102,29 @@ namespace com.cellit.MailProvider.V1
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetFields")]
-        public int email;
+        public int mailfield;
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Bcc an", FieldType = FieldType.TextField)]
-        public string bcc;
+        public string bcc
+        {
+            get { return _bcc; }
+            set { _bcc = value; }
+        }
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "E-Mail Inhalt html", FieldType = FieldType.TextArea , Height=500 , Width=500 )]
-        public string Nachricht;
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Betreff", FieldType = FieldType.TextField)]
+        public string subject
+        {
+            get { return _subject; }
+            set { _subject = value; }
+
+        }
+
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "E-Mail Inhalt html", FieldType = FieldType.TextArea, Height = 500, Width = 500)]
+        public string nachricht
+        {
+            get { return _body; }
+            set { _body = value; }
+        }
         
         #endregion
 
@@ -94,7 +140,7 @@ namespace com.cellit.MailProvider.V1
             {
                 List<string> scripts = new List<string>();
                 // zu ladende Scripte müssen als Ressourcen eingebettet sein oder im Pfad als Datei vorliegen
-                //scripts.Add(this.GetProviderDatas().UrlDirectory + "js/VoiceRecProvider.js?V=1");
+                scripts.Add(this.GetProviderDatas().UrlDirectory + "js/MailProvider.js?V=1");
                 return scripts;
             }
         }
@@ -107,7 +153,7 @@ namespace com.cellit.MailProvider.V1
             {
                 List<string> scripts = new List<string>();
                 // der Platzhalter %this% dient als Verweiß für diese Instance der C#-Klasse (siehe ScriptVisible) 
-                //scripts.Add("com.cellit.VoiceRecPlay.V1.ProviderInstance = new com.cellit.VoiceRecPlay.V1.VoiceRecProvider(%this%);");
+                scripts.Add("com.cellit.MailProvider.V1.ProviderInstance = new com.cellit.MailProvider.V1.MailProvider(%this%);");
                 return scripts;
             }
         }
@@ -150,6 +196,7 @@ namespace com.cellit.MailProvider.V1
                     this.Log(LogType.Debug, Convert.ToString("Test"+ e));
                     //throw;
                 }
+                
             }
         }
 
@@ -161,6 +208,7 @@ namespace com.cellit.MailProvider.V1
 
         #region Provider Code
 
+        //Get Field Methode
         public static object GetFields(Dictionary<string, object> settings)
         {
             object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
@@ -243,6 +291,74 @@ namespace com.cellit.MailProvider.V1
 
             return result;
         }
+
+        public bool testConnect()
+        {
+            try
+            {
+                SmtpClient test = new SmtpClient(_server, _port);
+                test.Credentials = new System.Net.NetworkCredential(_username, _passwort);
+                if (_ssl == true)
+                {
+                    test.EnableSsl = true;
+                }
+                else
+                {
+                    test.EnableSsl = false;
+                }
+                test.Send(new MailMessage(_username, "test@cellit-gruppe.de", "test", "Test"));
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
+        }
+
+        [ScriptVisible]
+        public  void SendMail(string mailTo)
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(_username); //Absender
+            mail.To.Add(mailTo); //empfänger
+            if (_bcc == "")
+            {
+                //Do Nothing
+            }
+            else
+            {
+                mail.Bcc.Add(_bcc); //Blindkopie an
+            }
+            mail.Subject = _subject; //Betreff
+            mail.IsBodyHtml = true;
+            mail.Body = _body;
+
+            SmtpClient client = new SmtpClient(_server, _port); //SMTP Server und port
+
+            try
+            {
+                client.Credentials = new System.Net.NetworkCredential(_username, _passwort); //Server Login
+                if (_ssl == true)
+                {
+                    client.EnableSsl = true;
+                }
+                else
+                {
+                    client.EnableSsl = false;
+                }
+                client.Send(mail);
+                this.Log(LogType.Info, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
+            }
+            catch (Exception ex)
+            {
+               this.Log(LogType.Error, Convert.ToString("MailProvider ERROR Client.Send")+ex);
+               
+            }
+        }
+        
 
         #endregion
     }
