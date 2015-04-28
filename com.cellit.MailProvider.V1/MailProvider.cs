@@ -24,6 +24,9 @@ namespace com.cellit.MailProvider.V1
         private static string _bcc;
         private static string _subject;
         private static string _body;
+        ICampaign currentcampaign;
+        private static int ttCallProjektID;
+        
 
 
         #region Add/Remove-Provider
@@ -81,10 +84,7 @@ namespace com.cellit.MailProvider.V1
             set { _ssl = value; }
         }
 
-        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Einstellung testen", FieldType = FieldType.Method, Values = "testConnect")]
-        
-        
-       
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Einstellung testen", FieldType = FieldType.Method)]
         
         
 
@@ -164,8 +164,21 @@ namespace com.cellit.MailProvider.V1
 
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         #region Initilize/Dispose
+
         public void Initialize(object args)
         {
+            currentcampaign = (ICampaign)this.GetParentProvider().GetParentProvider();
+            if (currentcampaign.GetProviderDatas().IsInitialized == true)
+            {
+                ttCallProjektID = GetprojektID(currentcampaign.ID);
+                this.Log(LogType.Debug, Convert.ToString("MailProvider Initilisiert " + currentcampaign.Name));
+                this.Log(LogType.Debug, Convert.ToString(currentcampaign.Name));
+            }
+            else
+            {
+                currentcampaign.GetProviderEvents().Initialized += campagnInitialized;
+            }
+
             string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='_MailProviderTransaktion'";
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
             int exists = Convert.ToInt32(ds.Tables[0].Rows[0]["count"]);
@@ -193,8 +206,7 @@ namespace com.cellit.MailProvider.V1
                 }
                 catch (Exception e)
                 {
-                    this.Log(LogType.Debug, Convert.ToString("Test"+ e));
-                    //throw;
+                    this.Log(LogType.Debug, Convert.ToString("Test" + e));
                 }
                 
             }
@@ -204,9 +216,28 @@ namespace com.cellit.MailProvider.V1
         public void Dispose()
         {
         }
+
         #endregion
 
         #region Provider Code
+        //Fals die Campagn noch nicht initialisiert war wir darauf gewartet
+        private void campagnInitialized(object sender, EventArgs e)
+        {
+            currentcampaign.GetProviderEvents().Initialized -= campagnInitialized;
+            ttCallProjektID = GetprojektID(currentcampaign.ID);
+            this.Log(LogType.Debug, Convert.ToString("VoiceRecProvider Initilisiert " + currentcampaign.Name));
+            
+
+        }
+        //Projekt ID auslesen 
+        private int GetprojektID(int campaignID)
+        {
+            string sql = "SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString();
+            System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
+
+            return Convert.ToInt32(ds.Tables[0].Rows[0]["Campaign_Reference"]);
+
+        }
 
         //Get Field Methode
         public static object GetFields(Dictionary<string, object> settings)
@@ -292,54 +323,53 @@ namespace com.cellit.MailProvider.V1
             return result;
         }
 
-        public bool testConnect()
-        {
-            try
-            {
-                SmtpClient test = new SmtpClient(_server, _port);
-                test.Credentials = new System.Net.NetworkCredential(_username, _passwort);
-                if (_ssl == true)
-                {
-                    test.EnableSsl = true;
-                }
-                else
-                {
-                    test.EnableSsl = false;
-                }
-                test.Send(new MailMessage(_username, "test@cellit-gruppe.de", "test", "Test"));
+        //public static bool testConnect()
+        //{
+        //    try
+        //    {
+        //        SmtpClient test = new SmtpClient(_server, _port);
+        //        test.Credentials = new System.Net.NetworkCredential(_username, _passwort);
+        //        if (_ssl == true)
+        //        {
+        //            test.EnableSsl = true;
+        //        }
+        //        else
+        //        {
+        //            test.EnableSsl = false;
+        //        }
+        //        test.Send(new MailMessage(_username, "test@cellit-gruppe.de", "test", "Test"));
 
-                return true;
+        //        return true;
 
-            }
-            catch (Exception e)
-            {
+        //    }
+        //    catch (Exception)
+        //    {
 
-                return false;
-            }
-        }
+        //        return false;
+        //    }
+        //}
 
         [ScriptVisible]
-        public  void SendMail(string mailTo)
+        public  string SendMail(string mailTo) //E-Mail Versenden
         {
-            MailMessage mail = new MailMessage();
-            mail.From = new MailAddress(_username); //Absender
-            mail.To.Add(mailTo); //empfänger
-            if (_bcc == "")
-            {
-                //Do Nothing
-            }
-            else
-            {
-                mail.Bcc.Add(_bcc); //Blindkopie an
-            }
-            mail.Subject = _subject; //Betreff
-            mail.IsBodyHtml = true;
-            mail.Body = _body;
-
-            SmtpClient client = new SmtpClient(_server, _port); //SMTP Server und port
-
             try
             {
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(_username); //Absender
+                mail.To.Add(mailTo); //empfänger
+                if (_bcc == ""){
+                    //Do Nothing
+                }
+                else{
+                    mail.Bcc.Add(_bcc); //Blindkopie an
+                }
+                mail.Subject = _subject; //Betreff
+                mail.IsBodyHtml = true;
+                mail.Body = _body;
+
+                SmtpClient client = new SmtpClient(_server, _port); //SMTP Server und port
+
+
                 client.Credentials = new System.Net.NetworkCredential(_username, _passwort); //Server Login
                 if (_ssl == true)
                 {
@@ -350,16 +380,36 @@ namespace com.cellit.MailProvider.V1
                     client.EnableSsl = false;
                 }
                 client.Send(mail);
-                this.Log(LogType.Info, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
+                this.Log(LogType.Debug, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
+                Random random = new Random();
+                int num = random.Next();
+                return num.ToString("X");
             }
             catch (Exception ex)
             {
-               this.Log(LogType.Error, Convert.ToString("MailProvider ERROR Client.Send")+ex);
-               
+                this.Log(LogType.Error, Convert.ToString("MailProvider ERROR ") + ex);
+                return "";
             }
+            
         }
-        
+        //Transaktion in Sql speichern
+        [ScriptVisible]
+        public void SetTransaktion(int kundenId,  string kundenmail, string hex)
+        {
+
+            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + _body + "',getdate(),'" + kundenmail + "','false');";
+            try
+            {
+                this.GetDefaultDatabaseConnection().Execute(sql);
+            }
+            catch (Exception error)
+            {
+                this.Log(LogType.Error, error);
+            }
+            
+        }
 
         #endregion
     }
+    
 }

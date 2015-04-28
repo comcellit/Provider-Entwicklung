@@ -2,7 +2,7 @@ CREATE TABLE [dbo].[_MailProviderTransaktion]
 ( 
 [MailID] [int] IDENTITY(1,1) NOT NULL, 
 [ProjektID] [nchar](10) NOT NULL, 
-[TransaktionsID] [nvarchar](50) NOT NULL, 
+[transaktionID] [nvarchar](50) NOT NULL, 
 [KundenID] [int] NOT NULL, 
 [VersandDatum] [date] NOT NULL,
 [VersandUhrzeit] [time](0) NOT NULL, 
