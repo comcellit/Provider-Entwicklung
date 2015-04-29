@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace com.cellit.VoiceRecPlay.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask VoiceRecPlay", Description = "Provider zum Abspielen von Voicerecords aus vorherigen Aufrufen", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider",SingletonConfiguration=true ,ConfigurationKey="VoicerecPlay")]
+    [Provider(DisplayName = "Com.cellit Mask VoiceRecPlay", Description = "Abspielen von Voicerecords aus vorherigen Aufrufen", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider",SingletonConfiguration=true ,ConfigurationKey="VoicerecPlay")]
     public class VoiceRecPlay : IProvider
     {
         //Globale Variablen

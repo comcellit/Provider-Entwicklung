@@ -334,7 +334,7 @@ namespace com.cellit.MailProvider.V1
         }
         //Mail Versand
         [ScriptVisible]
-        public  string SendMail(string mailTo, string newBody) //E-Mail Versenden
+        public  void SendMail(string mailTo, string newBody) //E-Mail Versenden
         {
             try
             {
@@ -365,24 +365,20 @@ namespace com.cellit.MailProvider.V1
                 }
                 client.Send(mail);
                 this.Log(LogType.Debug, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
-                //Hex Random Transaktion
-                Random random = new Random();
-                int num = random.Next();
-                return num.ToString("X");
+                
             }
             catch (Exception ex)
             {
                 this.Log(LogType.Error, Convert.ToString("MailProvider ERROR ") + ex);
-                return "";
             }
             
         }
         //Transaktion in Sql speichern
         [ScriptVisible]
-        public void SetTransaktion(int kundenId,  string kundenmail, string hex)
+        public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + _body + "',getdate(),'" + kundenmail + "','false');";
+            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false');";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);
@@ -395,13 +391,23 @@ namespace com.cellit.MailProvider.V1
         }
         //Nachrichten Variablen ersetzen
         [ScriptVisible]
-        public string ReplaceBody(string anrede,string vorname,string nachname )
+        public string ReplaceBody(string anrede,string vorname,string nachname,string transaktion )
         {
             string message= _body;
             message = message.Replace("[Anrede]", anrede);
             message = message.Replace("[Name]", nachname);
             message = message.Replace("[Vorname]", vorname);
+            message = message.Replace("[transID]", transaktion);
             return message;
+        }
+        //Get Transaktion ID
+        [ScriptVisible]
+        public string GetTrasaktionID()
+        {
+            Random random = new Random();
+            int num = random.Next();
+            return num.ToString("X");
+
         }
 
         #endregion
