@@ -12,7 +12,7 @@ using System.Net.Mail;
 
 namespace com.cellit.MailProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask MailProvider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
+    [Provider(DisplayName = "Com.cellit Mask SendMailProvider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
     public class MailProvider : IProvider
     {
         //Globale Variablen
@@ -84,8 +84,21 @@ namespace com.cellit.MailProvider.V1
             set { _ssl = value; }
         }
 
-        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Einstellung testen", FieldType = FieldType.Method)]
-        
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Einstellungen testen")]
+        public static void CheckConnection(Dictionary<string, object> settings)
+        {
+                SmtpClient test = new SmtpClient(_server, _port);
+                test.Credentials = new System.Net.NetworkCredential(_username, _passwort);
+                if (_ssl == true)
+                {
+                    test.EnableSsl = true;
+                }
+                else
+                {
+                    test.EnableSsl = false;
+                }
+                test.Send(new MailMessage(_username, _username, "test", "Test"));
+        }
         
 
         #endregion
@@ -119,12 +132,13 @@ namespace com.cellit.MailProvider.V1
 
         }
 
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "E-Mail Inhalt html", FieldType = FieldType.TextArea, Height = 500, Width = 500)]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "E-Mail body html", FieldType = FieldType.TextArea, Height = 500, Width = 500)]
         public string nachricht
         {
             get { return _body; }
             set { _body = value; }
         }
+        
         
         #endregion
 
@@ -226,8 +240,6 @@ namespace com.cellit.MailProvider.V1
             currentcampaign.GetProviderEvents().Initialized -= campagnInitialized;
             ttCallProjektID = GetprojektID(currentcampaign.ID);
             this.Log(LogType.Debug, Convert.ToString("VoiceRecProvider Initilisiert " + currentcampaign.Name));
-            
-
         }
         //Projekt ID auslesen 
         private int GetprojektID(int campaignID)
@@ -236,9 +248,7 @@ namespace com.cellit.MailProvider.V1
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
 
             return Convert.ToInt32(ds.Tables[0].Rows[0]["Campaign_Reference"]);
-
         }
-
         //Get Field Methode
         public static object GetFields(Dictionary<string, object> settings)
         {
@@ -322,35 +332,9 @@ namespace com.cellit.MailProvider.V1
 
             return result;
         }
-
-        //public static bool testConnect()
-        //{
-        //    try
-        //    {
-        //        SmtpClient test = new SmtpClient(_server, _port);
-        //        test.Credentials = new System.Net.NetworkCredential(_username, _passwort);
-        //        if (_ssl == true)
-        //        {
-        //            test.EnableSsl = true;
-        //        }
-        //        else
-        //        {
-        //            test.EnableSsl = false;
-        //        }
-        //        test.Send(new MailMessage(_username, "test@cellit-gruppe.de", "test", "Test"));
-
-        //        return true;
-
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        return false;
-        //    }
-        //}
-
+        //Mail Versand
         [ScriptVisible]
-        public  string SendMail(string mailTo) //E-Mail Versenden
+        public  string SendMail(string mailTo, string newBody) //E-Mail Versenden
         {
             try
             {
@@ -365,7 +349,7 @@ namespace com.cellit.MailProvider.V1
                 }
                 mail.Subject = _subject; //Betreff
                 mail.IsBodyHtml = true;
-                mail.Body = _body;
+                mail.Body = newBody;
 
                 SmtpClient client = new SmtpClient(_server, _port); //SMTP Server und port
 
@@ -381,6 +365,7 @@ namespace com.cellit.MailProvider.V1
                 }
                 client.Send(mail);
                 this.Log(LogType.Debug, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
+                //Hex Random Transaktion
                 Random random = new Random();
                 int num = random.Next();
                 return num.ToString("X");
@@ -407,6 +392,16 @@ namespace com.cellit.MailProvider.V1
                 this.Log(LogType.Error, error);
             }
             
+        }
+        //Nachrichten Variablen ersetzen
+        [ScriptVisible]
+        public string ReplaceBody(string anrede,string vorname,string nachname )
+        {
+            string message= _body;
+            message = message.Replace("[Anrede]", anrede);
+            message = message.Replace("[Name]", nachname);
+            message = message.Replace("[Vorname]", vorname);
+            return message;
         }
 
         #endregion

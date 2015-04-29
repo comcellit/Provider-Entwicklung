@@ -3,7 +3,7 @@ Ext.ns('com.cellit.MailProvider.V1.');
 
 com.cellit.MailProvider.V1.MailProvider = function (remote) {
    
-    var getTransField
+    var getTransField;
     
 
     //ttCall4 Mask-Eventhandler registirerien:
@@ -42,14 +42,14 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
             case remote.send:
                 if (remote.mailfield > 200)
                 {
+                    var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(), ttCall4.Hook.CustomerFields[4].value.getValue(), ttCall4.Hook.CustomerFields[2].value.getValue());//Ersetze Body Variablen
                     var mailTo = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
                     if (mailTo == null) {
-                        //alert("Kunden E-Mail kann nicht leer sein!")
                         Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
                     } //Prüft ob Empfänger leer ist
                     else {
                         getProgress();
-                        var mytransaktion = remote.SendMail(mailTo); //Mail Versand Speicher TransaktionId
+                        var mytransaktion = remote.SendMail(mailTo, newBody); //Mail Versand Speicher TransaktionId
                         
                         if (remote.transaktion > 200)
                         {
@@ -71,13 +71,12 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
                             }
                             
                         }
-                        remote.SetTransaktion(ttCall4.Hook.CustomerFields.id.getValue(), mailTo, mytransaktion);
+                        remote.SetTransaktion(ttFramework.providers.ttCall4.CallJob.Customer.CustomerID, mailTo, mytransaktion);
                     }
                 }
                 else {
                     var mailTo = ttCall4.Hook.ResultFields[remote.mailfield].value.getValue();
                     if (mailTo == null) {
-                        //alert("Kunden E-Mail kann nicht leer sein!")
                         Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
                     }
                     else {
@@ -89,7 +88,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
                         else {
                             ttCall4.Hook.ResultFields[remote.transaktion].value.setValue(mytransaktion);
                         }
-                        remote.SetTransaktion(ttCall4.Hook.CustomerFields.id.getValue(), mailTo, mytransaktion);
+                        remote.SetTransaktion(ttFramework.providers.ttCall4.CallJob.Customer.CustomerID, mailTo, mytransaktion);
                     }
                 }
                 break;
