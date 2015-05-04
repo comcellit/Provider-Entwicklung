@@ -40,83 +40,37 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
             ////Sound abspielen
             case remote.send:
-                if (remote.mailfield > 200)
+                
+                var myVtgRef = remote.transaktion - 200;
+                if (myVtgRef < 10)
                 {
+                    myVtgRef = "0" + myVtgRef;
+                   
+                }
                     
                     var mailTo = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
                     if (mailTo == null) {
                         Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
                     } //Prüft ob Empfänger leer ist
                     else {
+
                         getProgress();//Anzeige Mail Versand Status
                         var mytransaktion = remote.GetTrasaktionID();//Speicher TransaktionId
                         var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(), ttCall4.Hook.CustomerFields[4].value.getValue(), ttCall4.Hook.CustomerFields[2].value.getValue(), mytransaktion);//Ersetze Body Variablen
                         remote.SendMail(mailTo, newBody); //Mail Versand 
-                        
-                        if (remote.transaktion > 200)
-                        {
-                            getTransField = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
-                            if (getTransField == null) {
-                                ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(mytransaktion);
-                            }
-                            else {
-                                ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(getTransField+','+ mytransaktion);
-                            }
+
+
+                        getTransField = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
+                        if (getTransField == null) {
+                            ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(mytransaktion);
                         }
                         else {
-                            getTransField = ttCall4.Hook.ResultFields[remote.transaktion].value.setValue();
-                            if (getTransField == null) {
-                                ttCall4.Hook.ResultFields[remote.transaktion].value.setValue(mytransaktion);
-                            }
-                            else {
-                                ttCall4.Hook.ResultFields[remote.transaktion].value.setValue(getTransField + ',' + mytransaktion);
-                            }
-                            
-                        }
-                        remote.SetTransaktion(ttFramework.providers.ttCall4.CallJob.Customer.CustomerID, mailTo, mytransaktion, newBody);
-                    }
-                }
-                else {
-                    var mailTo = ttCall4.Hook.ResultFields[remote.mailfield].value.getValue();
-                    if (mailTo == null) {
-                        Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
-                    }
-                    else {
-                        getProgress();//Anzeige Mail Versand Status
-                        var mytransaktion = remote.GetTrasaktionID();//Speicher TransaktionId
-                        var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(), ttCall4.Hook.CustomerFields[4].value.getValue(), ttCall4.Hook.CustomerFields[2].value.getValue(), mytransaktion);//Ersetze Body Variablen
-                        remote.SendMail(mailTo, newBody); //Mail Versand 
-                        var mytransaktion = remote.SendMail(mailTo);
-                        if (remote.transaktion > 200) {
-
-                            getTransField = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
-
-                            if (getTransField == null) {
-
-                                ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(mytransaktion);
-                            }
-                            else {
-
-                                ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(getTransField + ',' + mytransaktion);
-                            }
-                        }
-                        else {
-
-                            getTransField = ttCall4.Hook.ResultFields[remote.transaktion].value.setValue();
-
-                            if (getTransField == null) {
-
-                                ttCall4.Hook.ResultFields[remote.transaktion].value.setValue(mytransaktion);
-                            }
-                            else {
-
-                                ttCall4.Hook.ResultFields[remote.transaktion].value.setValue(getTransField + ',' + mytransaktion);
-                            }
+                            ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(getTransField + ',' + mytransaktion);
                         }
 
-                        remote.SetTransaktion(ttFramework.providers.ttCall4.CallJob.Customer.CustomerID, mailTo, mytransaktion, newBody);
+                        remote.SetTransaktion(ttFramework.providers.ttCall4.CallJob.Customer.CustomerID, mailTo, mytransaktion, newBody, myVtgRef);
                     }
-                }
+                
                 break;
 
             default:

@@ -110,11 +110,11 @@ namespace com.cellit.MailProvider.V1
         public int send;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "TrasaktionsID Speichern auf Feld", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "TrasaktionsID Speichern auf Feld", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
         public int transaktion;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
         public int mailfield;
 
         [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Bcc an", FieldType = FieldType.TextField)]
@@ -234,6 +234,7 @@ namespace com.cellit.MailProvider.V1
         #endregion
 
         #region Provider Code
+
         //Fals die Campagn noch nicht initialisiert war wir darauf gewartet
         private void campagnInitialized(object sender, EventArgs e)
         {
@@ -332,6 +333,89 @@ namespace com.cellit.MailProvider.V1
 
             return result;
         }
+        //Nur DatenFelder abrufen
+        public static object GetDataFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
         //Mail Versand
         [ScriptVisible]
         public  void SendMail(string mailTo, string newBody) //E-Mail Versenden
@@ -375,10 +459,10 @@ namespace com.cellit.MailProvider.V1
         }
         //Transaktion in Sql speichern
         [ScriptVisible]
-        public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body)
+        public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,string vtgRef)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false');";
+            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd,Vtg_Ref) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+'" + vtgRef + "');";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);
@@ -397,7 +481,7 @@ namespace com.cellit.MailProvider.V1
             message = message.Replace("[Anrede]", anrede);
             message = message.Replace("[Name]", nachname);
             message = message.Replace("[Vorname]", vorname);
-            message = message.Replace("[transID]", transaktion);
+            message = message.Replace("[TransID]", transaktion);
             return message;
         }
         //Get Transaktion ID
