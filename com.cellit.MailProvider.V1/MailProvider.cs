@@ -24,6 +24,10 @@ namespace com.cellit.MailProvider.V1
         private static string _bcc;
         private static string _subject;
         private static string _body;
+        private static int _KDatumField;
+        private static int _KUhrzeitField;
+        private static int _KResultField;
+        private static int _KIPField;
         ICampaign currentcampaign;
         private static int ttCallProjektID;
         
@@ -106,16 +110,46 @@ namespace com.cellit.MailProvider.V1
         #region Runtime-Settings
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Feld zum versenden", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Feld zum versenden", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int send;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "TrasaktionsID Speichern auf Feld", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "TrasaktionsID Speichern auf Feld", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
         public int transaktion;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
         public int mailfield;
+
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kundenreaktions Datum", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
+        public int KundeDatumField
+        {
+            get { return _KDatumField; }
+            set { _KDatumField = value-200; }
+        }
+
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kundenreaktions Uhrzeit", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
+        public int KundeUhrzeitField
+        {
+            get { return _KUhrzeitField; }
+            set { _KUhrzeitField = value-200; }
+        }
+
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden IP", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
+        public int KundeIPField
+        {
+            get { return _KIPField; }
+            set { _KIPField = value-200; }
+        }
+
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank=false)]
+        public int KundeResultField
+        {
+            get { return _KResultField; }
+            set { _KResultField = value-200; }
+        }
+
+
 
         [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Bcc an", FieldType = FieldType.TextField)]
         public string bcc
@@ -124,7 +158,7 @@ namespace com.cellit.MailProvider.V1
             set { _bcc = value; }
         }
 
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Betreff", FieldType = FieldType.TextField)]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "Betreff", FieldType = FieldType.TextField, AllowBlank = false)]
         public string subject
         {
             get { return _subject; }
@@ -132,7 +166,7 @@ namespace com.cellit.MailProvider.V1
 
         }
 
-        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "E-Mail body html", FieldType = FieldType.TextArea, Height = 500, Width = 500)]
+        [RuntimeSetting(Frame = "Provider Einstellungen", Label = "E-Mail body html", FieldType = FieldType.TextArea, Height = 500, Width = 500, AllowBlank = false)]
         public string nachricht
         {
             get { return _body; }
@@ -459,10 +493,10 @@ namespace com.cellit.MailProvider.V1
         }
         //Transaktion in Sql speichern
         [ScriptVisible]
-        public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,string vtgRef)
+        public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,int vtgTransRef)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd,Vtg_Ref) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+'" + vtgRef + "');";
+            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + ","+_KDatumField+","+_KUhrzeitField+","+_KResultField+","+_KIPField+");";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);

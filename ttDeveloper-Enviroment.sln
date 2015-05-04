@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.VoiceRecPlay.V1"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.MailProvider.V1", "com.cellit.MailProvider.V1\com.cellit.MailProvider.V1.csproj", "{27BB9FAA-BF37-4D0B-A414-406D64B539B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.MailResultService.V1", "com.cellit.MailResultService.V1\com.cellit.MailResultService.V1.csproj", "{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,14 @@ Global
 		{27BB9FAA-BF37-4D0B-A414-406D64B539B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27BB9FAA-BF37-4D0B-A414-406D64B539B1}.Release|x64.ActiveCfg = Release|Any CPU
 		{27BB9FAA-BF37-4D0B-A414-406D64B539B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,5 +136,6 @@ Global
 		{A9A3481A-8103-4C99-ABDD-70E00EA3475B} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
 		{51BD7E9E-5D3D-4388-972E-6B88DDF404BA} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
 		{27BB9FAA-BF37-4D0B-A414-406D64B539B1} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
+		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
 	EndGlobalSection
 EndGlobal
