@@ -1,0 +1,5 @@
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SendSMSProvider.V1\bin\Debug\com.cellit.SendSMSProvider.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SendSMSProvider.V1\bin\Debug\com.cellit.SendSMSProvider.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SendSMSProvider.V1\obj\Debug\com.cellit.SendSMSProvider.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SendSMSProvider.V1\obj\Debug\com.cellit.SendSMSProvider.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SendSMSProvider.V1\obj\Debug\com.cellit.SendSMSProvider.V1.csprojResolveAssemblyReference.cache

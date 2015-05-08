@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{27BB9FAA-BF37-4D0B-A414-406D64B539B1}</ProjectGuid>
+    <ProjectGuid>{68173B09-1FC6-4269-BA59-DBDE17EB4013}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>com.cellit.MailProvider.V1</RootNamespace>
-    <AssemblyName>com.cellit.MailProvider.V1</AssemblyName>
+    <RootNamespace>com.cellit.SendSMSProvider.V1</RootNamespace>
+    <AssemblyName>com.cellit.SendSMSProvider.V1</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACD.Interface.V1">
-      <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -49,14 +46,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MailProvider.cs" />
+    <Compile Include="SendSMSProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="sql\cmd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="js\MailProvider.js" />
+    <EmbeddedResource Include="js\SMSProvider.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

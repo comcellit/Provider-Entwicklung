@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{27BB9FAA-BF37-4D0B-A414-406D64B539B1}</ProjectGuid>
+    <ProjectGuid>{1F00136E-0DCD-482F-8EB4-B4B8CABA6313}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>com.cellit.MailProvider.V1</RootNamespace>
-    <AssemblyName>com.cellit.MailProvider.V1</AssemblyName>
+    <RootNamespace>com.cellit.SMSGatewayService.V1</RootNamespace>
+    <AssemblyName>com.cellit.SMSGatewayService.V1</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,10 +34,11 @@
     <Reference Include="ACD.Interface.V1">
       <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
     </Reference>
+    <Reference Include="com.esendex.sdk">
+      <HintPath>..\..\com.esendex.sdk.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -49,14 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MailProvider.cs" />
+    <Compile Include="SmsGatewayService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="sql\cmd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="js\MailProvider.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

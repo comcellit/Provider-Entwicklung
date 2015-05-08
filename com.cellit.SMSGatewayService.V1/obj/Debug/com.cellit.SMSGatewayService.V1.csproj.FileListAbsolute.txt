@@ -1,0 +1,7 @@
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\bin\Debug\com.cellit.SMSGatewayService.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\bin\Debug\com.cellit.SMSGatewayService.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\bin\Debug\ACD.Interface.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\bin\Debug\com.esendex.sdk.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\obj\Debug\com.cellit.SMSGatewayService.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\obj\Debug\com.cellit.SMSGatewayService.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.SMSGatewayService.V1\obj\Debug\com.cellit.SMSGatewayService.V1.csprojResolveAssemblyReference.cache
