@@ -10,6 +10,7 @@ namespace com.cellit.SendSMSProvider.V1
     [Provider(DisplayName = "Com.cellit Mask SendSMSProvider", Description = "SMS Versand", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
     public class SendSMSProvider : IProvider
     {
+        
 
         #region Add/Remove-Provider
 
@@ -103,11 +104,13 @@ namespace com.cellit.SendSMSProvider.V1
 
 
         // --------------------------------------- Provider-Code --------------------------------------------
-        public EventHandler inbound;
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
+            
+           
         }
+
 
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
@@ -272,32 +275,30 @@ namespace com.cellit.SendSMSProvider.V1
                 {
                     result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
                 }
-                //for (int i = 1; i <= 50; i++)
-                //{
-                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                //}
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                }
             }
 
             return result;
         }
 
         [ScriptVisible]
-        public void SendSmS(string phonenumber)
+        public string SendSmS(string phonenumber)
         {
-            
+            string batchid=null;
             try
             {
-                _smsGateway.CallbyName("SendSMS", phonenumber, text, from);
+                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, from, onlysend).ToString();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Do Nothing
+                this.Log(LogType.Error, ex);
             }
-            
+            return batchid;
         }
 
-        
-       
     }
     
 }

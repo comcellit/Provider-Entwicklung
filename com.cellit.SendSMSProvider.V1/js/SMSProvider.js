@@ -13,6 +13,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
 
     //Event: Bearbeitungsmaske geöffnet
     function Mask_Open() {
+        
         //Remote-Events registrieren:
     }
 
@@ -49,7 +50,8 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
                 }
                 else {
                     getProgress();
-                    remote.SendSmS(phonenumber);
+                    var batchid = remote.SendSmS(phonenumber);
+                    batchid 
                 }
 
                 break;

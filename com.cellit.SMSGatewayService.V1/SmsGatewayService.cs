@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using ttFramework.Provider;
 using com.esendex.sdk.messaging;
+using com.esendex.sdk;
+using System.Xml;
 using System.Reflection;
 
 namespace com.cellit.SMSGatewayService.V1
@@ -90,11 +92,24 @@ namespace com.cellit.SMSGatewayService.V1
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
+              
         }
+
+       
 
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
         {
+        }
+        public event EventHandler SmSInbound;
+
+        public void OnSmsInbound()
+        {
+            EventHandler smsInbound = SmSInbound;
+            if (smsInbound != null)
+            {
+                smsInbound(this, EventArgs.Empty);
+            }
         }
 
         public event EventHandler ServiceStarted;
@@ -140,17 +155,63 @@ namespace com.cellit.SMSGatewayService.V1
             {
 
                 //Programm toDo
-
+                //SmSInbound += SmsGatewayService_SmSInbound;
+                
                 System.Threading.Thread.Sleep(_looptime);
+                //OnSmsInbound();
             }
         }
 
-
-        public void SendSMS(string phone, string text, string from)
+        void SmsGatewayService_SmSInbound(object sender, EventArgs e)
         {
-            var messagingService = new MessagingService(_user, _pass);
-            messagingService.SendMessage(new SmsMessage(phone, text, _accountRef, from));
+           // throw new NotImplementedException();
         }
 
+
+        public string SendSMS(string phone, string text, string from,bool onlysend)
+        {
+            string batchid = null;
+            var messagingService = new MessagingService(_user, _pass);
+            batchid = messagingService.SendMessage(new SmsMessage(phone, text, _accountRef, from)).BatchId.ToString();
+
+            if (onlysend == true)
+            {
+                return "";
+            }
+            else
+            {
+                SetTransaktion(phone, batchid);
+                return batchid;
+            }
+
+        }
+
+        public void SetTransaktion(string to,string batch)
+        {
+            string insert = "Insert Into _SmSTransfer (BatchID,[Gesendet am],phonenumber) values('" + batch + "', getdate(),'" + to + "');";
+            this.GetDefaultDatabaseConnection().Execute(insert);
+        }
+
+        //public string GetMessageID()
+        //{
+        //    string messageId= null;
+        //    const int pageNumber = 1;
+        //    const int pageSize = 1;
+
+        //    var credentials = new EsendexCredentials("mathias.weis@cellit-gruppe.de", "WgFHV788qfKD");
+        //    var sentService = new com.esendex.sdk.sent.SentService(credentials);
+        //    var messageBodyService = new MessageBodyService(credentials);
+
+        //    var sentMessages = sentService.GetMessages(pageNumber, pageSize);
+
+        //    foreach (var message in sentMessages.Messages)
+        //    {
+        //        messageBodyService.LoadBodyText(message.Body);
+        //       messageId= message.Id.ToString();
+        //        // message.Body.BodyText, message.DeliveredAt, message.SubmittedAt, message.Status, message.SentAt);
+        //    }
+        //    return messageId;
+        //}
+       
     }
 }
