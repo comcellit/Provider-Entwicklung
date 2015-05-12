@@ -280,7 +280,6 @@ namespace com.cellit.MailProvider.V1
         {
             currentcampaign.GetProviderEvents().Initialized -= campagnInitialized;
             ttCallProjektID = GetprojektID(currentcampaign.ID);
-            this.Log(LogType.Debug, Convert.ToString("VoiceRecProvider Initilisiert " + currentcampaign.Name));
         }
         //Projekt ID auslesen 
         private int GetprojektID(int campaignID)

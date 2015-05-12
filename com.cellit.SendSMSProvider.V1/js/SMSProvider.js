@@ -13,12 +13,13 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
 
     //Event: Bearbeitungsmaske geöffnet
     function Mask_Open() {
-        
+        remote.ReceiveMessage.addEventHandler(ReceiveMessage, this);
         //Remote-Events registrieren:
     }
 
     //Event: Beitungsmaske geschlossen
     function Mask_Close() {
+        remote.ReceiveMessage.removeEventHandler(ReceiveMessage);
         //Remote-Events deregistrieren:
     }
 
@@ -51,7 +52,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
                 else {
                     getProgress();
                     var batchid = remote.SendSmS(phonenumber);
-                    batchid 
+                    
                 }
 
                 break;
@@ -86,6 +87,12 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
             setTimeout(f(i), i * 50);
         }
         return this;
+    }
+    //Remote-Event: Nachricht erhalten
+    function ReceiveMessage(sender, args) {
+        //Empfänger prüfen
+        Ext.MessageBox.alert('Eingehende Nachricht', 'Von: ' + args.Params[1] + '<br>Datum: ' + args.Params[2] + '<br><br>' + args.Params[3]);
+        
     }
     return this;
 }

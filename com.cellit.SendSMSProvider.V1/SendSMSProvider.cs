@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using ttFramework.Provider;
 using System.Reflection;
+using com.cellit.SMSGatewayService.V1;
+using ACD.Interface.V1;
 
 namespace com.cellit.SendSMSProvider.V1
 {
     [Provider(DisplayName = "Com.cellit Mask SendSMSProvider", Description = "SMS Versand", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
     public class SendSMSProvider : IProvider
     {
-        
+        private static int ttCallProjektID;
+        ICampaign currentcampaign;
 
         #region Add/Remove-Provider
 
@@ -107,15 +110,38 @@ namespace com.cellit.SendSMSProvider.V1
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
-            
+            SMSGatewayService.V1.OnEvent.Inbound += OnEvent_Inbound;//Eingehende SMS Event Registrieren
+            currentcampaign = (ICampaign)this.GetParentProvider().GetParentProvider();
+            if (currentcampaign.GetProviderDatas().IsInitialized == true)
+            {
+                ttCallProjektID = GetprojektID(currentcampaign.ID);
+               
+            }
+            else
+            {
+                currentcampaign.GetProviderEvents().Initialized += campagnInitialized;
+            }
+
            
         }
-
-
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
         {
-            
+            SMSGatewayService.V1.OnEvent.Inbound -= OnEvent_Inbound;
+        }
+        //Projekt ID auslesen 
+        private int GetprojektID(int campaignID)
+        {
+            string sql = "SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString();
+            System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
+
+            return Convert.ToInt32(ds.Tables[0].Rows[0]["Campaign_Reference"]);
+        }
+        //Falls die Campagn noch nicht initialisiert war wird darauf gewartet
+        private void campagnInitialized(object sender, EventArgs e)
+        {
+            currentcampaign.GetProviderEvents().Initialized -= campagnInitialized;
+            ttCallProjektID = GetprojektID(currentcampaign.ID);
         }
 
         public static object GetDataFields(Dictionary<string, object> settings)
@@ -285,12 +311,15 @@ namespace com.cellit.SendSMSProvider.V1
         }
 
         [ScriptVisible]
+        public event EventHandler ReceiveMessage;//Event für Java bereitstellen
+
+        [ScriptVisible]
         public string SendSmS(string phonenumber)
         {
             string batchid=null;
             try
             {
-                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, from, onlysend).ToString();
+                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, from, onlysend,ttCallProjektID.ToString()).ToString();
             }
             catch (Exception ex)
             {
@@ -298,6 +327,41 @@ namespace com.cellit.SendSMSProvider.V1
             }
             return batchid;
         }
+
+        void OnEvent_Inbound(object sender, EventArgs e)
+        {
+
+            string sql = "select [Kunde Antwort] as msg,[Antwort am] as empfang,BatchID,Phonenumber from _SmSTransfer where [Kunde Antwort] is not null";
+            System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
+
+            receive(new object[] { ds.Tables[0].Rows[0]["BatchID"].ToString(), ds.Tables[0].Rows[0]["Phonenumber"].ToString(), ds.Tables[0].Rows[0]["empfang"].ToString(), ds.Tables[0].Rows[0]["msg"].ToString() });
+
+
+        }
+        private void receive(object args)
+        {
+            // Antwort verzögern
+            System.Threading.Thread.Sleep(5000);
+            // Registrierte Handler prüfen
+            EventHandler receiveMessage = this.ReceiveMessage;
+            if (receiveMessage != null)
+            {
+                // Daten ermitteln
+                object[] data = (object[])args;
+                string batchID = data[0].ToString();
+                string from = data[1].ToString();
+                string date = data[2].ToString();
+                string msg = data[3].ToString();
+                // Event auslösen
+                receiveMessage(this, new ParamArrayEventArgs(batchID, from, date, msg));
+                
+            }
+        }
+        
+        
+       
+       
+        
 
     }
     

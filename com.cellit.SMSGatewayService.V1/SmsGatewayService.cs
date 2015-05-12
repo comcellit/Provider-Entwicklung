@@ -5,6 +5,7 @@ using System.Text;
 using ttFramework.Provider;
 using com.esendex.sdk.messaging;
 using com.esendex.sdk;
+using com.esendex.sdk.inbox;
 using System.Xml;
 using System.Reflection;
 
@@ -101,16 +102,7 @@ namespace com.cellit.SMSGatewayService.V1
         public void Dispose()
         {
         }
-        public event EventHandler SmSInbound;
-
-        public void OnSmsInbound()
-        {
-            EventHandler smsInbound = SmSInbound;
-            if (smsInbound != null)
-            {
-                smsInbound(this, EventArgs.Empty);
-            }
-        }
+       
 
         public event EventHandler ServiceStarted;
 
@@ -149,26 +141,20 @@ namespace com.cellit.SMSGatewayService.V1
                 serviceStopped(this, null);
             }
         }
+
         public void ServiceLoop()
         {
             while (!isStoping)
             {
 
                 //Programm toDo
-                //SmSInbound += SmsGatewayService_SmSInbound;
-                
+                GetInboundMessage();
                 System.Threading.Thread.Sleep(_looptime);
-                //OnSmsInbound();
+                //OnEvent.OnInbound();
             }
         }
-
-        void SmsGatewayService_SmSInbound(object sender, EventArgs e)
-        {
-           // throw new NotImplementedException();
-        }
-
-
-        public string SendSMS(string phone, string text, string from,bool onlysend)
+        //SMS Versenden durch aufruf von den SendSMSProvidern
+        public string SendSMS(string phone, string text, string from,bool onlysend,string progId)
         {
             string batchid = null;
             var messagingService = new MessagingService(_user, _pass);
@@ -180,38 +166,60 @@ namespace com.cellit.SMSGatewayService.V1
             }
             else
             {
-                SetTransaktion(phone, batchid);
+                SetTransaktion(phone, batchid, progId);
                 return batchid;
             }
 
         }
-
-        public void SetTransaktion(string to,string batch)
+        //Für die antworten Trasaktion in Datenbank speicher
+        public void SetTransaktion(string to,string batch,string projektID)
         {
-            string insert = "Insert Into _SmSTransfer (BatchID,[Gesendet am],phonenumber) values('" + batch + "', getdate(),'" + to + "');";
+            string insert = "Insert Into _SmSTransfer (BatchID,[Gesendet am],phonenumber,ProjektID) values('" + batch + "', getdate(),'" + to + "','"+projektID+"');";
             this.GetDefaultDatabaseConnection().Execute(insert);
         }
-
-        //public string GetMessageID()
-        //{
-        //    string messageId= null;
-        //    const int pageNumber = 1;
-        //    const int pageSize = 1;
-
-        //    var credentials = new EsendexCredentials("mathias.weis@cellit-gruppe.de", "WgFHV788qfKD");
-        //    var sentService = new com.esendex.sdk.sent.SentService(credentials);
-        //    var messageBodyService = new MessageBodyService(credentials);
-
-        //    var sentMessages = sentService.GetMessages(pageNumber, pageSize);
-
-        //    foreach (var message in sentMessages.Messages)
-        //    {
-        //        messageBodyService.LoadBodyText(message.Body);
-        //       messageId= message.Id.ToString();
-        //        // message.Body.BodyText, message.DeliveredAt, message.SubmittedAt, message.Status, message.SentAt);
-        //    }
-        //    return messageId;
-        //}
+        //SMS Antworten holen und Speichern an zugehörige BatchID und Event schmeißen
+        public void GetInboundMessage()
+        {
+            string update = null;
+            int count = 0;
+            var loginCredentials = new EsendexCredentials(_user, _pass);
+            var inboxService = new InboxService(loginCredentials);
+            var inboxMessages = inboxService.GetMessages();
+            foreach (var inboxMessage in inboxMessages.Messages)
+            {
+                if (inboxMessage.ReadAt.ToString() == "01.01.0001 00:00:00")
+                {
+                    //Console.WriteLine("Message: BachtID {0} from: {1} to: {2} at: {3} Text:{4}", inboxMessage.Id, inboxMessage.Originator.PhoneNumber, inboxMessage.Recipient.PhoneNumber, inboxMessage.ReceivedAt,inboxMessage.Summary);
+                    update = "update _SmSTransfer set [Kunde Antwort]='" + inboxMessage.Summary + "',[Antwort am]='" + TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(inboxMessage.ReceivedAt), TimeZoneInfo.Local) + "' where Phonenumber='" + "0" + inboxMessage.Originator.PhoneNumber.Substring(2, inboxMessage.Originator.PhoneNumber.Length - 2) + "'";
+                    this.GetDefaultDatabaseConnection().Execute(update);
+                    inboxService.MarkMessageAsRead(inboxMessage.Id);
+                    count++;
+                    
+                }
+            }
+            if (count>0)
+            {
+                OnEvent.OnInbound();
+            }
+        }
        
+    }
+    //Hilfs class für das Inbound Event
+    public static class OnEvent 
+    {
+        public static event EventHandler Inbound;
+        //public static string test;
+
+        public static void OnInbound()
+        {
+           //test= phone[0] .ToString();
+            EventHandler onInbound = Inbound;
+            if (onInbound!=null)
+            {
+                onInbound(typeof(SmsGatewayService),EventArgs.Empty);
+
+            }
+        }
+        
     }
 }
