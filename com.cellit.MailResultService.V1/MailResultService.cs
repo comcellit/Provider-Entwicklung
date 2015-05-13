@@ -131,7 +131,7 @@ namespace com.cellit.MailResultService.V1
             //Daten Lesen und schreiben
             try
             {
-                foreach (var row in ds.Tables)
+                foreach (System.Data.DataRow dataRow in ds.Tables[0].Rows)
                 {
                     //Trasaktion Vtg Feld=
                     if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_TransRef"]) < 10)

@@ -3,7 +3,7 @@ Ext.ns('com.cellit.SendSMSProvider.V1.');
 
 com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
    
-    
+    var batchid = null;
 
     //ttCall4 Mask-Eventhandler registirerien:
     ttCall4.Hook.on('dialogStart', Mask_Open, this);
@@ -21,6 +21,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
     function Mask_Close() {
         remote.ReceiveMessage.removeEventHandler(ReceiveMessage);
         //Remote-Events deregistrieren:
+
     }
 
     //Event: Vorgangs-Feld geklickt
@@ -42,7 +43,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
             ////Sound abspielen
             case remote.send:
 
-                var phonenumber= ttCall4.Hook.DataFields[remote.phone - 200].value.getValue();
+                var phonenumber = ttCall4.Hook.DataFields[remote.phone - 200].value.getValue();
                 if (phonenumber == null) {
                     Ext.MessageBox.alert('Fehler', 'Die Handynummer darf nicht leer sein.');
                 } //Prüft ob Empfänger leer ist
@@ -51,12 +52,19 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
                 }
                 else {
                     getProgress();
-                    var batchid = remote.SendSmS(phonenumber);
-                    
+                    batchid = remote.SendSmS(phonenumber);
+                    if (remote.onlysend == false) {
+                        ttCall4.Hook.DataFields[remote.smstransfer - 200].value.setValue(batchid)
+                    }
                 }
 
                 break;
+            case remote.smsOlder:
 
+                if (remote.GetAllOpenSmS(ttCall4.Hook.DataFields[remote.smstransfer - 200].value.getValue()) == false) {
+                    Ext.MessageBox.alert('Fehler', 'Keine SMS erhalten für: ' + '<br>' + ttCall4.Hook.DataFields[remote.smstransfer - 200].value.getValue());
+                }
+                break;
             default:
                 break;
         }
@@ -91,8 +99,20 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
     //Remote-Event: Nachricht erhalten
     function ReceiveMessage(sender, args) {
         //Empfänger prüfen
-        Ext.MessageBox.alert('Eingehende Nachricht', 'Von: ' + args.Params[1] + '<br>Datum: ' + args.Params[2] + '<br><br>' + args.Params[3]);
+        if (args.Params[0] == ttCall4.Hook.DataFields[remote.smstransfer - 200].value.getValue()) {
+            Ext.MessageBox.alert('Eingehende SMS', 'Von: ' + args.Params[1] + '<br>Datum: ' + args.Params[2] + '<br><br>' + args.Params[3]);
+            //Antwort speichern
+            ttCall4.Hook.DataFields[remote.smsRequestDate - 200].value.setValue(args.Params[2])
+            ttCall4.Hook.DataFields[remote.smsRequestText - 200].value.setValue(args.Params[3])
+            //Transaktion Beendet setzen
+            remote.SetSmsEnd(args.Params[0]);
+        }
+        else {
+            //DoNothing
+            //Ext.MessageBox.alert('Eingehende Nachricht', 'Von: ' + args.Params[1] + '<br>Datum: ' + args.Params[2] + '<br><br>' + args.Params[3]+args.Params[0]);
+        }
         
     }
+    
     return this;
 }

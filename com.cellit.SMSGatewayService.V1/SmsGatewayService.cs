@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace com.cellit.SMSGatewayService.V1
 {
-    [Provider(DisplayName = "Com.cellit SMSGatewayService", Description = "SMS Dienste Bereitstellen für den SMS Provider", Tags = "SMS.Gateway", Category = "Com.cellit.Provider", SingletonConfiguration = true, ConfigurationKey = "SMSGatewayService")]
+    [Provider(DisplayName = "Com.cellit SMSGatewayService", Description = "SMS Dienste Bereitstellen für die SMS Send Provider", Tags = "SMS.Gateway", Category = "Com.cellit.Provider", SingletonConfiguration = true, ConfigurationKey = "SMSGatewayService")]
     public class SmsGatewayService : IService
     {
         private int _looptime;
@@ -41,7 +41,7 @@ namespace com.cellit.SMSGatewayService.V1
         #region Config-Settings
         // Werte, die bei der Konfiguration des Providers für alle Instanzen gesetzt werden können  
 
-        [ConfigSetting(Frame = "Service Einstellung", Label = "Looptime in sec", FieldType = FieldType.SliderField, MinValue = "30", MaxValue = "3600", Default = "300")]
+        [ConfigSetting(Frame = "Service Einstellung", Label = "Looptime in sec", FieldType = FieldType.SliderField, MinValue = "10", MaxValue = "3600", Default = "30")]
         public int looptime
         {
             get { return _looptime / 1000; }
@@ -81,9 +81,7 @@ namespace com.cellit.SMSGatewayService.V1
 
         #region Runtime-Settings
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-
-        //[RuntimeSetting(Frame = "Datenbank", Label = "Verbindung")]
-        //public IDatabaseConnection ConfigConnection = null;
+       
 
         #endregion
 
@@ -96,23 +94,18 @@ namespace com.cellit.SMSGatewayService.V1
               
         }
 
-       
-
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
         {
         }
        
-
+        //Service Benötigte Events und Methoden
         public event EventHandler ServiceStarted;
-
         public ServiceState ServiceState
         {
             get { return _serviceState; }
         }
-
         public event EventHandler ServiceStopped;
-
         public void Start(Dictionary<string, object> args)
         {
             isStoping = false;
@@ -130,7 +123,6 @@ namespace com.cellit.SMSGatewayService.V1
             }
 
         }
-
         public void Stopp()
         {
             isStoping = true;
@@ -141,20 +133,18 @@ namespace com.cellit.SMSGatewayService.V1
                 serviceStopped(this, null);
             }
         }
-
         public void ServiceLoop()
         {
             while (!isStoping)
             {
-
                 //Programm toDo
                 GetInboundMessage();
                 System.Threading.Thread.Sleep(_looptime);
-                //OnEvent.OnInbound();
             }
         }
-        //SMS Versenden durch aufruf von den SendSMSProvidern
-        public string SendSMS(string phone, string text, string from,bool onlysend,string progId)
+
+        //SMS Versenden durch aufruf aus dem  SendSMSProvidern
+        public string SendSMS(string phone, string text, string from,bool onlysend,string progId, int transField, int kundeRequest,int kundeRequestDate)
         {
             string batchid = null;
             var messagingService = new MessagingService(_user, _pass);
@@ -166,17 +156,19 @@ namespace com.cellit.SMSGatewayService.V1
             }
             else
             {
-                SetTransaktion(phone, batchid, progId);
+                SetTransaktion(phone, batchid, progId,transField,kundeRequest,kundeRequestDate);
                 return batchid;
             }
 
         }
+
         //Für die antworten Trasaktion in Datenbank speicher
-        public void SetTransaktion(string to,string batch,string projektID)
+        public void SetTransaktion(string to, string batch, string projektID, int trasRef, int requestText,int smsRequestDate)
         {
-            string insert = "Insert Into _SmSTransfer (BatchID,[Gesendet am],phonenumber,ProjektID) values('" + batch + "', getdate(),'" + to + "','"+projektID+"');";
+            string insert = "Insert Into _SmSTransfer (BatchID,Gesendetam,phonenumber,ProjektID,TrasRef,ResultRef,ResultDateRef) values('" + batch + "', getdate(),'" + to + "','" + projektID + "'," + trasRef + "," + requestText + "," + smsRequestDate + ");";
             this.GetDefaultDatabaseConnection().Execute(insert);
         }
+
         //SMS Antworten holen und Speichern an zugehörige BatchID und Event schmeißen
         public void GetInboundMessage()
         {
@@ -190,7 +182,7 @@ namespace com.cellit.SMSGatewayService.V1
                 if (inboxMessage.ReadAt.ToString() == "01.01.0001 00:00:00")
                 {
                     //Console.WriteLine("Message: BachtID {0} from: {1} to: {2} at: {3} Text:{4}", inboxMessage.Id, inboxMessage.Originator.PhoneNumber, inboxMessage.Recipient.PhoneNumber, inboxMessage.ReceivedAt,inboxMessage.Summary);
-                    update = "update _SmSTransfer set [Kunde Antwort]='" + inboxMessage.Summary + "',[Antwort am]='" + TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(inboxMessage.ReceivedAt), TimeZoneInfo.Local) + "' where Phonenumber='" + "0" + inboxMessage.Originator.PhoneNumber.Substring(2, inboxMessage.Originator.PhoneNumber.Length - 2) + "'";
+                    update = "update _SmSTransfer set KundeAntwort='" + inboxMessage.Summary + "', Antwortam='" + TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(inboxMessage.ReceivedAt), TimeZoneInfo.Local) + "' where SmSEnd=0 and Phonenumber='" + "0" + inboxMessage.Originator.PhoneNumber.Substring(2, inboxMessage.Originator.PhoneNumber.Length - 2) + "'";
                     this.GetDefaultDatabaseConnection().Execute(update);
                     inboxService.MarkMessageAsRead(inboxMessage.Id);
                     count++;
