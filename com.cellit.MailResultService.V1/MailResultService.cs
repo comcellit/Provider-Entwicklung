@@ -12,6 +12,17 @@ namespace com.cellit.MailResultService.V1
     {
         //Globale Variablen
         private int _looptime;
+        private int datacount;
+        private string transRef;
+        private string dateRef;
+        private string timeRef;
+        private string ergRef;
+        private string ipRef;
+        private string kontoRef;
+        private string blzRef;
+        private string ibanRef;
+        private string bicRef;
+        private string Insert;
         
 
         #region Add/Remove-Provider
@@ -35,7 +46,6 @@ namespace com.cellit.MailResultService.V1
 
         #region Config-Settings
         // Werte, die bei der Konfiguration des Providers für alle Instanzen gesetzt werden können  
-
         [ConfigSetting(Frame = "Einstellung", Label = "Looptime in sec", FieldType = FieldType.SliderField, MinValue = "30", MaxValue = "3600", Default = "300")]
         public int looptime
         {
@@ -108,6 +118,7 @@ namespace com.cellit.MailResultService.V1
                 serviceStopped(this, null);
             }
         }
+
         public void ServiceLoop()
         {
             while (!isStoping)
@@ -117,20 +128,50 @@ namespace com.cellit.MailResultService.V1
                 System.Threading.Thread.Sleep(_looptime);
             }
         }
+        //E-Mail Rückmeldungen an Kunden Speichern
         public void SendResultData()
         {
-            int datacount = 0;
-            string transRef = null;
-            string dateRef = null;
-            string timeRef = null;
-            string ergRef = null;
-            string ipRef = null;
+            datacount = 0;
+            transRef = null;
+            dateRef = null;
+            timeRef = null;
+            ergRef = null;
+            ipRef = null;
+            kontoRef = null;
+            blzRef = null;
+            ibanRef = null;
+            bicRef = null;
 
-            string sql = "SELECT _MailProviderTransaktion.ProjektID,transaktionID,vtg_TransRef,_MailProviderTransaktion.KundenID,left(BestaetigungDatum,10) as BestaetigungDatum,vtg_BDatumRef,BestaetigungUhrzeit,vtg_BUhrzeitRef,Ergebnis,vtg_ErgebnisRef,KundenIP,vtg_IPRef,TransaktionEnd FROM _MailProviderTransaktion left Join Prog_KundenLogin on  _MailProviderTransaktion.KundenID=Prog_KundenLogin.KundenID and Prog_KundenLogin.ProjektID = _MailProviderTransaktion.ProjektID where TransaktionEnd=1 and RequestEnd=0  and Prog_KundenLogin.KundenID is null";
-            System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
+            //string sql = "SELECT _MailProviderTransaktion.ProjektID,transaktionID,vtg_TransRef,_MailProviderTransaktion.KundenID,left(BestaetigungDatum,10) as BestaetigungDatum,vtg_BDatumRef,BestaetigungUhrzeit,vtg_BUhrzeitRef,Ergebnis,vtg_ErgebnisRef,KundenIP,vtg_IPRef,Kontonummer,vtg_KontoRef,BLZ, FROM _MailProviderTransaktion left Join Prog_KundenLogin on  _MailProviderTransaktion.KundenID=Prog_KundenLogin.KundenID and Prog_KundenLogin.ProjektID = _MailProviderTransaktion.ProjektID where TransaktionEnd=0 and RequestEnd=1  and Prog_KundenLogin.KundenID is null";
+            string sql = "SELECT _MailProviderTransaktion.ProjektID";
+            sql += ",transaktionID";
+            sql += ",vtg_TransRef";
+            sql += ",_MailProviderTransaktion.KundenID";
+            sql += ",left(BestaetigungDatum,10) as BestaetigungDatum";
+            sql += ",vtg_BDatumRef";
+            sql += ",BestaetigungUhrzeit";
+            sql += ",vtg_BUhrzeitRef";
+            sql += ",Anliegen";
+            sql += ",Ergebnis";
+            sql += ",vtg_ErgebnisRef";
+            sql += ",KundenIP";
+            sql += ",vtg_IPRef";
+            sql += ",Kontonummer";
+            sql += ",vtg_KontoRef";
+            sql += ",BLZ";
+            sql += ",vtg_BlzRef";
+            sql += ",IBAN";
+            sql += ",vtg_IbanRef";
+            sql += ",BIC";
+            sql += ",vtg_BicRef";
+            sql += ",BankArt";
+            sql += " FROM _MailProviderTransaktion left Join Prog_KundenLogin on  _MailProviderTransaktion.KundenID=Prog_KundenLogin.KundenID and Prog_KundenLogin.ProjektID = _MailProviderTransaktion.ProjektID where TransaktionEnd=0 and RequestEnd=1  and Prog_KundenLogin.KundenID is null";
+
             //Daten Lesen und schreiben
             try
             {
+                System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
+
                 foreach (System.Data.DataRow dataRow in ds.Tables[0].Rows)
                 {
                     //Trasaktion Vtg Feld=
@@ -213,21 +254,115 @@ namespace com.cellit.MailResultService.V1
                             ipRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_IPRef"];
                         }
                     }
-                    string Insert = "Update Dat_000";
-                    Insert += ds.Tables[0].Rows[datacount]["ProjektID"] + "_Vorgang";
-                    Insert += " Set " + dateRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungDatum"] + "'";
-                    Insert += " ," + timeRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungUhrzeit"] + "'";
-                    Insert += " ," + ergRef + "='" + ds.Tables[0].Rows[datacount]["Ergebnis"] + "'";
-                    Insert += " ," + ipRef + "='" + ds.Tables[0].Rows[datacount]["KundenIP"] + "'";
-                    Insert += " where Vtg_KundenID=" + ds.Tables[0].Rows[datacount]["KundenID"];
-                    Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
+                    //Konto Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) < 10)
+                    {
+                        kontoRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_KontoRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) > 50)
+                        {
+                            kontoRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) + 50);
+                        }
+                        else
+                        {
+                            kontoRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_KontoRef"];
+                        }
+                    }
+                    //BLZ Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) < 10)
+                    {
+                        blzRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_BlzRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) > 50)
+                        {
+                            blzRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) + 50);
+                        }
+                        else
+                        {
+                            blzRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_BlzRef"];
+                        }
+                    }
+                    //IBAN Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) < 10)
+                    {
+                        ibanRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_IbanRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) > 50)
+                        {
+                            ibanRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) + 50);
+                        }
+                        else
+                        {
+                            ibanRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_IbanRef"];
+                        }
+                    }
+                    //BIG Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) < 10)
+                    {
+                        bicRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_BicRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) > 50)
+                        {
+                            bicRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) + 50);
+                        }
+                        else
+                        {
+                            bicRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_BicRef"];
+                        }
+                    }
+                    if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "SEPA")
+                    {
+                        Insert = "Update Dat_000";
+                        Insert += ds.Tables[0].Rows[datacount]["ProjektID"] + "_Vorgang";
+                        Insert += " Set " + dateRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungDatum"] + "'";
+                        Insert += " ," + timeRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungUhrzeit"] + "'";
+                        Insert += " ," + ergRef + "='" + ds.Tables[0].Rows[datacount]["Ergebnis"] + "'";
+                        Insert += " ," + ipRef + "='" + ds.Tables[0].Rows[datacount]["KundenIP"] + "'";
+                        Insert += " ," + ibanRef + "='" + ds.Tables[0].Rows[datacount]["IBAN"] + "'";
+                        Insert += " ," + bicRef + "='" + ds.Tables[0].Rows[datacount]["BIC"] + "'";
+                        Insert += " where Vtg_KundenID=" + ds.Tables[0].Rows[datacount]["KundenID"];
+                        Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
+                    }
+                    if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "Konto")
+                    {
+                        Insert = "Update Dat_000";
+                        Insert += ds.Tables[0].Rows[datacount]["ProjektID"] + "_Vorgang";
+                        Insert += " Set " + dateRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungDatum"] + "'";
+                        Insert += " ," + timeRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungUhrzeit"] + "'";
+                        Insert += " ," + ergRef + "='" + ds.Tables[0].Rows[datacount]["Ergebnis"] + "'";
+                        Insert += " ," + ipRef + "='" + ds.Tables[0].Rows[datacount]["KundenIP"] + "'";
+                        Insert += " ," + kontoRef + "='" + ds.Tables[0].Rows[datacount]["Kontonummer"] + "'";
+                        Insert += " ," + blzRef + "='" + ds.Tables[0].Rows[datacount]["BLZ"] + "'";
+                        Insert += " where Vtg_KundenID=" + ds.Tables[0].Rows[datacount]["KundenID"];
+                        Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
 
-                    string ResultEnd = "Update _MailProviderTransaktion set RequestEnd='true' where transaktionID='" + ds.Tables[0].Rows[datacount]["transaktionID"] + "'";
+                    }
+                    if (ds.Tables[0].Rows[datacount]["Anliegen"].ToString() == "Konto")
+                    {
+                        Insert = "Update Dat_000";
+                        Insert += ds.Tables[0].Rows[datacount]["ProjektID"] + "_Vorgang";
+                        Insert += " Set " + dateRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungDatum"] + "'";
+                        Insert += " ," + timeRef + "='" + ds.Tables[0].Rows[datacount]["BestaetigungUhrzeit"] + "'";
+                        Insert += " ," + ergRef + "='" + ds.Tables[0].Rows[datacount]["Ergebnis"] + "'";
+                        Insert += " ," + ipRef + "='" + ds.Tables[0].Rows[datacount]["KundenIP"] + "'";
+                        Insert += " where Vtg_KundenID=" + ds.Tables[0].Rows[datacount]["KundenID"];
+                        Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
+                    }
+
+                    string TransaktionEnd = "Update _MailProviderTransaktion set TransaktionEnd='true' where transaktionID='" + ds.Tables[0].Rows[datacount]["transaktionID"] + "'";
 
                     try
                     {
                         this.GetDefaultDatabaseConnection().Execute(Insert);
-                        this.GetDefaultDatabaseConnection().Execute(ResultEnd);
+                        this.GetDefaultDatabaseConnection().Execute(TransaktionEnd);
                     }
                     catch (Exception e)
                     {
@@ -244,7 +379,7 @@ namespace com.cellit.MailResultService.V1
             catch (Exception ex)
             {
                 this.Log(LogType.Debug, ex);
-               
+
             }
 
         }

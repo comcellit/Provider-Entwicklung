@@ -1,0 +1,14 @@
+CREATE TABLE [dbo].[_SmSTransfer]
+(
+[BatchID] [nvarchar](50) NOT NULL,
+[TrasRef] [int] NULL,
+[Gesendetam] [datetime2](0) NOT NULL,
+[Phonenumber] [nvarchar](20) NULL,
+[KundeAntwort] [nvarchar](50) NULL,
+[ResultRef] [int] NULL,
+[Antwortam] [datetime2](0) NULL,
+[ResultDateRef] [int] NULL,
+[ProjektID] [nvarchar](5) NULL,
+[SmSEnd] [bit] NULL
+) ON [PRIMARY]
+ALTER TABLE [dbo].[_SmSTransfer] ADD  CONSTRAINT [DF__SmSTransfer_SmSEnd]  DEFAULT ((0)) FOR [SmSEnd]

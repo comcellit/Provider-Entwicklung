@@ -8,6 +8,7 @@ using com.esendex.sdk;
 using com.esendex.sdk.inbox;
 using System.Xml;
 using System.Reflection;
+using System.IO;
 
 namespace com.cellit.SMSGatewayService.V1
 {
@@ -85,12 +86,42 @@ namespace com.cellit.SMSGatewayService.V1
 
         #endregion
 
-
         // --------------------------------------- Provider-Code --------------------------------------------
 
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
+            string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='_SmSTransfer'";
+            System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
+            int exists = Convert.ToInt32(ds.Tables[0].Rows[0]["count"]);
+
+            if (exists == 1)
+            {
+                //do Nothing
+            }
+            else
+            {
+                Assembly _Assembly = Assembly.GetExecutingAssembly();
+                StreamReader sr = new StreamReader(_Assembly.GetManifestResourceStream("com.cellit.SMSGatewayService.V1.sql.cmd.txt"));
+                string data = sr.ReadLine();
+                string insert = "";
+
+                while (data != null)
+                {
+                    insert += " " + data;
+                    data = sr.ReadLine();
+                }
+
+                try
+                {
+                    this.GetDefaultDatabaseConnection().Execute(insert);
+                }
+                catch (Exception e)
+                {
+                    this.Log(LogType.Debug, Convert.ToString("Test" + e));
+                }
+
+            }
               
         }
 

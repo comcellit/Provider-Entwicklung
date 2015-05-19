@@ -20,9 +20,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.Mask.Extention.V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xcom.cellit.Service.V1", "com.cellit.Service.V1\Xcom.cellit.Service.V1.csproj", "{0D45E937-2AFA-48DB-A358-DD725623B67D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.userextention.V1", "com.cellit.userextention.V1\com.cellit.userextention.V1.csproj", "{BBA95BCC-42BC-4718-9183-EFABE8DA8943}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xcom.cellit.userextention.V1", "com.cellit.userextention.V1\Xcom.cellit.userextention.V1.csproj", "{BBA95BCC-42BC-4718-9183-EFABE8DA8943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.PhoenixExternsion.Provider2", "com.cellit.PhoenixExternsion.Provider2\com.cellit.PhoenixExternsion.Provider2.csproj", "{A9A3481A-8103-4C99-ABDD-70E00EA3475B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xcom.cellit.PhoenixExternsion.Provider2", "com.cellit.PhoenixExternsion.Provider2\Xcom.cellit.PhoenixExternsion.Provider2.csproj", "{A9A3481A-8103-4C99-ABDD-70E00EA3475B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.VoiceRecPlay.V1", "com.cellit.VoiceRecPlay.V1\com.cellit.VoiceRecPlay.V1.csproj", "{51BD7E9E-5D3D-4388-972E-6B88DDF404BA}"
 EndProject
@@ -33,6 +33,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.SMSGatewayService.V1", "com.cellit.SMSGatewayService.V1\com.cellit.SMSGatewayService.V1.csproj", "{1F00136E-0DCD-482F-8EB4-B4B8CABA6313}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.SendSMSProvider.V1", "com.cellit.SendSMSProvider.V1\com.cellit.SendSMSProvider.V1.csproj", "{68173B09-1FC6-4269-BA59-DBDE17EB4013}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cellit.ValidateProvider.V1", "com.cellit.ValidateProvider.V1\com.cellit.ValidateProvider.V1.csproj", "{220A65D0-2EEA-4569-9745-E93B51E10A2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,6 +134,14 @@ Global
 		{68173B09-1FC6-4269-BA59-DBDE17EB4013}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68173B09-1FC6-4269-BA59-DBDE17EB4013}.Release|x64.ActiveCfg = Release|Any CPU
 		{68173B09-1FC6-4269-BA59-DBDE17EB4013}.Release|x86.ActiveCfg = Release|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Release|x64.ActiveCfg = Release|Any CPU
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,5 +158,6 @@ Global
 		{B2981CDC-A2E5-4C45-8AB2-9CFC2A1464BD} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
 		{1F00136E-0DCD-482F-8EB4-B4B8CABA6313} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
 		{68173B09-1FC6-4269-BA59-DBDE17EB4013} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
+		{220A65D0-2EEA-4569-9745-E93B51E10A2D} = {8169640B-83E4-4A3D-9B5D-01324FFEE24F}
 	EndGlobalSection
 EndGlobal

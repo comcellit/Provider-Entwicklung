@@ -53,6 +53,9 @@
     <Compile Include="SmsGatewayService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="sql\cmd.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(FrameworkSDKDir)bin\signtool" sign /n "ttDeveloper Code Signing" /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$(TargetPath)"
