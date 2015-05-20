@@ -35,7 +35,7 @@
       <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
     </Reference>
     <Reference Include="com.cellit.SMSGatewayService.V1">
-      <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\Common\com.cellit.SMSGatewayService.V1\com.cellit.SMSGatewayService.V1.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\com.cellit.SMSGatewayService.V1\com.cellit.SMSGatewayService.V1.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,11 +62,11 @@
   <PropertyGroup>
     <PostBuildEvent>"$(FrameworkSDKDir)bin\signtool" sign /n "ttDeveloper Code Signing" /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$(TargetPath)"
 
-If not exist "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Common\$(ProjectName)\NUL" mkdir "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Common\$(ProjectName)"
+If not exist "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\$(ProjectName)\NUL" mkdir "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\$(ProjectName)"
 
-copy "$(TargetPath)" "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Common\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetPath)" "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\$(ProjectName)\$(TargetFileName)"
 
-copy "$(TargetDir)\$(TargetName).pdb" "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Common\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
+copy "$(TargetDir)\$(TargetName).pdb" "c:\program files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

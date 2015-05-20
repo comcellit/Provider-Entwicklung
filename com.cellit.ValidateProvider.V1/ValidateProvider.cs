@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ttFramework.Provider;
 using System.Text.RegularExpressions;
+using System.Net.Mail;
 
 namespace com.cellit.ValidateProvider.V1
 {
@@ -419,23 +420,34 @@ namespace com.cellit.ValidateProvider.V1
         [ScriptVisible]
         public static bool EmailIsValid(string email)
         {
-            string expresion;
-            expresion = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-            if (Regex.IsMatch(email, expresion))
+            try
             {
-                if (Regex.Replace(email, expresion, string.Empty).Length == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                MailMessage validate = new MailMessage();
+                validate.From = new MailAddress(email);
+                return true;
             }
-            else
+            catch (Exception)
             {
-                return false;
+                return false; 
+               
             }
+            //string expresion;
+            //expresion = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+            //if (Regex.IsMatch(email, expresion))
+            //{
+            //    if (Regex.Replace(email, expresion, string.Empty).Length == 0)
+            //    {
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        return false;
+            //    }
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         #endregion
