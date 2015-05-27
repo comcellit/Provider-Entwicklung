@@ -12,7 +12,7 @@ using System.IO;
 
 namespace com.cellit.SMSGatewayService.V1
 {
-    [Provider(DisplayName = "Com.cellit SMSGatewayService", Description = "SMS Dienste Bereitstellen für die SMS Send Provider", Tags = "SMS.Gateway", Category = "Com.cellit.Provider", SingletonConfiguration = true, ConfigurationKey = "SMSGatewayService")]
+    [Provider(DisplayName = "Com.cellit SMS Gateway Service", Description = "SMS Dienste Bereitstellen für die SMS Send Provider", Tags = "SMS.Gateway", Category = "Com.cellit Service", SingletonConfiguration = true, ConfigurationKey = "SMSGatewayService")]
     public class SmsGatewayService : IService
     {
         private int _looptime;
@@ -51,21 +51,21 @@ namespace com.cellit.SMSGatewayService.V1
         }
 
 
-        [ConfigSetting(Frame = "SMS Dienst Login", Label = "Username", FieldType = FieldType.TextField)]
+        [ConfigSetting(Frame = "SMS Dienst Login", Label = "Username", FieldType = FieldType.TextField, AllowBlank=false)]
         public string user
         {
             get { return _user; }
             set { _user = value; }
         }
 
-        [ConfigSetting(Frame = "SMS Dienst Login", Label = "Passwort", FieldType = FieldType.PasswordField)]
+        [ConfigSetting(Frame = "SMS Dienst Login", Label = "Passwort", FieldType = FieldType.PasswordField, AllowBlank = false)]
         public string pass
         {
             get { return _pass; }
             set { _pass = value; }
         }
 
-        [ConfigSetting(Frame = "SMS Dienst Login", Label = "Account Reference", FieldType = FieldType.TextField)]
+        [ConfigSetting(Frame = "SMS Dienst Login", Label = "Account Reference", FieldType = FieldType.TextField, AllowBlank = false)]
         public string accountRef
         {
             get { return _accountRef; }
@@ -178,6 +178,7 @@ namespace com.cellit.SMSGatewayService.V1
         public string SendSMS(string phone, string text, string from,bool onlysend,string progId, int transField, int kundeRequest,int kundeRequestDate)
         {
             string batchid = null;
+            _accountRef = System.Text.RegularExpressions.Regex.Replace(_accountRef," ", string.Empty);
             var messagingService = new MessagingService(_user, _pass);
             batchid = messagingService.SendMessage(new SmsMessage(phone, text, _accountRef, from)).BatchId.ToString();
 

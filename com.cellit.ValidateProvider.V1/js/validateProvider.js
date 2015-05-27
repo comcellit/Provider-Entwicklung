@@ -5,11 +5,22 @@ Ext.ns('com.cellit.ValidateProvider.V1.');
 com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
 
     //ttCall4 Mask-Eventhandler registirerien:
+    
     ttCall4.Hook.on('dialogStart', Mask_Open, this);
     ttCall4.Hook.on('dialogEnd', Mask_Close, this);
     ttCall4.Hook.DataFields.on('lostFocus', DataField_LostFocus, this);
+    //ttCall4.Hook.DataFields.on('keyPress', DataField_KeyPress, this);
 
-
+    var myDate;
+    var myDateResult;
+    var mydatefield;
+    var mycheck;
+    var myMail;
+    var mymailfield;
+    var myMailResult;
+    var myText;
+    var myTextField;
+    var myReplaceResult;
 
     function Mask_Open() {
         //Do Nothing
@@ -24,7 +35,26 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
 
         ttCallField_LostFocus(index + 200);
     };
+    //Event changeValue
+    ttCall4.Hook.DataFields.on('changeValue', function (index, newValue) {
+        if (index == (remote.auswahl.textField - 200)) {
+            myText = null;
+            myReplaceResult = null;
+            myText = ttCall4.Hook.DataFields[remote.auswahl.textField - 200].value.getValue();
+            myReplaceResult = remote.auswahl.Replace(myText);
+            //alert(  myReplaceResult+'  '+ myText);
 
+            if ((myText == null) || (myReplaceResult == myText)) {
+                //Do Nothing
+            }
+            else {
+                ttCall4.Hook.DataFields[remote.auswahl.textField - 200].value.setValue(myReplaceResult);
+                Ext.MessageBox.alert('Fehler', unescape("Textinhalt enth%E4lt nicht zul%E4ssige zeichen die entfernt wurden"));
+
+            }
+        }
+    }, this);
+        
     function ttCallField_LostFocus(index) {
 
         switch (index) {
@@ -32,19 +62,19 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
             //Check Date Script
             case remote.auswahl.dateField:
 
-                var mydate = ttCall4.Hook.DataFields[remote.auswahl.dateField - 200].value.getValue();
-                var myresult = remote.auswahl.getCheckResult(remote.auswahl.check, mydate, remote.auswahl.type);
-                var mydatefield = ttCall4.Hook.DataFields[remote.auswahl.dateField - 200].getFieldObject();
-                var mycheck = remote.auswahl.check;
+                myDate = ttCall4.Hook.DataFields[remote.auswahl.dateField - 200].value.getValue();
+                myDateResult = remote.auswahl.getCheckResult(remote.auswahl.check, myDate, remote.auswahl.type);
+                mydatefield = ttCall4.Hook.DataFields[remote.auswahl.dateField - 200].getFieldObject();
+                mycheck = remote.auswahl.check;
 
-                if (myresult == true) {
+                if (myDateResult == true) {
 
                     mydatefield.setColor(ttCall4.Hook.ttColors.Green);
                     if (remote.auswahl.OKmessage == '') {
                         //Nothing
                     }
                     else {
-                        alert(remote.auswahl.OKmessage);
+                        Ext.MessageBox.alert('OK', remote.auswahl.OKmessage);
                     }
                 }
                 else {
@@ -54,31 +84,55 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
 
                     }
                     else {
-                        alert(remote.auswahl.Failmessage);
+                        Ext.MessageBox.alert('Fehler',remote.auswahl.Failmessage);
                     }
                 }
                 break;
             //Email Validate
             case remote.auswahl.mailField:
 
-                var mymail = ttCall4.Hook.DataFields[remote.auswahl.mailField - 200].value.getValue();
-                var mymailfield = ttCall4.Hook.DataFields[remote.auswahl.mailField - 200].getFieldObject();
-                var myresult = remote.auswahl.EmailIsValid(mymail);
-
-                if (myresult == true) {
-
-                    mymailfield.setColor(ttCall4.Hook.ttColors.Green);
-
-                    //Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
-
+                myMail = ttCall4.Hook.DataFields[remote.auswahl.mailField - 200].value.getValue();
+                mymailfield = ttCall4.Hook.DataFields[remote.auswahl.mailField - 200].getFieldObject();
+                myMailResult = remote.auswahl.EmailIsValid(myMail);
+                
+                if (myMail == null) {
+                    //Do Nothing
                 }
                 else {
-                    mymailfield.setColor(ttCall4.Hook.ttColors.Red);
+                    if (myMailResult == true) {
 
-                    Ext.MessageBox.alert('Fehler', 'Diese E-Mail ist nicht Valide.');
+                        mymailfield.setColor(ttCall4.Hook.ttColors.Green);
 
+                        //Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
+
+                    }
+                    else {
+                        mymailfield.setColor(ttCall4.Hook.ttColors.Red);
+
+                        Ext.MessageBox.alert('Fehler', 'Diese E-Mail ist nicht Valide.');
+
+                    }
                 }
                 break;
+            //Text Sonderzeichen entfernen
+            //case remote.auswahl.textField:
+
+            //    myText = null;
+            //    myReplaceResult = null;
+            //    myText = ttCall4.Hook.DataFields[remote.auswahl.textField - 200].value.getValue();
+            //    myReplaceResult = remote.auswahl.Replace(myText);
+            //    //alert(  myReplaceResult+"="+myText);
+                
+            //    if ((myText == null) || (myReplaceResult == myText)) {
+            //        //Do Nothing
+            //    }
+            //    else {
+            //        ttCall4.Hook.DataFields[remote.auswahl.textField - 200].value.setValue(myReplaceResult);
+            //        Ext.MessageBox.alert('Fehler', unescape("Textinhalt enth%E4lt nicht zul%E4ssige zeichen die entfernt wurden"));
+
+            //    }
+
+            //    break;
         }
 
     };
