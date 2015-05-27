@@ -9,7 +9,7 @@ using ACD.Interface.V1;
 
 namespace com.cellit.SendSMSProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask Send SMS Provider", Description = "SMS Versand", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
+    [Provider(DisplayName = "Com.cellit Mask SendSMSProvider", Description = "SMS Versand", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
     public class SendSMSProvider : IProvider
     {
         private static int ttCallProjektID;
@@ -415,13 +415,6 @@ namespace com.cellit.SendSMSProvider.V1
                 return false;
             }
 
-        }
-
-        //Sonderzeichen aus Handynummer entfernen
-        [ScriptVisible]
-        public string ReplaceString(string feldinhalt)
-        {
-            return System.Text.RegularExpressions.Regex.Replace(feldinhalt, @"[^0-9a-zA-Z .;.,_-]", string.Empty);
         }
     }
 }

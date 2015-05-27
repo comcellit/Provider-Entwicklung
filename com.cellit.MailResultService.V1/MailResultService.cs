@@ -7,7 +7,7 @@ using ttFramework.Provider;
 
 namespace com.cellit.MailResultService.V1
 {
-    [Provider(DisplayName = "Com.cellit Mail Result Service", Description = "EMail Vollmacht/Bankverbindung Result zuordnung und rückspielung an den Kunden", Tags = "", Category = "Com.cellit Service",SingletonConfiguration=true ,ConfigurationKey="MailResultProv")]
+    [Provider(DisplayName = "Com.cellit MailResultService", Description = "EMail Vollmacht/Bankverbindung Result zuordnung und rückspielung an den Kunden", Tags = "", Category = "Com.cellit.Provider",SingletonConfiguration=true ,ConfigurationKey="MailResultProv")]
     public class MailResultService : IService
     {
         //Globale Variablen
@@ -254,78 +254,70 @@ namespace com.cellit.MailResultService.V1
                             ipRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_IPRef"];
                         }
                     }
-                    if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "Konto")
+                    //Konto Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) < 10)
                     {
-
-                        //Konto Vtg Feld=
-                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) < 10)
+                        kontoRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_KontoRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) > 50)
                         {
-                            kontoRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_KontoRef"];
+                            kontoRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) + 50);
                         }
                         else
                         {
-                            if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) > 50)
-                            {
-                                kontoRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_KontoRef"]) + 50);
-                            }
-                            else
-                            {
-                                kontoRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_KontoRef"];
-                            }
-                        }
-                        //BLZ Vtg Feld=
-                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) < 10)
-                        {
-                            blzRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_BlzRef"];
-                        }
-                        else
-                        {
-                            if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) > 50)
-                            {
-                                blzRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) + 50);
-                            }
-                            else
-                            {
-                                blzRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_BlzRef"];
-                            }
+                            kontoRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_KontoRef"];
                         }
                     }
-                    if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "SEPA")
+                    //BLZ Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) < 10)
                     {
-                        //IBAN Vtg Feld=
-                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) < 10)
+                        blzRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_BlzRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) > 50)
                         {
-                            ibanRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_IbanRef"];
+                            blzRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BlzRef"]) + 50);
                         }
                         else
                         {
-                            if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) > 50)
-                            {
-                                ibanRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) + 50);
-                            }
-                            else
-                            {
-                                ibanRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_IbanRef"];
-                            }
-                        }
-                        //BIG Vtg Feld=
-                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) < 10)
-                        {
-                            bicRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_BicRef"];
-                        }
-                        else
-                        {
-                            if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) > 50)
-                            {
-                                bicRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) + 50);
-                            }
-                            else
-                            {
-                                bicRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_BicRef"];
-                            }
+                            blzRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_BlzRef"];
                         }
                     }
-                    //Update Tabelle 
+                    //IBAN Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) < 10)
+                    {
+                        ibanRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_IbanRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) > 50)
+                        {
+                            ibanRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_IbanRef"]) + 50);
+                        }
+                        else
+                        {
+                            ibanRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_IbanRef"];
+                        }
+                    }
+                    //BIG Vtg Feld=
+                    if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) < 10)
+                    {
+                        bicRef = "Vtg_Wert0" + ds.Tables[0].Rows[datacount]["vtg_BicRef"];
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) > 50)
+                        {
+                            bicRef = "VTG_ExData" + (Convert.ToInt32(ds.Tables[0].Rows[datacount]["vtg_BicRef"]) + 50);
+                        }
+                        else
+                        {
+                            bicRef = "Vtg_Wert" + ds.Tables[0].Rows[datacount]["vtg_BicRef"];
+                        }
+                    }
                     if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "SEPA")
                     {
                         Insert = "Update Dat_000";
@@ -353,7 +345,7 @@ namespace com.cellit.MailResultService.V1
                         Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
 
                     }
-                    if (ds.Tables[0].Rows[datacount]["Anliegen"].ToString() == "Vollmacht")
+                    if (ds.Tables[0].Rows[datacount]["Anliegen"].ToString() == "Konto")
                     {
                         Insert = "Update Dat_000";
                         Insert += ds.Tables[0].Rows[datacount]["ProjektID"] + "_Vorgang";
@@ -377,8 +369,8 @@ namespace com.cellit.MailResultService.V1
                         //this.Log(LogType.Error, e);
 
                     }
-                    TransaktionEnd = null;
-                    Insert = null;
+
+
                     datacount++;
 
                 }

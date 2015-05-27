@@ -8,9 +8,10 @@ using System.Net.Mail;
 
 namespace com.cellit.ValidateProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask Field Validator", Description = "Prüfen von Feldinhalten auf Valide Inhalte", Tags = "ttCall4.Mask.Extention" , Category = "Com.cellit Mask")]
+    [Provider(DisplayName = "Com.cellit Mask FieldValidator", Description = "Prüfen von Feldinhalten auf Valide Inhalte", Tags = "ttCall4.Mask.Extention" , Category = "Com.cellit.Provider")]
     public class ValidateProvider : IProvider
     {
+
 
         #region Add/Remove-Provider
 
@@ -43,7 +44,7 @@ namespace com.cellit.ValidateProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         private IProvider _auswahl;
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Prüfe Feldinhalt auf", Filter = "Validate.Block")]
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Prüfen auf", Filter = "Validate.Block")]
         public ISubProvider auswahl
         {
             get { return _auswahl as ISubProvider; }
@@ -54,7 +55,6 @@ namespace com.cellit.ValidateProvider.V1
         #endregion
 
         #region Script-Integration in ttCall 4
-
         public List<string> LoadScripts
         {
             get
@@ -453,133 +453,6 @@ namespace com.cellit.ValidateProvider.V1
         #endregion
 
     }
-    //Keine Sonderzeichen Subprovider
-    [SubProvider(DisplayName = "Entfernte Sonderzeichen Text", Tags = "Validate.Block")]
-    public class ReplaceSonderzeichen : ISubProvider
-    {
-        #region Runtime-Settings
-        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Email Adresse", Label = "Feld zur prüfung", FieldType = FieldType.ComboBox, Values = "GetFields")]
-        public int textField;
-
-
-
-        #endregion
-
-        #region Provider Code
-
-        public IProvider OwnerProvider
-        {
-            set { }
-        }
-
-        public void Dispose()
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        public void Initialize(object args)
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        // Felder für Einstellung( NUR Datenfelder!)
-        public static object GetFields(Dictionary<string, object> settings)
-        {
-            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
-            List<object[]> result = new List<object[]>();
-            bool isExtended = false;
-            if (campaignID != null)
-            {
-                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
-                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
-                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
-                {
-                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
-
-                    if (ds.Tables[0].Rows.Count == 1)
-                    {
-                        for (int i = 1; i <= 50; i++)
-                        {
-                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
-                            {
-                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
-                            }
-                            else
-                            {
-                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                            }
-                        }
-                        if (isExtended)
-                        {
-                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
-                            {
-                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
-
-                                for (int i = 1; i <= ExtFields.Length; i++)
-                                {
-                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
-                                    if (fieldCaption == "")
-                                    {
-                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
-                                    }
-                                    else
-                                    {
-                                        result.Add(new object[] { i + 250, fieldCaption });
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                for (int i = 1; i <= 150; i++)
-                                {
-                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
-                                }
-                            }
-                            //for (int i = 1; i <= 200; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
-                        else
-                        {
-                            //for (int i = 1; i <= 50; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
-
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 1; i <= 50; i++)
-                {
-                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                }
-                //for (int i = 1; i <= 50; i++)
-                //{
-                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                //}
-            }
-
-            return result;
-        }
-
-        [ScriptVisible]
-        public string Replace(string feldinhalt)
-        {
-            string test = System.Text.RegularExpressions.Regex.Replace(feldinhalt, @"[^0-9a-zA-Z .;.,_-]", string.Empty);
-            return System.Text.RegularExpressions.Regex.Replace(feldinhalt, @"[^0-9a-zA-Z .;.,_-]", string.Empty);
-        }
-
-        #endregion
-
-    }
     
 }

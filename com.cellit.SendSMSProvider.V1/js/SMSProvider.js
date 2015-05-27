@@ -40,7 +40,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
     function ttCallField_Click(index) {
         switch (index) {
 
-            ////SMS Versand
+            ////Sound abspielen
             case remote.send:
 
                 var phonenumber = ttCall4.Hook.DataFields[remote.phone - 200].value.getValue();
@@ -51,10 +51,8 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
                     Ext.MessageBox.alert('Fehler', 'Die Handynummer ist zu kurz.');
                 }
                 else {
-                    phonenumber = remote.ReplaceString(phonenumber);
                     getProgress();
                     batchid = remote.SendSmS(phonenumber);
-                    ttCall4.Hook.DataFields[remote.phone - 200].value.setValue(phonenumber);
                     if (remote.onlysend == false) {
                         ttCall4.Hook.DataFields[remote.smstransfer - 200].value.setValue(batchid)
                     }
