@@ -8,7 +8,7 @@ using System.Net.Mail;
 
 namespace com.cellit.ValidateProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask FieldValidator", Description = "Prüfen von Feldinhalten auf Valide Inhalte", Tags = "ttCall4.Mask.Extention" , Category = "Com.cellit.Provider")]
+    [Provider(DisplayName = "Com.cellit Mask Field Validator", Description = "Prüfen von Feldinhalten auf Valide Inhalte", Tags = "ttCall4.Mask.Extention" , Category = "Com.cellit Mask")]
     public class ValidateProvider : IProvider
     {
 

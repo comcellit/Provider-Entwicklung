@@ -9,7 +9,7 @@ using ACD.Interface.V1;
 
 namespace com.cellit.SendSMSProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask SendSMSProvider", Description = "SMS Versand", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
+    [Provider(DisplayName = "Com.cellit Mask Send SMS", Description = "SMS Versand", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
     public class SendSMSProvider : IProvider
     {
         private static int ttCallProjektID;
@@ -416,5 +416,13 @@ namespace com.cellit.SendSMSProvider.V1
             }
 
         }
+
+        //Handynummer säubern
+        [ScriptVisible]
+        public string ReplaceString(string telefon)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(text, @"[^0-9a-zA-Z .;.,_-]", string.Empty);
+        }
+
     }
 }

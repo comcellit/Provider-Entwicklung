@@ -52,6 +52,8 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
                 }
                 else {
                     getProgress();
+                    phonenumber = remote.ReplaceString(phonenumber);
+                    ttCall4.Hook.DataFields[remote.phone - 200].value.setValue(phonenumber);
                     batchid = remote.SendSmS(phonenumber);
                     if (remote.onlysend == false) {
                         ttCall4.Hook.DataFields[remote.smstransfer - 200].value.setValue(batchid)

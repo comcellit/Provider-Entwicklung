@@ -65,6 +65,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         }
                 
     }
+
     function getProgress(){
         Ext.MessageBox.show({
             title: 'Please wait',

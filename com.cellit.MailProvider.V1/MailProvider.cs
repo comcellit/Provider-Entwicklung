@@ -14,7 +14,7 @@ using System.Collections;
 
 namespace com.cellit.MailProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask SendMailProvider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit.Provider")]
+    [Provider(DisplayName = "Com.cellit Mask Send Mail Provider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
     public class MailProvider : IProvider
     {
         //Globale Variablen
@@ -511,7 +511,7 @@ namespace com.cellit.MailProvider.V1
         public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,int vtgTransRef)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,TransaktionEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef,Anliegen) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KDatumField + "," + _KUhrzeitField + "," + _KResultField + "," + _KIPField + ",'Vollmacht');";
+            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef,Anliegen) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KDatumField + "," + _KUhrzeitField + "," + _KResultField + "," + _KIPField + ",'Vollmacht');";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);
@@ -594,8 +594,6 @@ namespace com.cellit.MailProvider.V1
         public void Initialize(object args)
         {
             isVollmacht = true;
-
-            //throw new NotImplementedException();
         }
 
         // Felder für Einstellung( NUR Datenfelder!)

@@ -12,7 +12,7 @@ using System.IO;
 
 namespace com.cellit.SMSGatewayService.V1
 {
-    [Provider(DisplayName = "Com.cellit SMSGatewayService", Description = "SMS Dienste Bereitstellen für die SMS Send Provider", Tags = "SMS.Gateway", Category = "Com.cellit.Provider", SingletonConfiguration = true, ConfigurationKey = "SMSGatewayService")]
+    [Provider(DisplayName = "Com.cellit SMS Gateway", Description = "SMS Dienste Bereitstellen für die SMS Send Provider", Tags = "SMS.Gateway", Category = "Com.cellit Service", SingletonConfiguration = true, ConfigurationKey = "SMSGatewayService")]
     public class SmsGatewayService : IService
     {
         private int _looptime;
@@ -174,7 +174,7 @@ namespace com.cellit.SMSGatewayService.V1
             }
         }
 
-        //SMS Versenden durch aufruf aus dem  SendSMSProvidern
+        //SMS Versenden durch aufruf aus dem  Send SMS Providern
         public string SendSMS(string phone, string text, string from,bool onlysend,string progId, int transField, int kundeRequest,int kundeRequestDate)
         {
             string batchid = null;
@@ -245,4 +245,5 @@ namespace com.cellit.SMSGatewayService.V1
         }
         
     }
+
 }

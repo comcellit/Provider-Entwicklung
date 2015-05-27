@@ -1,0 +1,11 @@
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\com.cellit.GetIban.Provider.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\com.cellit.GetIban.Provider.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\obj\Debug\com.cellit.GetIban.Provider.V1.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\obj\Debug\com.cellit.GetIban.Provider.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\AS.IBAN.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\AS.IBAN.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\AS.IBAN.xml
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\Microsoft.Practices.Unity.dll
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\Microsoft.Practices.Unity.xml
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\obj\Debug\com.cellit.GetIban.Provider.V1.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.GetIban.Provider.V1\bin\Debug\Microsoft.Practices.ServiceLocation.dll
