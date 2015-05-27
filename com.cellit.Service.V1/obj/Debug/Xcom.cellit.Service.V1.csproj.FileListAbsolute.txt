@@ -1,5 +1,0 @@
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Service.V1\bin\Debug\com.cellit.Service.V1.dll
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Service.V1\bin\Debug\com.cellit.Service.V1.pdb
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Service.V1\obj\Debug\Xcom.cellit.Service.V1.csprojResolveAssemblyReference.cache
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Service.V1\obj\Debug\com.cellit.Service.V1.dll
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Service.V1\obj\Debug\com.cellit.Service.V1.pdb

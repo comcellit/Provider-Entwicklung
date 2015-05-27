@@ -1,7 +1,0 @@
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\bin\Debug\AS.IBAN.dll
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\bin\Debug\AS.IBAN.pdb
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\bin\Debug\AS.IBAN.xml
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\bin\Debug\com.cellit.IbanBicGeneratorProvider.V1.dll
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\bin\Debug\com.cellit.IbanBicGeneratorProvider.V1.pdb
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\obj\Debug\com.cellit.IbanBicGeneratorProvider.V1.dll
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.IbanGeneratorProvider.V1\obj\Debug\com.cellit.IbanBicGeneratorProvider.V1.pdb
