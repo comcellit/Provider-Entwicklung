@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Web;
 using ACD.Interface.V1;
 using System.Net.Mail;
+using System.Collections;
+
 
 
 namespace com.cellit.MailProvider.V1
@@ -91,9 +93,10 @@ namespace com.cellit.MailProvider.V1
         [ConfigSetting(Frame = "Kontoeinstellung", Label = "Einstellungen testen")]
         public static void CheckConnection(Dictionary<string, object> settings)
         {
-                SmtpClient test = new SmtpClient(_server, _port);
-                test.Credentials = new System.Net.NetworkCredential(_username, _passwort);
-                if (_ssl == true)
+
+            SmtpClient test = new SmtpClient(settings["server"].ToString(), Convert.ToInt32(settings["port"].ToString()));
+            test.Credentials = new System.Net.NetworkCredential(settings["user"].ToString(), settings["passwort"].ToString());
+            if (Convert.ToBoolean(settings["ssl"].ToString()) == true)
                 {
                     test.EnableSsl = true;
                 }
@@ -101,7 +104,7 @@ namespace com.cellit.MailProvider.V1
                 {
                     test.EnableSsl = false;
                 }
-                test.Send(new MailMessage(_username, _username, "test", "Test"));
+            test.Send(new MailMessage(settings["user"].ToString(), settings["user"].ToString(), "test", "Test"));
         }
         
 
