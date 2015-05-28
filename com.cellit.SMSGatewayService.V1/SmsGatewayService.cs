@@ -178,8 +178,14 @@ namespace com.cellit.SMSGatewayService.V1
         public string SendSMS(string phone, string text, string from,bool onlysend,string progId, int transField, int kundeRequest,int kundeRequestDate)
         {
             string batchid = null;
+            // login Daten leerzeichen entfernen
+            _accountRef =  System.Text.RegularExpressions.Regex.Replace(_accountRef, @"\s+", string.Empty);
+            _pass = System.Text.RegularExpressions.Regex.Replace(_pass, @"\s+", string.Empty);
+            _user = System.Text.RegularExpressions.Regex.Replace(_user, @"\s+", string.Empty);
+
             var messagingService = new MessagingService(_user, _pass);
-            batchid = messagingService.SendMessage(new SmsMessage(phone, text, _accountRef, from)).BatchId.ToString();
+
+            batchid = messagingService.SendMessage(new SmsMessage(phone, text,_accountRef, from)).BatchId.ToString();
 
             if (onlysend == true)
             {

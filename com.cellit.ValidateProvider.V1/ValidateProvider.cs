@@ -8,7 +8,7 @@ using System.Net.Mail;
 
 namespace com.cellit.ValidateProvider.V1
 {
-    [Provider(DisplayName = "Com.cellit Mask Field Validator", Description = "Prüfen von Feldinhalten auf Valide Inhalte", Tags = "ttCall4.Mask.Extention" , Category = "Com.cellit Mask")]
+    [Provider(DisplayName = "Com.cellit Mask Field Validator", Description = "Prüfen von Feldinhalten auf Valide Inhalte oder entfernt sonderzeichen", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
     public class ValidateProvider : IProvider
     {
 
@@ -50,11 +50,12 @@ namespace com.cellit.ValidateProvider.V1
             get { return _auswahl as ISubProvider; }
             set { _auswahl = value; }
         }
-        
+
 
         #endregion
 
         #region Script-Integration in ttCall 4
+
         public List<string> LoadScripts
         {
             get
@@ -64,7 +65,7 @@ namespace com.cellit.ValidateProvider.V1
                 return scripts;
             }
         }
-         public List<string> RunScripts
+        public List<string> RunScripts
         {
             get
             {
@@ -77,7 +78,6 @@ namespace com.cellit.ValidateProvider.V1
         #endregion
 
         // --------------------------------------- Provider-Code --------------------------------------------
-        
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
@@ -87,7 +87,7 @@ namespace com.cellit.ValidateProvider.V1
         public void Dispose()
         {
         }
-        
+
 
     }
     //Check Date Subprovider
@@ -307,10 +307,8 @@ namespace com.cellit.ValidateProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Email Adresse", Label = "Feld Email", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Feld Email", FieldType = FieldType.ComboBox, Values = "GetFields")]
         public int mailField;
-
-
 
         #endregion
 
@@ -450,6 +448,254 @@ namespace com.cellit.ValidateProvider.V1
             //}
         }
 
+        #endregion
+
+    }
+    //Replace Sonderzeichen Subprobider
+    [SubProvider(DisplayName = "Entfernt Sonderzeichen aus String", Tags = "Validate.Block")]
+    public class ReplaceString : ISubProvider
+    {
+        #region Runtime-Settings
+        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Textfeld", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        public int textField;
+        
+        #endregion
+
+        #region Provider Code
+
+        public IProvider OwnerProvider
+        {
+            set { }
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public void Initialize(object args)
+        {
+
+            //throw new NotImplementedException();
+        }
+
+        // Felder für Einstellung ( NUR Datenfelder!)
+        public static object GetFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
+
+        //Replace String Sonderzeichen
+        [ScriptVisible]
+        public string ReplaceStringValue(string text)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(text, @"[^0-9a-zA-Z .;.,_-]", string.Empty);
+        }
+
+        #endregion
+
+    }
+    //Replace Leerzeichen Subprobider
+    [SubProvider(DisplayName = "Entfernt Leerzeichen aus String", Tags = "Validate.Block")]
+    public class ReplaceSpace : ISubProvider
+    {
+        #region Runtime-Settings
+        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Textfeld", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        public int spaceField;
+
+
+        #endregion
+
+        #region Provider Code
+
+        public IProvider OwnerProvider
+        {
+            set { }
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public void Initialize(object args)
+        {
+
+            //throw new NotImplementedException();
+        }
+
+        // Felder für Einstellung( NUR Datenfelder!)
+        public static object GetFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
+
+        //Replace String Space
+        [ScriptVisible]
+        public string ReplaceSpaceValue(string text)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(text,@"\s+", string.Empty);
+        }
+        
         #endregion
 
     }

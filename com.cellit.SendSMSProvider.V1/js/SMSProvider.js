@@ -40,7 +40,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
     function ttCallField_Click(index) {
         switch (index) {
 
-            ////Sound abspielen
+            //Send SmS
             case remote.send:
 
                 var phonenumber = ttCall4.Hook.DataFields[remote.phone - 200].value.getValue();

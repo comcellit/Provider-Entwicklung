@@ -142,7 +142,7 @@ namespace com.cellit.MailResultService.V1
             ibanRef = null;
             bicRef = null;
 
-            //string sql = "SELECT _MailProviderTransaktion.ProjektID,transaktionID,vtg_TransRef,_MailProviderTransaktion.KundenID,left(BestaetigungDatum,10) as BestaetigungDatum,vtg_BDatumRef,BestaetigungUhrzeit,vtg_BUhrzeitRef,Ergebnis,vtg_ErgebnisRef,KundenIP,vtg_IPRef,Kontonummer,vtg_KontoRef,BLZ, FROM _MailProviderTransaktion left Join Prog_KundenLogin on  _MailProviderTransaktion.KundenID=Prog_KundenLogin.KundenID and Prog_KundenLogin.ProjektID = _MailProviderTransaktion.ProjektID where TransaktionEnd=0 and RequestEnd=1  and Prog_KundenLogin.KundenID is null";
+            //SQL Select für die Ergebnis Rückspielung an Kunden
             string sql = "SELECT _MailProviderTransaktion.ProjektID";
             sql += ",transaktionID";
             sql += ",vtg_TransRef";
@@ -326,6 +326,7 @@ namespace com.cellit.MailResultService.V1
                             }
                         }
                     }
+                    //Schreibe Daten für Iban/Bic Aufnahme an den Kunden zurück
                     if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "SEPA")
                     {
                         Insert = "Update Dat_000";
@@ -339,6 +340,7 @@ namespace com.cellit.MailResultService.V1
                         Insert += " where Vtg_KundenID=" + ds.Tables[0].Rows[datacount]["KundenID"];
                         Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
                     }
+                    //Schreibe Daten für Konto/BLZ Aufnahme an den Kunden zurück
                     if (ds.Tables[0].Rows[datacount]["BankArt"].ToString() == "Konto")
                     {
                         Insert = "Update Dat_000";
@@ -353,6 +355,7 @@ namespace com.cellit.MailResultService.V1
                         Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
 
                     }
+                    //Schreibe Ergebnis der Vollmachtseinholung an den Kunden zurück
                     if (ds.Tables[0].Rows[datacount]["Anliegen"].ToString() == "Vollmacht")
                     {
                         Insert = "Update Dat_000";

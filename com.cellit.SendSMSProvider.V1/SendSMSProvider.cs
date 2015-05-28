@@ -124,6 +124,8 @@ namespace com.cellit.SendSMSProvider.V1
 
 
         // --------------------------------------- Provider-Code --------------------------------------------
+
+        #region Provider Code
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
@@ -421,8 +423,10 @@ namespace com.cellit.SendSMSProvider.V1
         [ScriptVisible]
         public string ReplaceString(string telefon)
         {
-            return System.Text.RegularExpressions.Regex.Replace(text, @"[^0-9a-zA-Z .;.,_-]", string.Empty);
+            return System.Text.RegularExpressions.Regex.Replace(telefon, @"[^0-9]", string.Empty);
         }
+
+        #endregion
 
     }
 }

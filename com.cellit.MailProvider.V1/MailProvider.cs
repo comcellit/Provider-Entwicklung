@@ -231,28 +231,25 @@ namespace com.cellit.MailProvider.V1
 
         public void Initialize(object args)
         {
+            //Beim hinzufühgen des Provider in die Kampange wird die ProjektID ermittelt
             currentcampaign = (ICampaign)this.GetParentProvider().GetParentProvider();
-            if (currentcampaign.GetProviderDatas().IsInitialized == true)
-            {
+            if (currentcampaign.GetProviderDatas().IsInitialized == true){
                 ttCallProjektID = GetprojektID(currentcampaign.ID);
-                this.Log(LogType.Debug, Convert.ToString("MailProvider Initilisiert " + currentcampaign.Name));
-                this.Log(LogType.Debug, Convert.ToString(currentcampaign.Name));
             }
-            else
-            {
+            else{
                 currentcampaign.GetProviderEvents().Initialized += campagnInitialized;
             }
-
+            //Prüfung ob die Benötigte Tabelle in der datenbank vorhanden ist
             string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='_MailProviderTransaktion'";
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
             int exists = Convert.ToInt32(ds.Tables[0].Rows[0]["count"]);
-            
-            if (exists==1)
-            {
-                //do Nothing
+
+            //Wenn nicht vorhanden angelegen
+            if (exists==1){
+                //Do Nothing
             }
-            else
-            {
+            else{
+
                 Assembly _Assembly = Assembly.GetExecutingAssembly();
                 StreamReader sr = new StreamReader(_Assembly.GetManifestResourceStream("com.cellit.MailProvider.V1.sql.cmd.txt"));
                 string data = sr.ReadLine();

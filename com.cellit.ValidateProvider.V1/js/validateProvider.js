@@ -41,7 +41,7 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
 
                     mydatefield.setColor(ttCall4.Hook.ttColors.Green);
                     if (remote.auswahl.OKmessage == '') {
-                        //Nothing
+                        //Do Nothing
                     }
                     else {
                         alert(remote.auswahl.OKmessage);
@@ -50,11 +50,10 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
                 else {
                     mydatefield.setColor(ttCall4.Hook.ttColors.Red);
                     if (remote.auswahl.Failmessage == '') {
-                        //Nothing
-
+                        //Do Nothing
                     }
                     else {
-                        alert(remote.auswahl.Failmessage);
+                        Ext.MessageBox.alert('Achtung', remote.auswahl.Failmessage);
                     }
                 }
                 break;
@@ -75,10 +74,43 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
                 else {
                     mymailfield.setColor(ttCall4.Hook.ttColors.Red);
 
-                    Ext.MessageBox.alert('Fehler', 'Diese E-Mail ist nicht Valide.');
+                    Ext.MessageBox.alert('Achtung', 'Diese E-Mail ist nicht Valide.');
 
                 }
                 break;
+            //Entferne sonderzeichen 
+            case remote.auswahl.textField:
+
+                var myTextField = ttCall4.Hook.DataFields[remote.auswahl.textField - 200].value.getValue();
+                var myresult = remote.auswahl.ReplaceStringValue(myTextField);
+
+                if (myTextField == myresult) {
+                    //Do Nothing
+                }
+                else {
+                    Ext.MessageBox.alert('Achtung', 'nicht erlaubte Sonderzeichen wurden entfernt');
+                    ttCall4.Hook.DataFields[remote.auswahl.textField - 200].value.setValue(myresult);
+                }
+                break;
+             //Entferne Leerzeichen
+            case remote.auswahl.spaceField:
+
+                var mySpaceField = ttCall4.Hook.DataFields[remote.auswahl.spaceField - 200].value.getValue();
+                var myresult = remote.auswahl.ReplaceSpaceValue(mySpaceField);
+
+                if (mySpaceField == myresult) {
+                    //Do Nothing
+                }
+                else {
+                    Ext.MessageBox.alert('Achtung', 'nicht erlaubte Leerzeichen wurden entfernt');
+                    ttCall4.Hook.DataFields[remote.auswahl.spaceField - 200].value.setValue(myresult);
+                }
+                break;
+
+            default:
+                //Do Nothing
+                break;
+
         }
 
     };
