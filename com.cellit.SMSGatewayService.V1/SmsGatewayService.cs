@@ -6,7 +6,8 @@ using ttFramework.Provider;
 using com.esendex.sdk.messaging;
 using com.esendex.sdk;
 using com.esendex.sdk.inbox;
-using System.Xml;
+using com.esendex.sdk.utilities;
+using System.Xml.Serialization;
 using System.Reflection;
 using System.IO;
 

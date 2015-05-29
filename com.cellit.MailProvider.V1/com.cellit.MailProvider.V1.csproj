@@ -34,6 +34,9 @@
     <Reference Include="ACD.Interface.V1">
       <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
     </Reference>
+    <Reference Include="com.cellit.MailResultService.V1">
+      <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\com.cellit.MailResultService.V1\com.cellit.MailResultService.V1.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />

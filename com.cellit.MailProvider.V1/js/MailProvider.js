@@ -8,8 +8,8 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
     var myVtgBlz;
     var myVtgIban;
     var myVtgBic;
-    var bankArt ;
-    
+    var bankArt;
+    var mailTo = null;
 
     //ttCall4 Mask-Eventhandler registirerien:
     ttCall4.Hook.on('dialogStart', Mask_Open, this);
@@ -19,15 +19,13 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
     //Event: Bearbeitungsmaske geöffnet
     function Mask_Open() {
-        //Remote-Events registrieren:
-        //alert(remote.anliegen.bank.konto);
-        //alert(remote.anliegen.bank.iban);
-        //remote.anliegen.isVollmacht
+        remote.ReceiveMailMessage.addEventHandler(ReciveMailMessage, this);
     }
 
     //Event: Beitungsmaske geschlossen
     function Mask_Close() {
         //Remote-Events deregistrieren:
+        remote.ReceiveMailMessage.removeEventHandler(ReciveMailMessage);
     }
 
     //Event: Vorgangs-Feld geklickt
@@ -49,13 +47,20 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
             //Email Versand
             case remote.send:
 
-                if (remote.anliegen.isVollmacht == true)
-                {
-                    SendVollmacht();
+                mailTo = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
+                var valide = remote.EmailIsValid(mailTo)
+                if (valide == true) {
+
+                    if (remote.anliegen.isVollmacht == true) {
+                        SendVollmacht(mailTo);
+                    }
+                    else {
+                        SendGetBank(mailTo);
+                    }
                 }
                 else
                 {
-                    SendGetBank();
+                    Ext.MessageBox.alert('Fehler', 'Die E-Mail Adresse ist nicht Valide');
                 }
 
                 break;
@@ -64,6 +69,33 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
                 break;
         }
                 
+    }
+    //Event Starten Daten Speichern
+    function ReciveMailMessage(sender, args)
+    {
+        var indexof = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
+        if (indexof.indexOf(args.Params[0]) >= 0 )
+        {
+            Ext.MessageBox.alert('Info', "Eingehende Mail Antwort für transaktion: " + args.Params[0]);
+            ttCall4.Hook.DataFields[remote.KundeIPField].value.setValue(args.Params[4]);
+            
+            if (args.Params[3] == "Vollmacht")
+            {
+                ttCall4.Hook.DataFields[remote.anliegen.KundeDatumField].value.setValue(args.Params[1]);
+                ttCall4.Hook.DataFields[remote.anliegen.KundeUhrzeitField].value.setValue(args.Params[2]);
+                ttCall4.Hook.DataFields[remote.anliegen.KundeResultField].value.setValue(args.Params[5]);
+            }
+            if (args.Params[3] == "Bankdaten")
+            {
+                if (typeof (remote.anliegen.bank.konto) == "undefined") {
+                    ttCall4.Hook.DataFields[remote.anliegen.bank.iban - 200].value.setValue(args.Params[8]);
+                    ttCall4.Hook.DataFields[remote.anliegen.bank.bic - 200].value.setValue(args.Params[9]);
+                } else {
+                    ttCall4.Hook.DataFields[remote.anliegen.bank.konto - 200].value.setValue(args.Params[6]);
+                    ttCall4.Hook.DataFields[remote.anliegen.bank.blz - 200].value.setValue(args.Params[7]);
+                }
+            }
+        }
     }
 
     function getProgress(){
@@ -93,10 +125,10 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         return this;
     }
 
-    function SendVollmacht()
+    function SendVollmacht(mailTo)
     {
         var myVtgRef = remote.transaktion - 200;
-        var mailTo = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
+        
         if (mailTo == null) {
             Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
         } //Prüft ob Empfänger leer ist
@@ -104,23 +136,30 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
             getProgress();//Anzeige Mail Versand Status
             var mytransaktion = remote.GetTrasaktionID();//Speicher TransaktionId
-            var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(), ttCall4.Hook.CustomerFields[4].value.getValue(), ttCall4.Hook.CustomerFields[2].value.getValue(), mytransaktion,"leer");//Ersetze Body Variablen
+            var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(),
+                          ttCall4.Hook.CustomerFields[4].value.getValue(),
+                          ttCall4.Hook.CustomerFields[2].value.getValue(),
+                          mytransaktion,
+                          "Keine",
+                          ttCall4.Hook.DataFields[remote.anliegen.produktgeber - 200].value.getValue());//Ersetze Body Variablen
+
             remote.SendMail(mailTo, newBody); //Mail Versand 
 
+            getTransField = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();//Frühere transaktionen speichern falls vorhanden
 
-            getTransField = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
             if (getTransField == null) {
                 ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(mytransaktion);
             }
             else {
-                ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(getTransField + ',' + mytransaktion);
+                ttCall4.Hook.DataFields[remote.transaktion - 200].value.setValue(getTransField + ', ' + mytransaktion);
             }
+
             remote.SetTransaktion(ttFramework.providers.ttCall4.CallJob.Customer.CustomerID, mailTo, mytransaktion, newBody, myVtgRef);
         }
 
     }
 
-    function SendGetBank()
+    function SendGetBank(mailTo)
     {
         var myVtgRef = remote.transaktion - 200;
         if (typeof (remote.anliegen.bank.konto) == "undefined") {
@@ -149,7 +188,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         else {
             myVtgBic = remote.anliegen.bank.bic - 200;
         }
-        var mailTo = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
+        
         if (mailTo == null) {
             Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
         } //Prüft ob Empfänger leer ist
@@ -157,7 +196,12 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
             getProgress();//Anzeige Mail Versand Status
             var mytransaktion = remote.GetTrasaktionID();//Speicher TransaktionId
-            var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(), ttCall4.Hook.CustomerFields[4].value.getValue(), ttCall4.Hook.CustomerFields[2].value.getValue(), mytransaktion,bankArt);//Ersetze Body Variablen
+            var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(),
+                          ttCall4.Hook.CustomerFields[4].value.getValue(),
+                          ttCall4.Hook.CustomerFields[2].value.getValue(),
+                          mytransaktion,
+                          bankArt,
+                          "Keine");//Ersetze Body Variablen
             remote.SendMail(mailTo, newBody); //Mail Versand 
 
 

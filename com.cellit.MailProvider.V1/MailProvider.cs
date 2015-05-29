@@ -9,6 +9,7 @@ using System.Web;
 using ACD.Interface.V1;
 using System.Net.Mail;
 using System.Collections;
+using com.cellit.MailResultService;
 
 
 
@@ -17,7 +18,7 @@ namespace com.cellit.MailProvider.V1
     [Provider(DisplayName = "Com.cellit Mask Send Mail Provider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
     public class MailProvider : IProvider
     {
-        //Globale Variablen
+        //Variablen
         private static string _server;
         private static int _port;
         private static string _username;
@@ -27,9 +28,9 @@ namespace com.cellit.MailProvider.V1
         private static string _bcc;
         private static string _subject;
         private static string _body;
-        private static int _KDatumField;
-        private static int _KUhrzeitField;
-        private static int _KResultField;
+        public static int _KDatumField;
+        public static int _KUhrzeitField;
+        public static int _KResultField;
         private static int _KIPField;
         ICampaign currentcampaign;
         private static int ttCallProjektID;
@@ -64,7 +65,7 @@ namespace com.cellit.MailProvider.V1
             set { _server = value; }
         }
 
-        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Smtp Server", FieldType = FieldType.NumberField)]
+        [ConfigSetting(Frame = "Kontoeinstellung", Label = "Server Port", FieldType = FieldType.NumberField)]
         public int port
         {
             get { return _port; }
@@ -124,36 +125,19 @@ namespace com.cellit.MailProvider.V1
         [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
         public int mailfield;
 
-        [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kundenreaktions Datum", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
-        public int KundeDatumField
-        {
-            get { return _KDatumField; }
-            set { _KDatumField = value-200; }
-        }
+        
 
-        [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kundenreaktions Uhrzeit", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
-        public int KundeUhrzeitField
-        {
-            get { return _KUhrzeitField; }
-            set { _KUhrzeitField = value-200; }
-        }
-
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kunden IP", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
         public int KundeIPField
         {
             get { return _KIPField; }
             set { _KIPField = value-200; }
         }
-
-        [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank=false)]
-        public int KundeResultField
-        {
-            get { return _KResultField; }
-            set { _KResultField = value-200; }
-        }
+                
         private IProvider _anliegen;
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Anliegen der e-Mail", Filter = "EMail.Anliegen", AllowBlank=false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Anliegen der e-Mail", Filter = "EMail.Anliegen", AllowBlank=false)]
         public ISubProvider anliegen
         {
             get { return _anliegen as ISubProvider; }
@@ -271,8 +255,11 @@ namespace com.cellit.MailProvider.V1
                 }
                 
             }
+            //MailInbound Event registrieren
+            com.cellit.MailResultService.V1.MailResultService.MailInbound += MailResultService_MailInbound;
+            
         }
-
+        
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
         {
@@ -282,12 +269,16 @@ namespace com.cellit.MailProvider.V1
 
         #region Provider Code
 
+        [ScriptVisible]
+        public event EventHandler ReceiveMailMessage;//Event für Java bereitstellen
+
         //Fals die Campagn noch nicht initialisiert war wir darauf gewartet
         private void campagnInitialized(object sender, EventArgs e)
         {
             currentcampaign.GetProviderEvents().Initialized -= campagnInitialized;
             ttCallProjektID = GetprojektID(currentcampaign.ID);
         }
+
         //Projekt ID auslesen 
         private int GetprojektID(int campaignID)
         {
@@ -296,6 +287,7 @@ namespace com.cellit.MailProvider.V1
 
             return Convert.ToInt32(ds.Tables[0].Rows[0]["Campaign_Reference"]);
         }
+
         //Get Field Methode
         public static object GetFields(Dictionary<string, object> settings)
         {
@@ -379,6 +371,7 @@ namespace com.cellit.MailProvider.V1
 
             return result;
         }
+
         //Nur DatenFelder abrufen
         public static object GetDataFields(Dictionary<string, object> settings)
         {
@@ -462,6 +455,7 @@ namespace com.cellit.MailProvider.V1
 
             return result;
         }
+
         //Mail Versand
         [ScriptVisible]
         public  void SendMail(string mailTo, string newBody) //E-Mail Versenden
@@ -503,6 +497,7 @@ namespace com.cellit.MailProvider.V1
             }
             
         }
+
         //Vollmacht Transaktion in Sql speichern
         [ScriptVisible]
         public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,int vtgTransRef)
@@ -519,11 +514,13 @@ namespace com.cellit.MailProvider.V1
             }
             
         }
+
+        //Bank Transaktion Speichern
         [ScriptVisible]
         public void SetBankTransaktion(string kundenId, string kundenmail, string hex, string body, int vtgTransRef, int vtgKontoRef, int vtgBlzRef, int vtgIbanRef, int vtgBicRef, string bankArt)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef,vtg_KontoRef,vtg_BlzRef,vtg_IbanRef,vtg_BicRef,Anliegen,BankArt) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KDatumField + "," + _KUhrzeitField + "," + _KResultField + "," + _KIPField + "," + vtgKontoRef + "," + vtgBlzRef + "," + vtgIbanRef + "," + vtgBicRef + ",'Bankdaten','" + bankArt + "');";
+            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_IPRef,vtg_KontoRef,vtg_BlzRef,vtg_IbanRef,vtg_BicRef,Anliegen,BankArt) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KIPField + "," + vtgKontoRef + "," + vtgBlzRef + "," + vtgIbanRef + "," + vtgBicRef + ",'Bankdaten','" + bankArt + "');";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);
@@ -534,9 +531,44 @@ namespace com.cellit.MailProvider.V1
             }
 
         }
+
+        //E-Mail prüfen
+        [ScriptVisible]
+        public bool EmailIsValid(string email)
+        {
+            try
+            {
+                MailMessage validate = new MailMessage();
+                validate.From = new MailAddress(email);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+
+            }
+            //string expresion;
+            //expresion = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+            //if (Regex.IsMatch(email, expresion))
+            //{
+            //    if (Regex.Replace(email, expresion, string.Empty).Length == 0)
+            //    {
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        return false;
+            //    }
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+        }
+
         //Nachrichten Variablen ersetzen
         [ScriptVisible]
-        public string ReplaceBody(string anrede,string vorname,string nachname,string transaktion,string bankdatenart )
+        public string ReplaceBody(string anrede,string vorname,string nachname,string transaktion,string bankdatenart, string auftraggeber )
         {
             string message= _body;
             message = message.Replace("[Anrede]", anrede);
@@ -544,8 +576,10 @@ namespace com.cellit.MailProvider.V1
             message = message.Replace("[Vorname]", vorname);
             message = message.Replace("[TransID]", transaktion);
             message = message.Replace("[BankArt]", bankdatenart);
+            message = message.Replace("[Produktgeber]", auftraggeber);
             return message;
         }
+
         //Get Transaktion ID
         [ScriptVisible]
         public string GetTrasaktionID()
@@ -556,9 +590,33 @@ namespace com.cellit.MailProvider.V1
 
         }
 
+        //Eingehende Mail Event Starten Werte übergeben
+        void MailResultService_MailInbound(object sender, MailResultService.V1.MailEvent e)
+        {
+            EventHandler reciveMail = this.ReceiveMailMessage;
+            if(reciveMail!= null)
+            {
+                reciveMail(this,new ParamArrayEventArgs(e.transaktionID,
+                                                        e.resultDate,
+                                                        e.resultTime,
+                                                        e.auftrag,
+                                                        e.resultIP,
+                                                        e.resultErg,
+                                                        e.resultKonto,
+                                                        e.resultBlz,
+                                                        e.resultIban,
+                                                        e.resultBic));
+            }
+
+
+        }
+                
         #endregion
 
     }
+
+    #region SubProvider
+
     //Anliegen SubProvider Vollmacht
     [SubProvider(DisplayName = "Vollmacht Einholen", Tags = "EMail.Anliegen")]
     public class GetVollmacht : ISubProvider
@@ -566,12 +624,34 @@ namespace com.cellit.MailProvider.V1
        
         #region Runtime-Settings
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-
-        
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
         public bool isVollmacht;
 
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für Auftraggeber", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int produktgeber;
 
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kundenreaktions Datum", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int KundeDatumField
+        {
+            get { return MailProvider._KDatumField; }
+            set { MailProvider._KDatumField = value - 200; }
+        }
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kundenreaktions Uhrzeit", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int KundeUhrzeitField
+        {
+            get { return MailProvider._KUhrzeitField; }
+            set { MailProvider._KUhrzeitField = value - 200; }
+        }
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int KundeResultField
+        {
+            get { return MailProvider._KResultField; }
+            set { MailProvider._KResultField = value - 200; }
+        }
 
         #endregion
 
@@ -688,7 +768,7 @@ namespace com.cellit.MailProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         private IProvider _bank;
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Bankdaten Einstellungen", Label = "Welche Art Bankdaten", Filter = "Bank.Anliegen" ,AllowBlank=false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Welche Art Bankdaten", Filter = "Bank.Anliegen", AllowBlank = false)]
         public ISubProvider bank
         {
             get { return _bank as ISubProvider; }
@@ -815,11 +895,11 @@ namespace com.cellit.MailProvider.V1
 
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Bankdaten Einstellungen", Label = "Feld für Kontonummer", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für Kontonummer", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int konto;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Bankdaten Einstellungen", Label = "Feld für BLZ", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für BLZ", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int blz;
 
 
@@ -941,11 +1021,11 @@ namespace com.cellit.MailProvider.V1
 
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Bankdaten Einstellungen", Label = "Feld für IBAN", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für IBAN", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int iban;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Bankdaten Einstellungen", Label = "Feld für BIC", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für BIC", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int bic;
 
 
@@ -1058,5 +1138,7 @@ namespace com.cellit.MailProvider.V1
         #endregion
 
     }
+
+    #endregion
     
 }
