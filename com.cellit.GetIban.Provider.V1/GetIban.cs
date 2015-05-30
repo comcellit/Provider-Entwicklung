@@ -201,7 +201,7 @@ namespace com.cellit.GetIban.Provider.V1
             }
             catch (IbanException ex)
             {
-                iban = "ERROR";
+                bic = "ERROR";
             }
 
             return bic;

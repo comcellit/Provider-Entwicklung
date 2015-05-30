@@ -10,17 +10,21 @@ using ACD.Interface.V1;
 using System.Net.Mail;
 using System.Collections;
 using com.cellit.MailResultService;
+using OpenPop;
 
 
 
 namespace com.cellit.MailProvider.V1
 {
+    delegate void AsyncMailCheck(int sleep,string mailTo);
+
     [Provider(DisplayName = "Com.cellit Mask Send Mail Provider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
     public class MailProvider : IProvider
     {
         //Variablen
         private static string _server;
         private static int _port;
+        private static int _pop3port;
         private static string _username;
         private static string _passwort;
         private static bool _ssl;
@@ -272,6 +276,9 @@ namespace com.cellit.MailProvider.V1
         [ScriptVisible]
         public event EventHandler ReceiveMailMessage;//Event für Java bereitstellen
 
+        [ScriptVisible]
+        public event EventHandler RecieveMailStatus;
+
         //Fals die Campagn noch nicht initialisiert war wir darauf gewartet
         private void campagnInitialized(object sender, EventArgs e)
         {
@@ -487,8 +494,10 @@ namespace com.cellit.MailProvider.V1
                 {
                     client.EnableSsl = false;
                 }
-                client.Send(mail);
-                this.Log(LogType.Debug, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
+                client.SendAsync(mail,null);
+
+                AsyncMailCheck check = GetMailStatus;
+                IAsyncResult asyncRes = check.BeginInvoke(5000, mailTo, null, null);
                 
             }
             catch (Exception ex)
@@ -496,6 +505,77 @@ namespace com.cellit.MailProvider.V1
                 this.Log(LogType.Error, Convert.ToString("MailProvider ERROR ") + ex);
             }
             
+        }
+
+        //Mail Delivery Status?
+        public void GetMailStatus(int sleep, string mailTo)
+        {
+            int nodelivery = 0;
+            System.Threading.Thread.Sleep(sleep);
+            OpenPop.Pop3.Pop3Client popclient = new OpenPop.Pop3.Pop3Client();
+            if (_ssl == true)
+            {
+                _pop3port = 995;
+            }
+            else
+            {
+                _pop3port = 110;
+            }
+            popclient.Connect(_server, _pop3port, true);
+            popclient.Authenticate(_username, _passwort);
+            bool delivery = false;
+            int mailCount = 0;
+            int messageCount = popclient.GetMessageCount();
+            if (messageCount<20)
+            {
+                mailCount = 0;
+            }
+            else
+            {
+                mailCount = messageCount -10;
+            }
+            for (int i = messageCount; i > mailCount; i--)
+            {
+                delivery = false;
+                string uid = popclient.GetMessageUid(i);
+                OpenPop.Mime.Message message = popclient.GetMessage(i);
+                try
+                {
+                    OpenPop.Mime.MessagePart messagePart = message.MessagePart.MessageParts[0];
+                    var body = message.Headers.Subject;
+                        body += messagePart.BodyEncoding.GetString(message.RawMessage);
+                        string[] stringArray = { "550", "Delivery", "Undeliverable", "Unzustellbar" };
+                    foreach (string error in stringArray)
+                    {
+                        if (body.Contains(error))
+                        {
+                            if (body.Contains(mailTo))
+                            {
+                                delivery = true;
+                                nodelivery++;
+                            }
+                        }
+                    }
+                    if (delivery == true)
+                    {
+                        MailStatus(mailTo,false);
+                        popclient.DeleteMessage(i);
+                    }
+                }
+                catch (Exception e)
+                {
+                    this.Log(LogType.Info, e);
+                }
+
+                
+
+            }
+            if (nodelivery==0)
+            {
+                MailStatus(mailTo, true);
+                this.Log(LogType.Info, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
+            }
+            popclient.Disconnect();
         }
 
         //Vollmacht Transaktion in Sql speichern
@@ -610,6 +690,19 @@ namespace com.cellit.MailProvider.V1
 
 
         }
+
+        //Mail Status Event starten
+        void MailStatus(string mailTo,bool Versand)
+        {
+            
+            EventHandler status = this.RecieveMailStatus;
+            if (status != null)
+            {
+                status(this, new ParamArrayEventArgs(mailTo,Versand));
+            }
+        }
+
+
                 
         #endregion
 

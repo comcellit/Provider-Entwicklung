@@ -7,6 +7,8 @@ com.cellit.GetIban.Provider.V1.GetIbanFunction = function (remote) {
     var mybankIdent;
     var myibanNumber;
     var mybicIdent;
+    var myIbanField;
+    var myBicField;
 
     //ttCall4 Mask-Eventhandler registirerien:
     ttCall4.Hook.on('dialogStart', Mask_Open, this);
@@ -45,6 +47,8 @@ com.cellit.GetIban.Provider.V1.GetIbanFunction = function (remote) {
             //Email Versand
             case remote.accountNumber:
 
+                myIbanField = ttCall4.Hook.DataFields[remote.ibanNumber - 200].getFieldObject();
+                myBicField = ttCall4.Hook.DataFields[remote.bicIdent - 200].getFieldObject();
                 myaccountNumber = ttCall4.Hook.DataFields[remote.accountNumber - 200].value.getValue();
                 mybankIdent = ttCall4.Hook.DataFields[remote.bankIdent - 200].value.getValue();
                 if (myaccountNumber == null || mybankIdent == null){
@@ -52,16 +56,27 @@ com.cellit.GetIban.Provider.V1.GetIbanFunction = function (remote) {
                 }
                 else{
 
-                    getProgress();
                     myibanNumber = remote.GenerateGermanIban(mybankIdent, myaccountNumber);
                     mybicIdent = remote.GetGermanBic(myibanNumber);
                     ttCall4.Hook.DataFields[remote.ibanNumber - 200].value.setValue(myibanNumber);
                     ttCall4.Hook.DataFields[remote.bicIdent - 200].value.setValue(mybicIdent);
+                    if (myibanNumber=="ERROR")
+                    {
+                        myIbanField.setColor(ttCall4.Hook.ttColors.Red);
+                        myBicField.setColor(ttCall4.Hook.ttColors.Red);
+                    }
+                    else
+                    {
+                        myIbanField.setColor(ttCall4.Hook.ttColors.Green);
+                        myBicField.setColor(ttCall4.Hook.ttColors.Green);
+                    }
                 }
                 break;
 
             case remote.bankIdent:
 
+                myIbanField = ttCall4.Hook.DataFields[remote.ibanNumber - 200].getFieldObject();
+                myBicField = ttCall4.Hook.DataFields[remote.bicIdent - 200].getFieldObject();
                 myaccountNumber = ttCall4.Hook.DataFields[remote.accountNumber - 200].value.getValue();
                 mybankIdent = ttCall4.Hook.DataFields[remote.bankIdent - 200].value.getValue();
                 if (myaccountNumber == null || mybankIdent == null) {
@@ -69,46 +84,24 @@ com.cellit.GetIban.Provider.V1.GetIbanFunction = function (remote) {
                 }
                 else {
 
-                    getProgress();
                     myibanNumber = remote.GenerateGermanIban(mybankIdent, myaccountNumber);
                     mybicIdent = remote.GetGermanBic(myibanNumber);
                     ttCall4.Hook.DataFields[remote.ibanNumber - 200].value.setValue(myibanNumber);
                     ttCall4.Hook.DataFields[remote.bicIdent - 200].value.setValue(mybicIdent);
+                    if (myibanNumber == "ERROR") {
+                        myIbanField.setColor(ttCall4.Hook.ttColors.Red);
+                        myBicField.setColor(ttCall4.Hook.ttColors.Red);
+                    }
+                    else {
+                        myIbanField.setColor(ttCall4.Hook.ttColors.Green);
+                        myBicField.setColor(ttCall4.Hook.ttColors.Green);
+                    }
                 }
-
                 break;
             default:
                 break;
         }
                 
     }
-
-    function getProgress(){
-        Ext.MessageBox.show({
-            title: 'Please wait',
-            msg: 'Searching...',
-            progressText: 'Searching...',
-            width: 300,
-            progress: true,
-            closable: false,
-        });
-
-        // this hideous block creates the bogus progress
-        var f = function (v) {
-            return function () {
-                if (v == 12) {
-                    Ext.MessageBox.hide();
-                } else {
-                    var i = v / 11;
-                    Ext.MessageBox.updateProgress(i, Math.round(100 * i) + '% completed');
-                }
-            };
-        };
-        for (var i = 1; i < 13; i++) {
-            setTimeout(f(i), i * 50);
-        }
-        return this;
-    }
-
     return this;
 }

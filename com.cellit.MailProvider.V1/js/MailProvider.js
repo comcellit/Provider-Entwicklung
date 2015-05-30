@@ -19,12 +19,14 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
     //Event: Bearbeitungsmaske geöffnet
     function Mask_Open() {
+        remote.RecieveMailStatus.addEventHandler(MailStatus, this);
         remote.ReceiveMailMessage.addEventHandler(ReciveMailMessage, this);
     }
 
     //Event: Beitungsmaske geschlossen
     function Mask_Close() {
         //Remote-Events deregistrieren:
+        remote.RecieveMailStatus.removeEventHandler(MailStatus);
         remote.ReceiveMailMessage.removeEventHandler(ReciveMailMessage);
     }
 
@@ -98,6 +100,21 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         }
     }
 
+    //Delivery Event Empfangen
+    function MailStatus(sender,args1)
+    {
+        var mymail = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
+        //alert(args1.Params[0]+ ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue());
+        if (args1.Params[0]== mymail && args1.Params[1]==false)
+        {
+            Ext.MessageBox.alert('Achtung', "E-Mail Unzustellbar diese E-mail ist nicht vergeben");
+        }
+        if (args1.Params[0] == mymail && args1.Params[1] == true)
+        {
+            Ext.MessageBox.alert('Info', "E-Mail erfolgreich Versendet");
+        }
+
+    }
     function getProgress(){
         Ext.MessageBox.show({
             title: 'Please wait',
