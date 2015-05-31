@@ -180,14 +180,14 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
         {
             var url = remote.GetSoundFile(gridurl);
             //Loading
-            Ext.MessageBox.show({
-                title: 'Please wait',
-                msg: 'Loading items...',
-                progressText: 'Initializing...',
-                width: 300,
-                progress: true,
-                closable: false,
-            });
+            //Ext.MessageBox.show({
+            //    title: 'Please wait',
+            //    msg: 'Loading items...',
+            //    progressText: 'Initializing...',
+            //    width: 300,
+            //    progress: true,
+            //    closable: false,
+            //});
 
             // this hideous block creates the bogus progress
             var f = function (v) {

@@ -106,6 +106,19 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
                     ttCall4.Hook.DataFields[remote.auswahl.spaceField - 200].value.setValue(myresult);
                 }
                 break;
+            case remote.auswahl.persoField:
+                var myPersoField = ttCall4.Hook.DataFields[remote.auswahl.persoField - 200].getFieldObject();
+                var myPerso = ttCall4.Hook.DataFields[remote.auswahl.persoField - 200].value.getValue();
+                myresult = remote.auswahl.ValidateAusweis(myPerso);
+                if (myresult == true) {
+                    myPersoField.setColor(ttCall4.Hook.ttColors.Green);
+                }
+                else {
+                    myPersoField.setColor(ttCall4.Hook.ttColors.Red);
+                }
+
+
+                break;
 
             default:
                 //Do Nothing

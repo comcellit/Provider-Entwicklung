@@ -16,7 +16,7 @@ using OpenPop;
 
 namespace com.cellit.MailProvider.V1
 {
-    delegate void AsyncMailCheck(int sleep,string mailTo);
+    delegate void AsyncMailCheck(int sleep,string mailTo);//delegate variable für Async Check der zustellung
 
     [Provider(DisplayName = "Com.cellit Mask Send Mail Provider", Description = "EMail Versand Provider", Tags = "ttCall4.Mask.Extention", Category = "Com.cellit Mask")]
     public class MailProvider : IProvider
@@ -465,7 +465,7 @@ namespace com.cellit.MailProvider.V1
 
         //Mail Versand
         [ScriptVisible]
-        public  void SendMail(string mailTo, string newBody) //E-Mail Versenden
+        public  void SendMail(string mailTo, string newBody) //E-Mail Versenden Asyncron
         {
             try
             {
@@ -497,12 +497,12 @@ namespace com.cellit.MailProvider.V1
                 client.SendAsync(mail,null);
 
                 AsyncMailCheck check = GetMailStatus;
-                IAsyncResult asyncRes = check.BeginInvoke(5000, mailTo, null, null);
+                IAsyncResult asyncRes = check.BeginInvoke(10000, mailTo, null, null);
                 
             }
             catch (Exception ex)
             {
-                this.Log(LogType.Error, Convert.ToString("MailProvider ERROR ") + ex);
+                this.Log(LogType.Error, Convert.ToString("SendMail :") + ex);
             }
             
         }
@@ -523,52 +523,36 @@ namespace com.cellit.MailProvider.V1
             }
             popclient.Connect(_server, _pop3port, true);
             popclient.Authenticate(_username, _passwort);
-            bool delivery = false;
             int mailCount = 0;
             int messageCount = popclient.GetMessageCount();
-            if (messageCount<20)
+            if (messageCount<10)
             {
                 mailCount = 0;
             }
             else
             {
-                mailCount = messageCount -10;
+                mailCount = messageCount -5;
             }
             for (int i = messageCount; i > mailCount; i--)
             {
-                delivery = false;
-                string uid = popclient.GetMessageUid(i);
                 OpenPop.Mime.Message message = popclient.GetMessage(i);
                 try
                 {
-                    OpenPop.Mime.MessagePart messagePart = message.MessagePart.MessageParts[0];
-                    var body = message.Headers.Subject;
-                        body += messagePart.BodyEncoding.GetString(message.RawMessage);
-                        string[] stringArray = { "550", "Delivery", "Undeliverable", "Unzustellbar" };
-                    foreach (string error in stringArray)
+                    OpenPop.Mime.MessagePart messagePart = message.MessagePart.MessageParts[1];
+                    var body = messagePart.BodyEncoding.GetString(message.RawMessage);
+                    var status = messagePart.ContentType.MediaType.ToString();
+                    if (body.Contains(mailTo) && status == "message/delivery-status")
                     {
-                        if (body.Contains(error))
-                        {
-                            if (body.Contains(mailTo))
-                            {
-                                delivery = true;
-                                nodelivery++;
-                            }
-                        }
-                    }
-                    if (delivery == true)
-                    {
-                        MailStatus(mailTo,false);
+                        nodelivery++;
+                        MailStatus(mailTo, false);
                         popclient.DeleteMessage(i);
                     }
+                   
                 }
                 catch (Exception e)
                 {
                     this.Log(LogType.Info, e);
                 }
-
-                
-
             }
             if (nodelivery==0)
             {
@@ -576,7 +560,7 @@ namespace com.cellit.MailProvider.V1
                 this.Log(LogType.Info, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
             }
             popclient.Disconnect();
-        }
+        }//Asyncroner check ob die Mai angekommen ist asyncron damit die Maske nicht hängt
 
         //Vollmacht Transaktion in Sql speichern
         [ScriptVisible]
@@ -622,8 +606,9 @@ namespace com.cellit.MailProvider.V1
                 validate.From = new MailAddress(email);
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                this.Log(LogType.Info, e);
                 return false;
 
             }

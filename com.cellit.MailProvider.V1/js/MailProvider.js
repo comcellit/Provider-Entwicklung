@@ -107,11 +107,11 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         //alert(args1.Params[0]+ ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue());
         if (args1.Params[0]== mymail && args1.Params[1]==false)
         {
-            Ext.MessageBox.alert('Achtung', "E-Mail Unzustellbar diese E-mail ist nicht vergeben");
+            Ext.MessageBox.alert('Achtung', "E-Mail unzustellbar die E-mail Adresse "+mymail+" ist nicht vergeben");
         }
         if (args1.Params[0] == mymail && args1.Params[1] == true)
         {
-            Ext.MessageBox.alert('Info', "E-Mail erfolgreich Versendet");
+            Ext.MessageBox.alert('Info', "E-Mail erfolgreich zugestellt an "+mymail);
         }
 
     }

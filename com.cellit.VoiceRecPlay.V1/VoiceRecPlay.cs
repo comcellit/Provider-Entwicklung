@@ -170,6 +170,7 @@ namespace com.cellit.VoiceRecPlay.V1
         // --------------------------------------- Provider-Code --------------------------------------------
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         #region Initialized/Dispose
+
         public void Initialize(object args)
         {
             currentcampaign = (ICampaign)this.GetParentProvider().GetParentProvider();
@@ -209,6 +210,7 @@ namespace com.cellit.VoiceRecPlay.V1
             byte[] data = System.IO.File.ReadAllBytes(name);
             return new WebRessource("Test", "audio/mpeg", data, 300);
         }
+
         private int GetprojektID(int campaignID)
         {
             string sql = "SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString();
@@ -218,6 +220,7 @@ namespace com.cellit.VoiceRecPlay.V1
             return Convert.ToInt32(ds.Tables[0].Rows[0]["Campaign_Reference"]);
 
         }
+
         [ScriptVisible]
         public int GetVoiceAnzahl(int kundenID)
         {
@@ -229,6 +232,7 @@ namespace com.cellit.VoiceRecPlay.V1
 
             return count;
         }
+
         [ScriptVisible]
         public object GetVoicepfad(int kundenID,int count)
         {
@@ -248,13 +252,14 @@ namespace com.cellit.VoiceRecPlay.V1
                 }
                 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                this.Log(LogType.Debug, Convert.ToString("VoiceRecProvider ERROR Kein VR vorhanden für Kunden ID: "+kundenID.ToString()));
+                this.Log(LogType.Info , e);
                 
             }
             return pfad;
         }
+
         #endregion
     }
 }

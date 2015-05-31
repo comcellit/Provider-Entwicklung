@@ -424,10 +424,9 @@ namespace com.cellit.ValidateProvider.V1
                 validate.From = new MailAddress(email);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false; 
-               
             }
             //string expresion;
             //expresion = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
@@ -697,6 +696,160 @@ namespace com.cellit.ValidateProvider.V1
         }
         
         #endregion
+
+    }
+    //Validiere Ausweisnummer
+    [SubProvider(DisplayName="Überprüfe Ausweisnummer", Tags="Validate.Block")]
+    public class ValidatePerso : ISubProvider
+    {
+        #region Runtime-Settings
+        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Ausweisnummer", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        public int persoField;
+
+
+        #endregion
+
+        #region Provider Code
+
+        public IProvider OwnerProvider
+        {
+            set { }
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public void Initialize(object args)
+        {
+
+            //throw new NotImplementedException();
+        }
+
+        // Felder für Einstellung( NUR Datenfelder!)
+        public static object GetFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
+
+        //Replace String Space
+        [ScriptVisible]
+        public bool ValidateAusweis(string ausweis)
+        {
+            string[] number = new string[10];
+            int[] multipler = new int[9] { 7, 3, 1, 7, 3, 1, 7, 3, 1 };
+            int pruefziffer = 0;
+            int i = 0;
+            foreach (char cr in ausweis)
+            {
+                if (cr == 'A') { number[i] = "10"; } if (cr == 'B') { number[i] = "11"; } if (cr == 'C') { number[i] = "12"; } if (cr == 'F') { number[i] = "15"; }
+                if (cr == 'G') { number[i] = "16"; } if (cr == 'H') { number[i] = "17"; } if (cr == 'J') { number[i] = "19"; } if (cr == 'K') { number[i] = "20"; }
+                if (cr == 'L') { number[i] = "21"; } if (cr == 'M') { number[i] = "22"; } if (cr == 'N') { number[i] = "23"; } if (cr == 'P') { number[i] = "25"; }
+                if (cr == 'R') { number[i] = "27"; } if (cr == 'T') { number[i] = "29"; } if (cr == 'V') { number[i] = "31"; } if (cr == 'W') { number[i] = "32"; }
+                if (cr == 'X') { number[i] = "33"; } if (cr == 'Y') { number[i] = "34"; } if (cr == 'Z') { number[i] = "35"; } 
+                if (number[i] == null) 
+                {
+                    number[i] = cr.ToString();
+                }
+                if (i < 9)
+                {
+                    pruefziffer = pruefziffer + Convert.ToInt32(number[i]) * multipler[i];
+                }
+                i++;
+            }
+            pruefziffer =Convert.ToInt32( pruefziffer.ToString().Substring((pruefziffer.ToString().Length - 1), 1));
+            if (pruefziffer == Convert.ToInt32( number[9]))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
 
     }
 

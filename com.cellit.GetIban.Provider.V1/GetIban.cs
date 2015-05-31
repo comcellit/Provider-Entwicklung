@@ -201,6 +201,7 @@ namespace com.cellit.GetIban.Provider.V1
             }
             catch (IbanException ex)
             {
+                this.Log(LogType.Info, ex);
                 bic = "ERROR";
             }
 
@@ -223,6 +224,7 @@ namespace com.cellit.GetIban.Provider.V1
             }
             catch (IbanException ex)
             {
+                this.Log(LogType.Info, ex);
                 iban = "ERROR";
             }
 
