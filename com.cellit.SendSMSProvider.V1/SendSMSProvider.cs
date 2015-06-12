@@ -14,6 +14,17 @@ namespace com.cellit.SendSMSProvider.V1
     {
         private static int ttCallProjektID;
         ICampaign currentcampaign;
+        public static bool onlySend;
+        public static int smstransfer;
+        public static int smsRequestDate;
+        public static int smsRequestText;
+        private int _send;
+        private int _phone;
+        private string _text;
+        private string _from;
+
+
+        
 
         #region Add/Remove-Provider
 
@@ -53,38 +64,68 @@ namespace com.cellit.SendSMSProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Einstellungen", Label = "Feld zum versenden", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int send;
+        public int send
+        {
+            get { return _send; }
+            set { _send = value; }
+        }
+
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Einstellungen", Label = "Kunden Handynummer", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
-        public int phone;
+        public int phone
+        {
+            get { return _phone; }
+            set { _phone = value; }
+        }
 
 
         [RuntimeSetting(Frame = "Einstellungen", Label = "Absenderadresse(Für Inbound immer 01771787827)", FieldType = FieldType.TextField, AllowBlank = false, MaxLength = 11)]
-        public string from;
+        public string from
+        {
+            get { return _from; }
+            set { _from = value; }
+        }
 
-        [RuntimeSetting(Frame = "Einstellungen", Label = "SMS Text", FieldType = FieldType.TextArea, Height = 100, AllowBlank = false)]
-        public string text;
 
+        private IProvider _anliegen;
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "SMS nur Versand", FieldType = FieldType.CheckBox, AllowBlank = false)]
-        public bool onlysend;
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Versandart", Filter = "SMS.Anliegen", AllowBlank = false)]
+        public ISubProvider anliegen
+        {
+            get { return _anliegen as ISubProvider; }
+            set { _anliegen = value; }
+        }
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für TransferID", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
-        public int smstransfer;
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Datum Antwort", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
-        public int smsRequestDate;
+        [RuntimeSetting(Frame = "Inhalt SMS Text", Label = "SMS Text", FieldType = FieldType.TextArea, Height = 100, AllowBlank = false)]
+        public string text
+        {
+            get { return _text; }
+            set { _text = value; }
+        }
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
-        public int smsRequestText;
+        
 
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Verpasste SMS abrufen", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
-        public int smsOlder;
+        //[ScriptVisible(SerializeType = SerializeTypes.Value)]
+        //[RuntimeSetting(Frame = "Einstellungen", Label = "SMS nur Versand", FieldType = FieldType.CheckBox, AllowBlank = false)]
+        //public bool onlysend;
+
+        //[ScriptVisible(SerializeType = SerializeTypes.Value)]
+        //[RuntimeSetting(Frame = "Einstellungen", Label = "Feld für TransferID", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
+        //public int smstransfer;
+
+        //[ScriptVisible(SerializeType = SerializeTypes.Value)]
+        //[RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Datum Antwort", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
+        //public int smsRequestDate;
+
+        //[ScriptVisible(SerializeType = SerializeTypes.Value)]
+        //[RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
+        //public int smsRequestText;
+
+        //[ScriptVisible(SerializeType = SerializeTypes.Value)]
+        //[RuntimeSetting(Frame = "Einstellungen", Label = "Verpasste SMS abrufen", FieldType = FieldType.ComboBox, Values = "GetDataFields")]
+        //public int smsOlder;
         
 
         #endregion
@@ -343,7 +384,7 @@ namespace com.cellit.SendSMSProvider.V1
             string batchid = null;
             try
             {
-                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, from, onlysend, ttCallProjektID.ToString(), smstransfer - 200, smsRequestText - 200, smsRequestDate - 200).ToString();
+                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, from, onlySend, ttCallProjektID.ToString(), smstransfer - 200, smsRequestText - 200, smsRequestDate - 200).ToString();
             }
             catch (Exception ex)
             {
@@ -429,4 +470,268 @@ namespace com.cellit.SendSMSProvider.V1
         #endregion
 
     }
+    //SMS SubProvider Nur Senden
+    [SubProvider(DisplayName = "Nur SMS Versand", Tags = "SMS.Anliegen")]
+    public class SmSOnly : ISubProvider
+    {
+
+        #region Runtime-Settings
+        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        public static bool onlySend
+        {
+            get { return SendSMSProvider.onlySend; }
+            set { SendSMSProvider.onlySend = true; }
+        }
+
+
+        #endregion
+
+        #region Provider Code
+
+        public IProvider OwnerProvider
+        {
+            set { }
+        }
+
+        public void Dispose()
+        {
+
+        }
+
+        public void Initialize(object args)
+        {
+            SendSMSProvider.onlySend = true;
+        }
+
+        // Felder für Einstellung( NUR Datenfelder!)
+        public static object GetFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
+
+        #endregion
+
+    }
+
+    [SubProvider(DisplayName = "SMS mit Antwort", Tags = "SMS.Anliegen")]
+    public class SmSRequest : ISubProvider
+    {
+
+        #region Runtime-Settings
+        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für TransferID", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int smstransfer
+        {
+            get { return SendSMSProvider.smstransfer; }
+            set { SendSMSProvider.smstransfer = value; }
+        }
+
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Datum Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int smsRequestDate
+        {
+            get { return SendSMSProvider.smsRequestDate; }
+            set {SendSMSProvider.smsRequestDate=value; }
+        }
+
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int smsRequestText
+        {
+            get { return SendSMSProvider.smsRequestText; }
+            set { SendSMSProvider.smsRequestText = value; }
+        }
+
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Verpasste SMS abrufen", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int smsOlder;
+
+
+        #endregion
+
+        #region Provider Code
+
+        public IProvider OwnerProvider
+        {
+            set { }
+        }
+
+        public void Dispose()
+        {
+
+        }
+
+        public void Initialize(object args)
+        {
+            SendSMSProvider.onlySend = false;
+        }
+
+        // Felder für Einstellung( NUR Datenfelder!)
+        public static object GetFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
+
+        #endregion
+
+    }
+
 }

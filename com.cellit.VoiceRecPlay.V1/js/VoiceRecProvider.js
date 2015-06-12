@@ -156,7 +156,7 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
                     {header: 'Uhrzeit', width: 100, sortable: true,dataIndex: 'uhrzeit'},
                     {
                         xtype: 'actioncolumn', width: 25, items: [{
-                            icon: 'http://agent.cellit-gruppe.de/ttframework/img/play.png',  // Use a URL in the icon config
+                            icon: 'http://agent.cellit-gruppe.de/ttframework/comCellitImg/play.png',  // Use a URL in the icon config
                             tooltip: 'Viocerec Play',
                             handler: function (grid, rowIndex, colIndex) {
                                 var rec = store.getAt(rowIndex);

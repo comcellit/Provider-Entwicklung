@@ -3,3 +3,4 @@ C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.MailRes
 C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.MailResultService.V1\bin\Debug\ACD.Interface.V1.dll
 C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.MailResultService.V1\obj\Debug\com.cellit.MailResultService.V1.dll
 C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.MailResultService.V1\obj\Debug\com.cellit.MailResultService.V1.pdb
+C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.MailResultService.V1\obj\Debug\com.cellit.MailResultService.V1.csprojResolveAssemblyReference.cache

@@ -55,16 +55,16 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
                     phonenumber = remote.ReplaceString(phonenumber);
                     ttCall4.Hook.DataFields[remote.phone - 200].value.setValue(phonenumber);
                     batchid = remote.SendSmS(phonenumber);
-                    if (remote.onlysend == false) {
-                        ttCall4.Hook.DataFields[remote.smstransfer - 200].value.setValue(batchid)
+                    if (typeof (remote.anliegen.onlySend) == "undefined") {
+                        ttCall4.Hook.DataFields[remote.anliegen.smstransfer - 200].value.setValue(batchid)
                     }
                 }
 
                 break;
-            case remote.smsOlder:
+            case remote.anliegen.smsOlder:
 
-                if (remote.GetAllOpenSmS(ttCall4.Hook.DataFields[remote.smstransfer - 200].value.getValue()) == false) {
-                    Ext.MessageBox.alert('Fehler', 'Keine SMS erhalten für: ' + '<br>' + ttCall4.Hook.DataFields[remote.smstransfer - 200].value.getValue());
+                if (remote.GetAllOpenSmS(ttCall4.Hook.DataFields[remote.anliegen.smstransfer - 200].value.getValue()) == false) {
+                    Ext.MessageBox.alert('Fehler', 'Keine SMS erhalten für: ' + '<br>' + ttCall4.Hook.DataFields[remote.anliegen.smstransfer - 200].value.getValue());
                 }
                 break;
             default:
@@ -101,11 +101,11 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
     //Remote-Event: Nachricht erhalten
     function ReceiveMessage(sender, args) {
         //Empfänger prüfen
-        if (args.Params[0] == ttCall4.Hook.DataFields[remote.smstransfer - 200].value.getValue()) {
+        if (args.Params[0] == ttCall4.Hook.DataFields[remote.anliegen.smstransfer - 200].value.getValue()) {
             Ext.MessageBox.alert('Eingehende SMS', 'Von: ' + args.Params[1] + '<br>Datum: ' + args.Params[2] + '<br><br>' + args.Params[3]);
             //Antwort speichern
-            ttCall4.Hook.DataFields[remote.smsRequestDate - 200].value.setValue(args.Params[2])
-            ttCall4.Hook.DataFields[remote.smsRequestText - 200].value.setValue(args.Params[3])
+            ttCall4.Hook.DataFields[remote.anliegen.smsRequestDate - 200].value.setValue(args.Params[2])
+            ttCall4.Hook.DataFields[remote.anliegen.smsRequestText - 200].value.setValue(args.Params[3])
             //Transaktion Beendet setzen
             remote.SetSmsEnd(args.Params[0]);
         }

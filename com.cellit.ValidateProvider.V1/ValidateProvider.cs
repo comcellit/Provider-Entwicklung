@@ -12,7 +12,6 @@ namespace com.cellit.ValidateProvider.V1
     public class ValidateProvider : IProvider
     {
 
-
         #region Add/Remove-Provider
 
         // wird augerufen, wenn der Provider hinzugefügt wird
@@ -816,8 +815,8 @@ namespace com.cellit.ValidateProvider.V1
         [ScriptVisible]
         public bool ValidateAusweis(string ausweis)
         {
-            string[] number = new string[10];
-            int[] multipler = new int[9] { 7, 3, 1, 7, 3, 1, 7, 3, 1 };
+            string[] number = new string[15];
+            int[] multipler = new int[15] { 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1 };
             int pruefziffer = 0;
             int i = 0;
             foreach (char cr in ausweis)
@@ -831,14 +830,14 @@ namespace com.cellit.ValidateProvider.V1
                 {
                     number[i] = cr.ToString();
                 }
-                if (i < 9)
+                if (i < ausweis.Length-1)
                 {
                     pruefziffer = pruefziffer + Convert.ToInt32(number[i]) * multipler[i];
                 }
                 i++;
             }
             pruefziffer =Convert.ToInt32( pruefziffer.ToString().Substring((pruefziffer.ToString().Length - 1), 1));
-            if (pruefziffer == Convert.ToInt32( number[9]))
+            if (pruefziffer == Convert.ToInt32( number[ausweis.Length-1]))
             {
                 return true;
             }
