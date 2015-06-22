@@ -397,7 +397,7 @@ namespace com.cellit.SendSMSProvider.V1
         void OnEvent_Inbound(object sender, EventArgs e)
         {
             int i = 0;
-            string sql = "select KundeAntwort as msg, Antwortam as empfang, BatchID, Phonenumber from _SmSTransfer where KundeAntwort is not null and SmSEnd=0";
+            string sql = "select KundeAntwort as msg, Antwortam as empfang, BatchID, Phonenumber from Provider_SmSTransfer where KundeAntwort is not null and SmSEnd=0";
             System.Data.DataSet dataset = this.GetDefaultDatabaseConnection().Select(sql);
             foreach (System.Data.DataRow dataRow in dataset.Tables[0].Rows)//Für jede SMS in Datenbank wird das Event gestartet
             {
@@ -434,7 +434,7 @@ namespace com.cellit.SendSMSProvider.V1
         {
             try
             {
-                this.GetDefaultDatabaseConnection().Execute("update _SmSTransfer set SmSEnd='true' where KundeAntwort is not null and BatchID='" + batchID + "'");
+                this.GetDefaultDatabaseConnection().Execute("update Provider_SmSTransfer set SmSEnd='true' where KundeAntwort is not null and BatchID='" + batchID + "'");
             }
             catch (Exception e)
             {
@@ -447,7 +447,7 @@ namespace com.cellit.SendSMSProvider.V1
         [ScriptVisible]
         public bool GetAllOpenSmS(string batchId)
         {
-            System.Data.DataSet old = this.GetDefaultDatabaseConnection().Select("select count(BatchID) as old from _SmSTransfer where SmSEnd=0 and KundeAntwort is not null and BatchId='" + batchId + "'");
+            System.Data.DataSet old = this.GetDefaultDatabaseConnection().Select("select count(BatchID) as old from Provider_SmSTransfer where SmSEnd=0 and KundeAntwort is not null and BatchId='" + batchId + "'");
             if (Convert.ToInt32(old.Tables[0].Rows[0]["old"].ToString()) > 0)
             {
                 OnEvent_Inbound(this, EventArgs.Empty);

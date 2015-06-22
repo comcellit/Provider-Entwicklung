@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[_MailProviderTransaktion] 
+CREATE TABLE [dbo].[Provider_MailTransaktion] 
 ( 
 [MailID] [int] IDENTITY(1,1) NOT NULL, 
 [ProjektID] [nchar](3) NOT NULL, 
@@ -29,4 +29,4 @@ CREATE TABLE [dbo].[_MailProviderTransaktion]
 [vtg_BicRef] [int] NULL,
 [TransaktionEnd] [bit] NOT NULL,
 [RequestEnd] [bit] NOT NULL,
-CONSTRAINT [PK__MailProviderTransaktion] PRIMARY KEY CLUSTERED  ( [MailID] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY] ) ON [PRIMARY] ALTER TABLE [dbo].[_MailProviderTransaktion] ADD  CONSTRAINT [DF__MailProviderTransaktion_TransaktionEnd]  DEFAULT ((0)) FOR [TransaktionEnd] 
+CONSTRAINT [PK_Provider_MailTransaktion] PRIMARY KEY CLUSTERED  ( [MailID] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY] ) ON [PRIMARY] ALTER TABLE [dbo].[_MailProviderTransaktion] ADD  CONSTRAINT [DF__MailProviderTransaktion_TransaktionEnd]  DEFAULT ((0)) FOR [TransaktionEnd] 

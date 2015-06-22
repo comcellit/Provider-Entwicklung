@@ -9,7 +9,13 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
     var myVtgIban;
     var myVtgBic;
     var bankArt;
-    var mailTo = null;
+    var mailTo;
+    var indexof;
+    var myVtgRef;
+    var mytransaktion;
+    var newBody;
+    var mymail;
+    var valide;
 
     //ttCall4 Mask-Eventhandler registirerien:
     ttCall4.Hook.on('dialogStart', Mask_Open, this);
@@ -28,6 +34,20 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         //Remote-Events deregistrieren:
         remote.RecieveMailStatus.removeEventHandler(MailStatus);
         remote.ReceiveMailMessage.removeEventHandler(ReciveMailMessage);
+        //Variablen löschen
+        getTransField = null;
+        myVtgKonto = null;
+        myVtgBlz = null;
+        myVtgIban = null;
+        myVtgBic = null;
+        bankArt = null;
+        mailTo = null;
+        indexof = null;
+        myVtgRef = null;
+        mytransaktion = null;
+        newBody = null;
+        mymail = null;
+        valide = null;
     }
 
     //Event: Vorgangs-Feld geklickt
@@ -50,7 +70,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
             case remote.send:
 
                 mailTo = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
-                var valide = remote.EmailIsValid(mailTo)
+                valide = remote.EmailIsValid(mailTo)
                 if (valide == true) {
 
                     if (remote.anliegen.isVollmacht == true) {
@@ -75,7 +95,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
     //Event Starten Daten Speichern
     function ReciveMailMessage(sender, args)
     {
-        var indexof = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
+        indexof = ttCall4.Hook.DataFields[remote.transaktion - 200].value.getValue();
         if (indexof.indexOf(args.Params[0]) >= 0 )
         {
             Ext.MessageBox.alert('Info', "Eingehende Mail Antwort für transaktion: " + args.Params[0]);
@@ -103,7 +123,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
     //Delivery Event Empfangen
     function MailStatus(sender,args1)
     {
-        var mymail = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
+        mymail = ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue();
         //alert(args1.Params[0]+ ttCall4.Hook.DataFields[remote.mailfield - 200].value.getValue());
         if (args1.Params[0]== mymail && args1.Params[1]==false)
         {
@@ -115,6 +135,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         }
 
     }
+
     function getProgress(){
         Ext.MessageBox.show({
             title: 'Please wait',
@@ -144,7 +165,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
     function SendVollmacht(mailTo)
     {
-        var myVtgRef = remote.transaktion - 200;
+        myVtgRef = remote.transaktion - 200;
         
         if (mailTo == null) {
             Ext.MessageBox.alert('Fehler', 'Das E-Mail feld darf nicht leer sein.');
@@ -152,8 +173,8 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
         else {
 
             getProgress();//Anzeige Mail Versand Status
-            var mytransaktion = remote.GetTrasaktionID();//Speicher TransaktionId
-            var newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(),
+            mytransaktion = remote.GetTrasaktionID();//Speicher TransaktionId
+            newBody = remote.ReplaceBody(ttCall4.Hook.CustomerFields[1].value.getValue(),
                           ttCall4.Hook.CustomerFields[4].value.getValue(),
                           ttCall4.Hook.CustomerFields[2].value.getValue(),
                           mytransaktion,
@@ -178,7 +199,7 @@ com.cellit.MailProvider.V1.MailProvider = function (remote) {
 
     function SendGetBank(mailTo)
     {
-        var myVtgRef = remote.transaktion - 200;
+        myVtgRef = remote.transaktion - 200;
         if (typeof (remote.anliegen.bank.konto) == "undefined") {
             myVtgKonto = 0;
             bankArt = "SEPA";

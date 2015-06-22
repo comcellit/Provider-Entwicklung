@@ -92,7 +92,7 @@ namespace com.cellit.SMSGatewayService.V1
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
-            string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='_SmSTransfer'";
+            string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='Provider_SmSTransfer'";
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
             int exists = Convert.ToInt32(ds.Tables[0].Rows[0]["count"]);
 
@@ -203,7 +203,7 @@ namespace com.cellit.SMSGatewayService.V1
         //Für die antworten Trasaktion in Datenbank speicher
         public void SetTransaktion(string to, string batch, string projektID, int trasRef, int requestText,int smsRequestDate)
         {
-            string insert = "Insert Into _SmSTransfer (BatchID,Gesendetam,phonenumber,ProjektID,TrasRef,ResultRef,ResultDateRef) values('" + batch + "', getdate(),'" + to + "','" + projektID + "'," + trasRef + "," + requestText + "," + smsRequestDate + ");";
+            string insert = "Insert Into Provider_SmSTransfer (BatchID,Gesendetam,phonenumber,ProjektID,TrasRef,ResultRef,ResultDateRef) values('" + batch + "', getdate(),'" + to + "','" + projektID + "'," + trasRef + "," + requestText + "," + smsRequestDate + ");";
             this.GetDefaultDatabaseConnection().Execute(insert);
         }
 
@@ -219,8 +219,7 @@ namespace com.cellit.SMSGatewayService.V1
             {
                 if (inboxMessage.ReadAt.ToString() == "01.01.0001 00:00:00")
                 {
-                    //Console.WriteLine("Message: BachtID {0} from: {1} to: {2} at: {3} Text:{4}", inboxMessage.Id, inboxMessage.Originator.PhoneNumber, inboxMessage.Recipient.PhoneNumber, inboxMessage.ReceivedAt,inboxMessage.Summary);
-                    update = "update _SmSTransfer set KundeAntwort='" + inboxMessage.Summary + "', Antwortam='" + TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(inboxMessage.ReceivedAt), TimeZoneInfo.Local) + "' where SmSEnd=0 and Phonenumber='" + "0" + inboxMessage.Originator.PhoneNumber.Substring(2, inboxMessage.Originator.PhoneNumber.Length - 2) + "'";
+                    update = "update Provider_SmSTransfer set KundeAntwort='" + inboxMessage.Summary + "', Antwortam='" + TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(inboxMessage.ReceivedAt), TimeZoneInfo.Local) + "' where SmSEnd=0 and Phonenumber='" + "0" + inboxMessage.Originator.PhoneNumber.Substring(2, inboxMessage.Originator.PhoneNumber.Length - 2) + "'";
                     this.GetDefaultDatabaseConnection().Execute(update);
                     inboxService.MarkMessageAsRead(inboxMessage.Id);
                     count++;

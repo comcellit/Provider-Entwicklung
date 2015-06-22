@@ -225,7 +225,7 @@ namespace com.cellit.VoiceRecPlay.V1
         public int GetVoiceAnzahl(int kundenID)
         {
             int count = 0;
-            string sql = "SELECT Count([Aufrufe_ID]) as count From Dat_000" + ttCallProjektID.ToString() + "_Aufrufe (nolock) WHERE Aufrufe_Kunden_ID = " + kundenID.ToString() + " and Aufrufe_TkAnlage is not null ";
+            string sql = "SELECT Count([Aufrufe_ID]) as count From Dat_000" + ttCallProjektID.ToString() + "_Aufrufe (nolock) WHERE Aufrufe_Kunden_ID = " + kundenID.ToString() + " and Aufrufe_TkAnlage is not null  and Aufrufe_TKAnlage!=''";
             System.Data.DataSet dscount = this.GetDefaultDatabaseConnection().Select(sql);
 
             count = Convert.ToInt32(dscount.Tables[0].Rows[0]["count"]);

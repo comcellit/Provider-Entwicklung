@@ -5,6 +5,7 @@ using System.Text;
 using ttFramework.Provider;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
+using System.Data;
 
 namespace com.cellit.ValidateProvider.V1
 {
@@ -43,7 +44,7 @@ namespace com.cellit.ValidateProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         private IProvider _auswahl;
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Prüfen auf", Filter = "Validate.Block")]
+        [RuntimeSetting(Frame = "Einstellungen", Label = "Prüfen auf", Filter = "Validate.Block", AllowBlank = false)]
         public ISubProvider auswahl
         {
             get { return _auswahl as ISubProvider; }
@@ -97,15 +98,15 @@ namespace com.cellit.ValidateProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Datum prüfen", Label = "Feld Datum", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Datum prüfen", Label = "Feld Datum", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int dateField;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Datum prüfen", Label = "Prüfe auf ", FieldType = FieldType.ComboBox, Values = "GetValue")]
+        [RuntimeSetting(Frame = "Datum prüfen", Label = "Prüfe auf ", FieldType = FieldType.ComboBox, Values = "GetValue", AllowBlank = false)]
         public string type;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Datum prüfen", Label = "Prüf Ziffer", FieldType = FieldType.NumberField)]
+        [RuntimeSetting(Frame = "Datum prüfen", Label = "Prüf Ziffer", FieldType = FieldType.NumberField, AllowBlank = false)]
         public int check;
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
@@ -306,7 +307,7 @@ namespace com.cellit.ValidateProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Feld Email", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Feld Email", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int mailField;
 
         #endregion
@@ -457,7 +458,7 @@ namespace com.cellit.ValidateProvider.V1
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Textfeld", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Textfeld", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int textField;
         
         #endregion
@@ -580,7 +581,7 @@ namespace com.cellit.ValidateProvider.V1
         #region Runtime-Settings
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Textfeld", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Textfeld", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int spaceField;
 
 
@@ -704,7 +705,7 @@ namespace com.cellit.ValidateProvider.V1
         #region Runtime-Settings
         // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Ausweisnummer", FieldType = FieldType.ComboBox, Values = "GetFields")]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Ausweisnummer", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
         public int persoField;
 
 
@@ -851,6 +852,193 @@ namespace com.cellit.ValidateProvider.V1
 
 
     }
+    //Validiere PLZ Straße ORT
+    [SubProvider(DisplayName="Validiere Adresse", Tags="Validate.Block")]
+    public class ValidateAdress : ISubProvider
+    {
+        #region Runtime-Settings
+        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "PLZ", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int plzField;
 
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "ORT", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank=false)]
+        public int ortField;
+
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Straße", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank=false)]
+        public int streetField;
+
+        [ScriptVisible(SerializeType = SerializeTypes.Value)]
+        [RuntimeSetting(Frame = "Feld Auswahl", Label = "Hausnummer", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+        public int numberField;
+
+        #endregion
+
+        #region Provider Code
+
+        public IProvider OwnerProvider
+        {
+            set { }
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public void Initialize(object args)
+        {
+
+            //throw new NotImplementedException();
+        }
+
+        // Felder für Einstellung( NUR Datenfelder!)
+        public static object GetFields(Dictionary<string, object> settings)
+        {
+            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+            List<object[]> result = new List<object[]>();
+            bool isExtended = false;
+            if (campaignID != null)
+            {
+                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                {
+                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                    if (ds.Tables[0].Rows.Count == 1)
+                    {
+                        for (int i = 1; i <= 50; i++)
+                        {
+                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
+                            {
+                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                            }
+                            else
+                            {
+                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                            }
+                        }
+                        if (isExtended)
+                        {
+                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                            {
+                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                for (int i = 1; i <= ExtFields.Length; i++)
+                                {
+                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                    if (fieldCaption == "")
+                                    {
+                                        result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                    }
+                                    else
+                                    {
+                                        result.Add(new object[] { i + 250, fieldCaption });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= 150; i++)
+                                {
+                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                }
+                            }
+                            //for (int i = 1; i <= 200; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+                        else
+                        {
+                            //for (int i = 1; i <= 50; i++)
+                            //{
+                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                            //}
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 50; i++)
+                {
+                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                }
+                //for (int i = 1; i <= 50; i++)
+                //{
+                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                //}
+            }
+
+            return result;
+        }
+
+        [ScriptVisible]
+        public  List<string> GetPLZ(string value)
+        {
+            List<string> list = new List<string>();
+            string select = string.Empty;
+            select += "SELECT PLZ_PLZ FROM Provider_PlzOrt ";
+            select += " WHERE PLZ_PLZ LIKE '" + value + "%';";
+            DataSet dataSet = this.GetDefaultDatabaseConnection().Select(select);
+            foreach (DataRow dataRow in dataSet.Tables[0].Rows)
+            {
+
+                if (!list.Contains(dataRow.ItemArray[0].ToString()))
+                {
+                    list.Add(dataRow.ItemArray[0].ToString());
+                }
+                
+            }
+            return list;
+        }
+
+        [ScriptVisible]
+        public List<string> GetOrt(string value)
+        {
+            string select = string.Empty;
+            select += "SELECT PLZ_ONAME FROM Provider_PlzOrt ";
+            select += " WHERE PLZ_PLZ = '" + value + "';";
+            DataSet dataSet = this.GetDefaultDatabaseConnection().Select(select);
+            List<string> list = new List<string>();
+            foreach (DataRow dataRow in dataSet.Tables[0].Rows)
+            {
+
+                if (!list.Contains(dataRow.ItemArray[0].ToString()))
+                {
+                    list.Add(dataRow.ItemArray[0].ToString());
+                }
+
+            }
+
+            return list;
+        }
+
+        [ScriptVisible]
+        public List<string> GetStreet(string street, string plz)
+        {
+            string select = string.Empty;
+            select += "SELECT STR_NAME46 FROM Provider_Strasse join Provider_PlzOrt on PLZ_ALORT=STR_ALORT ";
+            select += " WHERE PLZ_PLZ = '" + plz + "' and STR_NAME46 like '" + street + "%'";
+            DataSet dataSet = this.GetDefaultDatabaseConnection().Select(select);
+            List<string> list = new List<string>();
+            foreach (DataRow dataRow in dataSet.Tables[0].Rows)
+            {
+                if (!list.Contains(dataRow.ItemArray[0].ToString()))
+                {
+                    list.Add(dataRow.ItemArray[0].ToString());
+                }
+
+            }
+            return list;
+        }
+
+        #endregion
+
+    }
     
 }

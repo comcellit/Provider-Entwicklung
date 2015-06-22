@@ -49,7 +49,6 @@
     <Compile Include="ValidateProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="js\validateProvider.js" />
   </ItemGroup>

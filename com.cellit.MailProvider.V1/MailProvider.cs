@@ -228,7 +228,7 @@ namespace com.cellit.MailProvider.V1
                 currentcampaign.GetProviderEvents().Initialized += campagnInitialized;
             }
             //Prüfung ob die Benötigte Tabelle in der datenbank vorhanden ist
-            string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='_MailProviderTransaktion'";
+            string sql = "select COUNT(*) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='Provider_MailTransaktion'";
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
             int exists = Convert.ToInt32(ds.Tables[0].Rows[0]["count"]);
 
@@ -567,7 +567,7 @@ namespace com.cellit.MailProvider.V1
         public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,int vtgTransRef)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef,Anliegen) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KDatumField + "," + _KUhrzeitField + "," + _KResultField + "," + _KIPField + ",'Vollmacht');";
+            string sql = "Insert Into Provider_MailTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef,Anliegen) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KDatumField + "," + _KUhrzeitField + "," + _KResultField + "," + _KIPField + ",'Vollmacht');";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);
@@ -584,7 +584,7 @@ namespace com.cellit.MailProvider.V1
         public void SetBankTransaktion(string kundenId, string kundenmail, string hex, string body, int vtgTransRef, int vtgKontoRef, int vtgBlzRef, int vtgIbanRef, int vtgBicRef, string bankArt)
         {
 
-            string sql = "Insert Into _MailProviderTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_IPRef,vtg_KontoRef,vtg_BlzRef,vtg_IbanRef,vtg_BicRef,Anliegen,BankArt) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KIPField + "," + vtgKontoRef + "," + vtgBlzRef + "," + vtgIbanRef + "," + vtgBicRef + ",'Bankdaten','" + bankArt + "');";
+            string sql = "Insert Into Provider_MailTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_IPRef,vtg_KontoRef,vtg_BlzRef,vtg_IbanRef,vtg_BicRef,Anliegen,BankArt) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KIPField + "," + vtgKontoRef + "," + vtgBlzRef + "," + vtgIbanRef + "," + vtgBicRef + ",'Bankdaten','" + bankArt + "');";
             try
             {
                 this.GetDefaultDatabaseConnection().Execute(sql);

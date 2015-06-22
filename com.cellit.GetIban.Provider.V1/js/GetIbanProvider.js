@@ -18,33 +18,23 @@ com.cellit.GetIban.Provider.V1.GetIbanFunction = function (remote) {
     //Event: Bearbeitungsmaske geöffnet
     function Mask_Open() {
         //Remote-Events registrieren:
-        //alert(remote.anliegen.bank.konto);
-        //alert(remote.anliegen.bank.iban);
-        //remote.anliegen.isVollmacht
+        
     }
 
     //Event: Beitungsmaske geschlossen
     function Mask_Close() {
-        //Remote-Events deregistrieren:
+        //Variablen löschen
+        myaccountNumber = null;
+        mybankIdent = null;
+        myibanNumber = null;
+        mybicIdent = null;
+        myIbanField = null;
+        myBicField = null;
     }
-
-    //Event: Vorgangs-Feld geklickt
-    function DataField_Click(index) {
-        // Weiterleitung an globale Prüfung
-        ttCallField_Click(index + 200);
-    }
-
-    //Event: Ergebnis-Feld geklickt
-    function ResultField_Click(index) {
-        // Weiterleitung an globale Prüfung
-        ttCallField_Click(index);
-    }
-
-    //Globale Prüfung bei Field-Click
+    //Globale Prüfung bei LostFocus
     function DataField_LostFocus(index) {
         switch (index+200) {
-
-            //Email Versand
+            
             case remote.accountNumber:
 
                 myIbanField = ttCall4.Hook.DataFields[remote.ibanNumber - 200].getFieldObject();

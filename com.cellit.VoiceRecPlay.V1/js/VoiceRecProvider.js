@@ -4,7 +4,6 @@ Ext.ns('com.cellit.VoiceRecPlay.V1');
 com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
     //Variabeln
     var myStore;
-
     var voicecount;
     
 
@@ -21,7 +20,8 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
 
     //Event: Beitungsmaske geschlossen
     function Mask_Close() {
-        //Remote-Events deregistrieren:
+        myStore = null;
+        voicecount = null;
     }
 
     //Event: Vorgangs-Feld geklickt
@@ -42,15 +42,11 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
 
             ////Sound abspielen
             case remote.playField:
-
                 
                 voicecount = remote.GetVoiceAnzahl(ttCall4.Hook.CustomerFields.id.getValue());
                 //Soundfile Pfad mit prüfung
-                    
-                
-
                 if (voicecount == 0) {
-                    alert("Kein VoiceFile vorhanden");
+                    Ext.MessageBox.alert("Info","Kein VoiceFile vorhanden");
                 }
                 else {
                     if (voicecount == 1) {
@@ -190,20 +186,20 @@ com.cellit.VoiceRecPlay.V1.VoiceRecProvider = function (remote) {
             //});
 
             // this hideous block creates the bogus progress
-            var f = function (v) {
-                return function () {
-                    if (v == 12) {
-                        Ext.MessageBox.hide();
-                        Ext.example.msg('Done', 'Your fake items were loaded!');
-                    } else {
-                        var i = v / 11;
-                        Ext.MessageBox.updateProgress(i, Math.round(100 * i) + '% completed');
-                    }
-                };
-            };
-            for (var i = 1; i < 13; i++) {
-                setTimeout(f(i), i * 500);
-            }
+            //var f = function (v) {
+            //    return function () {
+            //        if (v == 12) {
+            //            Ext.MessageBox.hide();
+            //            Ext.example.msg('Done', 'Your fake items were loaded!');
+            //        } else {
+            //            var i = v / 11;
+            //            Ext.MessageBox.updateProgress(i, Math.round(100 * i) + '% completed');
+            //        }
+            //    };
+            //};
+            //for (var i = 1; i < 13; i++) {
+            //    setTimeout(f(i), i * 500);
+            //}
             var player = new Ext.Window({
                 //title: 'Player',
                 header: false,

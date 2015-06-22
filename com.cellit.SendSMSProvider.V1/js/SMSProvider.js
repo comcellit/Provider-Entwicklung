@@ -3,8 +3,8 @@ Ext.ns('com.cellit.SendSMSProvider.V1.');
 
 com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
    
-    var batchid = null;
-
+    var batchid;
+    var phonenumber;
     //ttCall4 Mask-Eventhandler registirerien:
     ttCall4.Hook.on('dialogStart', Mask_Open, this);
     ttCall4.Hook.on('dialogEnd', Mask_Close, this);
@@ -13,15 +13,17 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
 
     //Event: Bearbeitungsmaske geöffnet
     function Mask_Open() {
-        remote.ReceiveMessage.addEventHandler(ReceiveMessage, this);
         //Remote-Events registrieren:
+        remote.ReceiveMessage.addEventHandler(ReceiveMessage, this);
     }
 
     //Event: Beitungsmaske geschlossen
     function Mask_Close() {
-        remote.ReceiveMessage.removeEventHandler(ReceiveMessage);
         //Remote-Events deregistrieren:
-
+        remote.ReceiveMessage.removeEventHandler(ReceiveMessage);
+        //Variablen Löschen
+        batchid = null;
+        phonenumber = null;
     }
 
     //Event: Vorgangs-Feld geklickt
@@ -43,7 +45,7 @@ com.cellit.SendSMSProvider.V1.SMSProvider = function (remote) {
             //Send SmS
             case remote.send:
 
-                var phonenumber = ttCall4.Hook.DataFields[remote.phone - 200].value.getValue();
+                phonenumber = ttCall4.Hook.DataFields[remote.phone - 200].value.getValue();
                 if (phonenumber == null) {
                     Ext.MessageBox.alert('Fehler', 'Die Handynummer darf nicht leer sein.');
                 } //Prüft ob Empfänger leer ist

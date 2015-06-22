@@ -146,10 +146,10 @@ namespace com.cellit.MailResultService.V1
             bicRef = null;
 
             //SQL Select für die Ergebnis Rückspielung an Kunden
-            string sql = "SELECT _MailProviderTransaktion.ProjektID";
+            string sql = "SELECT Provider_MailTransaktion.ProjektID";
             sql += ",transaktionID";
             sql += ",vtg_TransRef";
-            sql += ",_MailProviderTransaktion.KundenID";
+            sql += ",Provider_MailTransaktion.KundenID";
             sql += ",left(BestaetigungDatum,10) as BestaetigungDatum";
             sql += ",vtg_BDatumRef";
             sql += ",BestaetigungUhrzeit";
@@ -168,7 +168,7 @@ namespace com.cellit.MailResultService.V1
             sql += ",BIC";
             sql += ",vtg_BicRef";
             sql += ",BankArt";
-            sql += " FROM _MailProviderTransaktion  where TransaktionEnd=0 and RequestEnd=1";
+            sql += " FROM Provider_MailTransaktion  where TransaktionEnd=0 and RequestEnd=1";
 
             //Daten Lesen und schreiben
             try
@@ -369,7 +369,7 @@ namespace com.cellit.MailResultService.V1
                         Insert += " and " + transRef + " like '%" + ds.Tables[0].Rows[datacount]["transaktionID"] + "%'";
                     }
 
-                    string TransaktionEnd = "Update _MailProviderTransaktion set TransaktionEnd='true' where transaktionID='" + ds.Tables[0].Rows[datacount]["transaktionID"] + "'";
+                    string TransaktionEnd = "Update Provider_MailTransaktion set TransaktionEnd='true' where transaktionID='" + ds.Tables[0].Rows[datacount]["transaktionID"] + "'";
 
                     //Sende Event an Agenten Falls kunde geöffnet
                     OnRaiseMailEvent(new MailEvent(ds.Tables[0].Rows[datacount]["transaktionID"].ToString(),

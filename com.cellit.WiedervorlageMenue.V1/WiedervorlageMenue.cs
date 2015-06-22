@@ -38,6 +38,33 @@ namespace com.cellit.WiedervorlageMenue.V1
 				};
             }
         }
+        //public List<object> ExtentionOptions
+        //{
+        //    get
+        //    {
+        //        List<object> options = new List<object>();
+
+
+
+        //        // Applications-Objekt erstellen
+        //        Dictionary<string, object> applications = new Dictionary<string, object>();
+        //        // ttCall 4 hinzufügen
+        //        Dictionary<string, object> ttCall4 = new Dictionary<string, object>();
+        //        // Menü-Eintrag hinzufügen
+        //        object[] menus = new object[1];
+        //        menus[0] = new object[]
+        //        {
+        //            "Add", "Wiedervorlagen", "", "", "Übersicht", "Wiedervorlagen" + "." + "Übersicht",
+        //            this.GetProviderDatas().UrlDirectory + "res/WV.png"
+        //        };
+
+        //        ttCall4.Add("Menus", menus);
+        //        applications.Add("ttCall4", ttCall4);
+        //        options.Add(applications);
+        //        return options;
+        //    }
+        //}
+
 
         #endregion
 
