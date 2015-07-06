@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using ttFramework.Provider;
 using System.IO;
-using System.Reflection;
 using System.Web;
 using ACD.Interface.V1;
 using System.Net.Mail;
@@ -102,16 +101,16 @@ namespace com.cellit.MailProvider.V1
             SmtpClient test = new SmtpClient(settings["server"].ToString(), Convert.ToInt32(settings["port"].ToString()));
             test.Credentials = new System.Net.NetworkCredential(settings["user"].ToString(), settings["passwort"].ToString());
             if (Convert.ToBoolean(settings["ssl"].ToString()) == true)
-                {
-                    test.EnableSsl = true;
-                }
-                else
-                {
-                    test.EnableSsl = false;
-                }
+            {
+                test.EnableSsl = true;
+            }
+            else
+            {
+                test.EnableSsl = false;
+            }
             test.Send(new MailMessage(settings["user"].ToString(), settings["user"].ToString(), "test", "Test"));
         }
-        
+
 
         #endregion
 
@@ -129,19 +128,19 @@ namespace com.cellit.MailProvider.V1
         [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kunden Email", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
         public int mailfield;
 
-        
+
 
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
         [RuntimeSetting(Frame = "Provider Feld Einstellung", Label = "Kunden IP", FieldType = FieldType.ComboBox, Values = "GetDataFields", AllowBlank = false)]
         public int KundeIPField
         {
             get { return _KIPField; }
-            set { _KIPField = value-200; }
+            set { _KIPField = value - 200; }
         }
-                
+
         private IProvider _anliegen;
         [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Anliegen der e-Mail", Filter = "EMail.Anliegen", AllowBlank=false)]
+        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Anliegen der e-Mail", Filter = "EMail.Anliegen", AllowBlank = false)]
         public ISubProvider anliegen
         {
             get { return _anliegen as ISubProvider; }
@@ -176,8 +175,8 @@ namespace com.cellit.MailProvider.V1
             get { return _body; }
             set { _body = value; }
         }
-        
-        
+
+
         #endregion
 
         #region Script-Integration in ttCall 4
@@ -221,10 +220,12 @@ namespace com.cellit.MailProvider.V1
         {
             //Beim hinzufühgen des Provider in die Kampange wird die ProjektID ermittelt
             currentcampaign = (ICampaign)this.GetParentProvider().GetParentProvider();
-            if (currentcampaign.GetProviderDatas().IsInitialized == true){
+            if (currentcampaign.GetProviderDatas().IsInitialized == true)
+            {
                 ttCallProjektID = GetprojektID(currentcampaign.ID);
             }
-            else{
+            else
+            {
                 currentcampaign.GetProviderEvents().Initialized += campagnInitialized;
             }
             //Prüfung ob die Benötigte Tabelle in der datenbank vorhanden ist
@@ -233,17 +234,20 @@ namespace com.cellit.MailProvider.V1
             int exists = Convert.ToInt32(ds.Tables[0].Rows[0]["count"]);
 
             //Wenn nicht vorhanden angelegen
-            if (exists==1){
+            if (exists == 1)
+            {
                 //Do Nothing
             }
-            else{
+            else
+            {
 
-                Assembly _Assembly = Assembly.GetExecutingAssembly();
-                StreamReader sr = new StreamReader(_Assembly.GetManifestResourceStream("com.cellit.MailProvider.V1.sql.cmd.txt"));
+                byte[] file = this.GetRessource("cmd.txt");
+                MemoryStream stream = new MemoryStream(file);
+                StreamReader sr = new StreamReader(stream);
                 string data = sr.ReadLine();
-                string insert="";
-              
-                while (data!=null)
+                string insert = "";
+
+                while (data != null)
                 {
                     insert += " " + data;
                     data = sr.ReadLine();
@@ -257,13 +261,13 @@ namespace com.cellit.MailProvider.V1
                 {
                     this.Log(LogType.Debug, Convert.ToString("Test" + e));
                 }
-                
+
             }
             //MailInbound Event registrieren
             com.cellit.MailResultService.V1.MailResultService.MailInbound += MailResultService_MailInbound;
-            
+
         }
-        
+
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
         {
@@ -465,17 +469,19 @@ namespace com.cellit.MailProvider.V1
 
         //Mail Versand
         [ScriptVisible]
-        public  void SendMail(string mailTo, string newBody) //E-Mail Versenden Asyncron
+        public void SendMail(string mailTo, string newBody) //E-Mail Versenden Asyncron
         {
             try
             {
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress(_username,_display); //Absender
+                mail.From = new MailAddress(_username, _display); //Absender
                 mail.To.Add(mailTo); //empfänger
-                if (_bcc == ""){
+                if (_bcc == "")
+                {
                     //Do Nothing
                 }
-                else{
+                else
+                {
                     mail.Bcc.Add(_bcc); //Blindkopie an
                 }
                 mail.Subject = _subject; //Betreff
@@ -494,17 +500,17 @@ namespace com.cellit.MailProvider.V1
                 {
                     client.EnableSsl = false;
                 }
-                client.SendAsync(mail,null);
+                client.SendAsync(mail, null);
 
                 AsyncMailCheck check = GetMailStatus;
                 IAsyncResult asyncRes = check.BeginInvoke(10000, mailTo, null, null);
-                
+
             }
             catch (Exception ex)
             {
                 this.Log(LogType.Error, Convert.ToString("SendMail :") + ex);
             }
-            
+
         }
 
         //Mail Delivery Status?
@@ -525,13 +531,13 @@ namespace com.cellit.MailProvider.V1
             popclient.Authenticate(_username, _passwort);
             int mailCount = 0;
             int messageCount = popclient.GetMessageCount();
-            if (messageCount<10)
+            if (messageCount < 10)
             {
                 mailCount = 0;
             }
             else
             {
-                mailCount = messageCount -5;
+                mailCount = messageCount - 5;
             }
             for (int i = messageCount; i > mailCount; i--)
             {
@@ -547,14 +553,14 @@ namespace com.cellit.MailProvider.V1
                         MailStatus(mailTo, false);
                         popclient.DeleteMessage(i);
                     }
-                   
+
                 }
                 catch (Exception e)
                 {
                     this.Log(LogType.Info, e);
                 }
             }
-            if (nodelivery==0)
+            if (nodelivery == 0)
             {
                 MailStatus(mailTo, true);
                 this.Log(LogType.Info, Convert.ToString("MailProvider Email erfolgreich versand ") + mailTo);
@@ -564,7 +570,7 @@ namespace com.cellit.MailProvider.V1
 
         //Vollmacht Transaktion in Sql speichern
         [ScriptVisible]
-        public void SetTransaktion(string kundenId,  string kundenmail, string hex, string body,int vtgTransRef)
+        public void SetTransaktion(string kundenId, string kundenmail, string hex, string body, int vtgTransRef)
         {
 
             string sql = "Insert Into Provider_MailTransaktion (ProjektID,transaktionID,KundenID,VersandDatum,VersandText,VersandUhrzeit,EmpfaengerAdresse,RequestEnd,vtg_TransRef,vtg_BDatumRef,vtg_BUhrzeitRef,vtg_ErgebnisRef,vtg_IPRef,Anliegen) values('" + ttCallProjektID + "','" + hex + "'," + kundenId + ",cast(GETDATE() as DATE),'" + body + "',getdate(),'" + kundenmail + "','false',+" + vtgTransRef + "," + _KDatumField + "," + _KUhrzeitField + "," + _KResultField + "," + _KIPField + ",'Vollmacht');";
@@ -576,7 +582,7 @@ namespace com.cellit.MailProvider.V1
             {
                 this.Log(LogType.Error, error);
             }
-            
+
         }
 
         //Bank Transaktion Speichern
@@ -633,9 +639,9 @@ namespace com.cellit.MailProvider.V1
 
         //Nachrichten Variablen ersetzen
         [ScriptVisible]
-        public string ReplaceBody(string anrede,string vorname,string nachname,string transaktion,string bankdatenart, string auftraggeber )
+        public string ReplaceBody(string anrede, string vorname, string nachname, string transaktion, string bankdatenart, string auftraggeber)
         {
-            string message= _body;
+            string message = _body;
             message = message.Replace("[Anrede]", anrede);
             message = message.Replace("[Name]", nachname);
             message = message.Replace("[Vorname]", vorname);
@@ -659,9 +665,9 @@ namespace com.cellit.MailProvider.V1
         void MailResultService_MailInbound(object sender, MailResultService.V1.MailEvent e)
         {
             EventHandler reciveMail = this.ReceiveMailMessage;
-            if(reciveMail!= null)
+            if (reciveMail != null)
             {
-                reciveMail(this,new ParamArrayEventArgs(e.transaktionID,
+                reciveMail(this, new ParamArrayEventArgs(e.transaktionID,
                                                         e.resultDate,
                                                         e.resultTime,
                                                         e.auftrag,
@@ -677,546 +683,547 @@ namespace com.cellit.MailProvider.V1
         }
 
         //Mail Status Event starten
-        void MailStatus(string mailTo,bool Versand)
+        void MailStatus(string mailTo, bool Versand)
         {
-            
+
             EventHandler status = this.RecieveMailStatus;
             if (status != null)
             {
-                status(this, new ParamArrayEventArgs(mailTo,Versand));
+                status(this, new ParamArrayEventArgs(mailTo, Versand));
             }
         }
 
 
-                
-        #endregion
-
-    }
-
-    #region SubProvider
-
-    //Anliegen SubProvider Vollmacht
-    [SubProvider(DisplayName = "Vollmacht Einholen", Tags = "EMail.Anliegen")]
-    public class GetVollmacht : ISubProvider
-    {
-       
-        #region Runtime-Settings
-        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        public bool isVollmacht;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für Auftraggeber", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int produktgeber;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kundenreaktions Datum", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int KundeDatumField
-        {
-            get { return MailProvider._KDatumField; }
-            set { MailProvider._KDatumField = value - 200; }
-        }
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kundenreaktions Uhrzeit", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int KundeUhrzeitField
-        {
-            get { return MailProvider._KUhrzeitField; }
-            set { MailProvider._KUhrzeitField = value - 200; }
-        }
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int KundeResultField
-        {
-            get { return MailProvider._KResultField; }
-            set { MailProvider._KResultField = value - 200; }
-        }
 
         #endregion
 
-        #region Provider Code
 
-        public IProvider OwnerProvider
+
+        #region SubProvider
+
+        //Anliegen SubProvider Vollmacht
+        [SubProvider(DisplayName = "Vollmacht Einholen", Tags = "EMail.Anliegen")]
+        public class GetVollmacht : ISubProvider
         {
-            set { }
-        }
 
-        public void Dispose()
-        {
+            #region Runtime-Settings
+            // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            public bool isVollmacht;
 
-            //throw new NotImplementedException();
-        }
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für Auftraggeber", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int produktgeber;
 
-        public void Initialize(object args)
-        {
-            isVollmacht = true;
-        }
-
-        // Felder für Einstellung( NUR Datenfelder!)
-        public static object GetFields(Dictionary<string, object> settings)
-        {
-            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
-            List<object[]> result = new List<object[]>();
-            bool isExtended = false;
-            if (campaignID != null)
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kundenreaktions Datum", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int KundeDatumField
             {
-                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
-                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
-                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                get { return MailProvider._KDatumField; }
+                set { MailProvider._KDatumField = value - 200; }
+            }
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kundenreaktions Uhrzeit", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int KundeUhrzeitField
+            {
+                get { return MailProvider._KUhrzeitField; }
+                set { MailProvider._KUhrzeitField = value - 200; }
+            }
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int KundeResultField
+            {
+                get { return MailProvider._KResultField; }
+                set { MailProvider._KResultField = value - 200; }
+            }
+
+            #endregion
+
+            #region Provider Code
+
+            public IProvider OwnerProvider
+            {
+                set { }
+            }
+
+            public void Dispose()
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            public void Initialize(object args)
+            {
+                isVollmacht = true;
+            }
+
+            // Felder für Einstellung( NUR Datenfelder!)
+            public static object GetFields(Dictionary<string, object> settings)
+            {
+                object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+                List<object[]> result = new List<object[]>();
+                bool isExtended = false;
+                if (campaignID != null)
                 {
-                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
-
-                    if (ds.Tables[0].Rows.Count == 1)
+                    string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                    sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                    using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
                     {
-                        for (int i = 1; i <= 50; i++)
-                        {
-                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
-                            {
-                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
-                            }
-                            else
-                            {
-                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                            }
-                        }
-                        if (isExtended)
-                        {
-                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
-                            {
-                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+                        isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
 
-                                for (int i = 1; i <= ExtFields.Length; i++)
+                        if (ds.Tables[0].Rows.Count == 1)
+                        {
+                            for (int i = 1; i <= 50; i++)
+                            {
+                                if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
                                 {
-                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
-                                    if (fieldCaption == "")
+                                    result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                                }
+                                else
+                                {
+                                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                                }
+                            }
+                            if (isExtended)
+                            {
+                                if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                                {
+                                    object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                    for (int i = 1; i <= ExtFields.Length; i++)
+                                    {
+                                        string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                        if (fieldCaption == "")
+                                        {
+                                            result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                        }
+                                        else
+                                        {
+                                            result.Add(new object[] { i + 250, fieldCaption });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 1; i <= 150; i++)
                                     {
                                         result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
                                     }
-                                    else
-                                    {
-                                        result.Add(new object[] { i + 250, fieldCaption });
-                                    }
                                 }
+                                //for (int i = 1; i <= 200; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
                             else
                             {
-                                for (int i = 1; i <= 150; i++)
-                                {
-                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
-                                }
+                                //for (int i = 1; i <= 50; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
-                            //for (int i = 1; i <= 200; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
-                        else
-                        {
-                            //for (int i = 1; i <= 50; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
 
+                        }
                     }
                 }
-            }
-            else
-            {
-                for (int i = 1; i <= 50; i++)
+                else
                 {
-                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                }
-                //for (int i = 1; i <= 50; i++)
-                //{
-                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                //}
-            }
-
-            return result;
-        }
-
-        #endregion
-
-    }
-    //Anliegen SubProvider Bankeinzug
-    [SubProvider(DisplayName = "Bankeinzug", Tags = "EMail.Anliegen")]
-    public class GetBankdata : ISubProvider
-    {
-        #region Runtime-Settings
-        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-        private IProvider _bank;
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Welche Art Bankdaten", Filter = "Bank.Anliegen", AllowBlank = false)]
-        public ISubProvider bank
-        {
-            get { return _bank as ISubProvider; }
-            set { _bank = value; }
-
-        }
-
-
-
-        #endregion
-
-        #region Provider Code
-
-        public IProvider OwnerProvider
-        {
-            set { }
-        }
-
-        public void Dispose()
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        public void Initialize(object args)
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        // Felder für Einstellung( NUR Datenfelder!)
-        public static object GetFields(Dictionary<string, object> settings)
-        {
-            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
-            List<object[]> result = new List<object[]>();
-            bool isExtended = false;
-            if (campaignID != null)
-            {
-                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
-                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
-                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
-                {
-                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
-
-                    if (ds.Tables[0].Rows.Count == 1)
+                    for (int i = 1; i <= 50; i++)
                     {
-                        for (int i = 1; i <= 50; i++)
-                        {
-                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
-                            {
-                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
-                            }
-                            else
-                            {
-                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                            }
-                        }
-                        if (isExtended)
-                        {
-                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
-                            {
-                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+                        result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                    }
+                    //for (int i = 1; i <= 50; i++)
+                    //{
+                    //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                    //}
+                }
 
-                                for (int i = 1; i <= ExtFields.Length; i++)
+                return result;
+            }
+
+            #endregion
+
+        }
+        //Anliegen SubProvider Bankeinzug
+        [SubProvider(DisplayName = "Bankeinzug", Tags = "EMail.Anliegen")]
+        public class GetBankdata : ISubProvider
+        {
+            #region Runtime-Settings
+            // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+            private IProvider _bank;
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Welche Art Bankdaten", Filter = "Bank.Anliegen", AllowBlank = false)]
+            public ISubProvider bank
+            {
+                get { return _bank as ISubProvider; }
+                set { _bank = value; }
+
+            }
+
+
+
+            #endregion
+
+            #region Provider Code
+
+            public IProvider OwnerProvider
+            {
+                set { }
+            }
+
+            public void Dispose()
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            public void Initialize(object args)
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            // Felder für Einstellung( NUR Datenfelder!)
+            public static object GetFields(Dictionary<string, object> settings)
+            {
+                object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+                List<object[]> result = new List<object[]>();
+                bool isExtended = false;
+                if (campaignID != null)
+                {
+                    string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                    sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                    using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                    {
+                        isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                        if (ds.Tables[0].Rows.Count == 1)
+                        {
+                            for (int i = 1; i <= 50; i++)
+                            {
+                                if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
                                 {
-                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
-                                    if (fieldCaption == "")
+                                    result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                                }
+                                else
+                                {
+                                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                                }
+                            }
+                            if (isExtended)
+                            {
+                                if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                                {
+                                    object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                    for (int i = 1; i <= ExtFields.Length; i++)
+                                    {
+                                        string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                        if (fieldCaption == "")
+                                        {
+                                            result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                        }
+                                        else
+                                        {
+                                            result.Add(new object[] { i + 250, fieldCaption });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 1; i <= 150; i++)
                                     {
                                         result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
                                     }
-                                    else
-                                    {
-                                        result.Add(new object[] { i + 250, fieldCaption });
-                                    }
                                 }
+                                //for (int i = 1; i <= 200; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
                             else
                             {
-                                for (int i = 1; i <= 150; i++)
-                                {
-                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
-                                }
+                                //for (int i = 1; i <= 50; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
-                            //for (int i = 1; i <= 200; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
-                        else
-                        {
-                            //for (int i = 1; i <= 50; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
 
+                        }
                     }
                 }
-            }
-            else
-            {
-                for (int i = 1; i <= 50; i++)
+                else
                 {
-                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                }
-                //for (int i = 1; i <= 50; i++)
-                //{
-                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                //}
-            }
-
-            return result;
-        }
-
-        #endregion
-
-    }
-    //Bankdaten SubProvider
-    [SubProvider(DisplayName = "Kontonummer und BLZ", Tags = "Bank.Anliegen")]
-    public class GetBankArt : ISubProvider
-    {
-        #region Runtime-Settings
-        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für Kontonummer", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int konto;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für BLZ", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int blz;
-
-
-
-        #endregion
-
-        #region Provider Code
-
-        public IProvider OwnerProvider
-        {
-            set { }
-        }
-
-        public void Dispose()
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        public void Initialize(object args)
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        // Felder für Einstellung( NUR Datenfelder!)
-        public static object GetFields(Dictionary<string, object> settings)
-        {
-            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
-            List<object[]> result = new List<object[]>();
-            bool isExtended = false;
-            if (campaignID != null)
-            {
-                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
-                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
-                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
-                {
-                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
-
-                    if (ds.Tables[0].Rows.Count == 1)
+                    for (int i = 1; i <= 50; i++)
                     {
-                        for (int i = 1; i <= 50; i++)
-                        {
-                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
-                            {
-                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
-                            }
-                            else
-                            {
-                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                            }
-                        }
-                        if (isExtended)
-                        {
-                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
-                            {
-                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+                        result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                    }
+                    //for (int i = 1; i <= 50; i++)
+                    //{
+                    //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                    //}
+                }
 
-                                for (int i = 1; i <= ExtFields.Length; i++)
+                return result;
+            }
+
+            #endregion
+
+        }
+        //Bankdaten SubProvider
+        [SubProvider(DisplayName = "Kontonummer und BLZ", Tags = "Bank.Anliegen")]
+        public class GetBankArt : ISubProvider
+        {
+            #region Runtime-Settings
+            // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+
+
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für Kontonummer", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int konto;
+
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für BLZ", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int blz;
+
+
+
+            #endregion
+
+            #region Provider Code
+
+            public IProvider OwnerProvider
+            {
+                set { }
+            }
+
+            public void Dispose()
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            public void Initialize(object args)
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            // Felder für Einstellung( NUR Datenfelder!)
+            public static object GetFields(Dictionary<string, object> settings)
+            {
+                object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+                List<object[]> result = new List<object[]>();
+                bool isExtended = false;
+                if (campaignID != null)
+                {
+                    string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                    sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                    using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                    {
+                        isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                        if (ds.Tables[0].Rows.Count == 1)
+                        {
+                            for (int i = 1; i <= 50; i++)
+                            {
+                                if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
                                 {
-                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
-                                    if (fieldCaption == "")
+                                    result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                                }
+                                else
+                                {
+                                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                                }
+                            }
+                            if (isExtended)
+                            {
+                                if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                                {
+                                    object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                    for (int i = 1; i <= ExtFields.Length; i++)
+                                    {
+                                        string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                        if (fieldCaption == "")
+                                        {
+                                            result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                        }
+                                        else
+                                        {
+                                            result.Add(new object[] { i + 250, fieldCaption });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 1; i <= 150; i++)
                                     {
                                         result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
                                     }
-                                    else
-                                    {
-                                        result.Add(new object[] { i + 250, fieldCaption });
-                                    }
                                 }
+                                //for (int i = 1; i <= 200; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
                             else
                             {
-                                for (int i = 1; i <= 150; i++)
-                                {
-                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
-                                }
+                                //for (int i = 1; i <= 50; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
-                            //for (int i = 1; i <= 200; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
-                        else
-                        {
-                            //for (int i = 1; i <= 50; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
 
+                        }
                     }
                 }
-            }
-            else
-            {
-                for (int i = 1; i <= 50; i++)
+                else
                 {
-                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                }
-                //for (int i = 1; i <= 50; i++)
-                //{
-                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                //}
-            }
-
-            return result;
-        }
-
-        #endregion
-
-    }
-    //Bankdaten SubProvider
-    [SubProvider(DisplayName = "IBAN und BIC", Tags = "Bank.Anliegen")]
-    public class GetBankArt2 : ISubProvider
-    {
-        #region Runtime-Settings
-        // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
-
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für IBAN", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int iban;
-
-        [ScriptVisible(SerializeType = SerializeTypes.Value)]
-        [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für BIC", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
-        public int bic;
-
-
-
-        #endregion
-
-        #region Provider Code
-
-        public IProvider OwnerProvider
-        {
-            set { }
-        }
-
-        public void Dispose()
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        public void Initialize(object args)
-        {
-
-            //throw new NotImplementedException();
-        }
-
-        // Felder für Einstellung( NUR Datenfelder!)
-        public static object GetFields(Dictionary<string, object> settings)
-        {
-            object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
-            List<object[]> result = new List<object[]>();
-            bool isExtended = false;
-            if (campaignID != null)
-            {
-                string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
-                sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
-                using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
-                {
-                    isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
-
-                    if (ds.Tables[0].Rows.Count == 1)
+                    for (int i = 1; i <= 50; i++)
                     {
-                        for (int i = 1; i <= 50; i++)
-                        {
-                            if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
-                            {
-                                result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
-                            }
-                            else
-                            {
-                                result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
-                            }
-                        }
-                        if (isExtended)
-                        {
-                            if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
-                            {
-                                object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+                        result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                    }
+                    //for (int i = 1; i <= 50; i++)
+                    //{
+                    //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                    //}
+                }
 
-                                for (int i = 1; i <= ExtFields.Length; i++)
+                return result;
+            }
+
+            #endregion
+
+        }
+        //Bankdaten SubProvider
+        [SubProvider(DisplayName = "IBAN und BIC", Tags = "Bank.Anliegen")]
+        public class GetBankArt2 : ISubProvider
+        {
+            #region Runtime-Settings
+            // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
+
+
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für IBAN", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int iban;
+
+            [ScriptVisible(SerializeType = SerializeTypes.Value)]
+            [RuntimeSetting(Frame = "Anliegen der Email", Label = "Feld für BIC", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            public int bic;
+
+
+
+            #endregion
+
+            #region Provider Code
+
+            public IProvider OwnerProvider
+            {
+                set { }
+            }
+
+            public void Dispose()
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            public void Initialize(object args)
+            {
+
+                //throw new NotImplementedException();
+            }
+
+            // Felder für Einstellung( NUR Datenfelder!)
+            public static object GetFields(Dictionary<string, object> settings)
+            {
+                object campaignID = Extension.GetProviderDatas((IProvider)settings["this"]).OwnerID;
+                List<object[]> result = new List<object[]>();
+                bool isExtended = false;
+                if (campaignID != null)
+                {
+                    string sql = "SELECT * FROM Prog_Vtg_Bez_Art (Nolock) WHERE Vtg_Bez_Art_ProjektID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");" + "\r\n";
+                    sql += "SELECT Projekt_DBVersion FROM Global_Projekte (Nolock) WHERE Projekt_ID IN (SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString() + ");";
+                    using (System.Data.DataSet ds = Extension.GetDefaultDatabaseConnection((IProvider)settings["this"]).Select(sql))
+                    {
+                        isExtended = (ds.Tables[1].Rows.Count == 1 && Convert.ToInt32(ds.Tables[1].Rows[0]["Projekt_DBVersion"]) == 3);
+
+                        if (ds.Tables[0].Rows.Count == 1)
+                        {
+                            for (int i = 1; i <= 50; i++)
+                            {
+                                if (ds.Tables[0].Rows[0][i] != null && ds.Tables[0].Rows[0][i].ToString().Length > 0)
                                 {
-                                    string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
-                                    if (fieldCaption == "")
+                                    result.Add(new object[] { i + 200, ds.Tables[0].Rows[0][i].ToString() });
+                                }
+                                else
+                                {
+                                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                                }
+                            }
+                            if (isExtended)
+                            {
+                                if (ds.Tables[0].Rows[0]["Vtg_Extended"].ToString().Length > 0)
+                                {
+                                    object[] ExtFields = new System.Web.Script.Serialization.JavaScriptSerializer().DeserializeObject(ds.Tables[0].Rows[0]["Vtg_Extended"].ToString()) as object[];
+
+                                    for (int i = 1; i <= ExtFields.Length; i++)
+                                    {
+                                        string fieldCaption = ((object[])ExtFields[i - 1])[0].ToString();
+                                        if (fieldCaption == "")
+                                        {
+                                            result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
+                                        }
+                                        else
+                                        {
+                                            result.Add(new object[] { i + 250, fieldCaption });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 1; i <= 150; i++)
                                     {
                                         result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
                                     }
-                                    else
-                                    {
-                                        result.Add(new object[] { i + 250, fieldCaption });
-                                    }
                                 }
+                                //for (int i = 1; i <= 200; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
                             else
                             {
-                                for (int i = 1; i <= 150; i++)
-                                {
-                                    result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
-                                }
+                                //for (int i = 1; i <= 50; i++)
+                                //{
+                                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                                //}
                             }
-                            //for (int i = 1; i <= 200; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
-                        else
-                        {
-                            //for (int i = 1; i <= 50; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
-                        }
 
+                        }
                     }
                 }
-            }
-            else
-            {
-                for (int i = 1; i <= 50; i++)
+                else
                 {
-                    result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                    for (int i = 1; i <= 50; i++)
+                    {
+                        result.Add(new object[] { i + 200, "Datenfeld " + i.ToString() });
+                    }
+                    //for (int i = 1; i <= 50; i++)
+                    //{
+                    //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
+                    //}
                 }
-                //for (int i = 1; i <= 50; i++)
-                //{
-                //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                //}
+
+                return result;
             }
 
-            return result;
+            #endregion
+
         }
 
         #endregion
-
     }
-
-    #endregion
     
 }

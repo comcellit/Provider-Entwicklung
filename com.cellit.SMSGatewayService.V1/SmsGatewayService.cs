@@ -8,7 +8,7 @@ using com.esendex.sdk;
 using com.esendex.sdk.inbox;
 using com.esendex.sdk.utilities;
 using System.Xml.Serialization;
-using System.Reflection;
+using System.Web;
 using System.IO;
 
 namespace com.cellit.SMSGatewayService.V1
@@ -102,8 +102,9 @@ namespace com.cellit.SMSGatewayService.V1
             }
             else
             {
-                Assembly _Assembly = Assembly.GetExecutingAssembly();
-                StreamReader sr = new StreamReader(_Assembly.GetManifestResourceStream("com.cellit.SMSGatewayService.V1.sql.cmd.txt"));
+                byte[] file = this.GetRessource("cmd.txt");
+                MemoryStream stream = new MemoryStream(file);
+                StreamReader sr = new StreamReader(stream);
                 string data = sr.ReadLine();
                 string insert = "";
 
@@ -212,7 +213,8 @@ namespace com.cellit.SMSGatewayService.V1
         {
             string update = null;
             int count = 0;
-            var loginCredentials = new EsendexCredentials(_user, _pass);
+            EsendexCredentials loginCredentials;
+            loginCredentials = new EsendexCredentials(_user, _pass);
             var inboxService = new InboxService(loginCredentials);
             var inboxMessages = inboxService.GetMessages();
             foreach (var inboxMessage in inboxMessages.Messages)
@@ -237,7 +239,6 @@ namespace com.cellit.SMSGatewayService.V1
     public static class OnEvent 
     {
         public static event EventHandler Inbound;
-        //public static string test;
 
         public static void OnInbound()
         {

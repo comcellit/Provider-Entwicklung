@@ -417,43 +417,6 @@ com.cellit.ValidateProvider.V1.ValidateFunction = function (remote) {
             _textFieldHausnummer = object.ownerCt.items.items[3];
         }
     };
-
-    //function GetAppletPanel() {
-    //    var AppletPanel = new Ext.Panel
-    //    ({
-    //        baseCls: 'x-plain',
-    //        id: 'AppletPanelId',
-    //        layout: 'absolute',
-    //        x: 0,
-    //        y: 20,
-    //        height: 400,
-    //        width: 500,
-    //        bodyCfg: {
-    //            name: 'viewingApplet',
-    //            tag: 'applet',
-    //            code: 'jrdesktop.mainApplet.class',
-    //            archive: 'http://agent.cellit-gruppe.de/ttframework/comCellitimg/lib/jrdesktop.jar',
-    //            cn: []
-    //            //{ tag: 'param', name: 'param1', value: '10' },
-    //            //{ tag: 'param', name: 'param2', value: '10' },
-    //            //{ tag: 'param', name: 'param3', value: '10' },
-    //            //{ tag: 'param', name: 'DebugMode', value: 'Y' }
-    //            //]
-    //        }
-    //    });
-
-    //    var window = new Ext.Window({
-    //        title: 'Adress Pruefung',
-    //        resizable: false,
-    //        layout: 'table',
-    //        modal: true,
-    //        items: [AppletPanel]
-    //    });
-    //    window.show();
-
-
-    //    return window;
-    //}
     
     return this;
 }

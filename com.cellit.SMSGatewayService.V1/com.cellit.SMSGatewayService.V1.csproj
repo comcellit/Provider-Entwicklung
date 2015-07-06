@@ -34,11 +34,13 @@
     <Reference Include="ACD.Interface.V1">
       <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\SharedAssemblies\ACD.Interface.V1.dll</HintPath>
     </Reference>
-    <Reference Include="com.esendex.sdk">
-      <HintPath>..\..\com.esendex.sdk.dll</HintPath>
+    <Reference Include="com.esendex.sdk, Version=1.1.1.28370, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\tribe technologies\ttFramework Publisher 3.0\Providers\Applications\Cellit\com.cellit.SMSGatewayService.V1\com.esendex.sdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />

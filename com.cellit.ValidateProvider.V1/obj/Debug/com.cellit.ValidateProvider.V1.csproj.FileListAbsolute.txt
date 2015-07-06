@@ -2,4 +2,3 @@ C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.Validat
 C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.ValidateProvider.V1\bin\Debug\com.cellit.ValidateProvider.V1.pdb
 C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.ValidateProvider.V1\obj\Debug\com.cellit.ValidateProvider.V1.dll
 C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.ValidateProvider.V1\obj\Debug\com.cellit.ValidateProvider.V1.pdb
-C:\Users\Admin\Desktop\Provider.Schulung\Provider-Entwicklung\com.cellit.ValidateProvider.V1\obj\Debug\com.cellit.ValidateProvider.V1.csprojResolveAssemblyReference.cache

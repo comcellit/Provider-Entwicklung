@@ -1,0 +1,1641 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>com.esendex.sdk</name>
+    </assembly>
+    <members>
+        <member name="T:com.esendex.sdk.contacts.Contact">
+            <summary>
+            Represents a contact.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.ModelBase">
+            <summary>
+            Represents a base model from which models in the com.esendex.sdk.contacts are derived.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ModelBase.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ModelBase.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.ModelBase.Id">
+            <summary>
+            Gets or sets a the Id.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.ModelBase.Uri">
+            <summary>
+            Gets or sets the uri.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.Contact.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.contacts.Contact
+            </summary>
+            <param name="quickName">A System.String instance that contains the quick name.</param>
+            <param name="phoneNumber">A System.String instance that contains the phone number.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.Contact.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.contacts.Contact
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.Contact.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.Contact.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.ConcurrencyId">
+            <summary>
+            Gets or sets the Concurrency Id.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.QuickName">
+            <summary>
+            Gets or sets the quick name.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.PhoneNumber">
+            <summary>
+            Gets or sets the mobile number.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.Type">
+            <summary>
+            Gets or sets the contact type.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.Contact.Groups">
+            <summary>
+            Gets or sets the contact group summary.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.ContactCollection">
+            <summary>
+            Represents a collecion of contacts.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactCollection.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.contacts.ContactCollection
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactCollection.#ctor(com.esendex.sdk.contacts.Contact)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.contacts.ContactCollection
+            </summary>
+            <param name="contact">A com.esendex.sdk.contacts.Contact instance that contains a contact.</param>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactCollection.#ctor(System.Collections.Generic.IEnumerable{com.esendex.sdk.contacts.Contact})">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.contacts.ContactCollection
+            </summary>
+            <param name="contacts"><![CDATA[A System.Collections.Generic.IEnumerable<com.esendex.sdk.contacts.Contact> instance that contains the contacts.]]></param>
+        </member>
+        <member name="F:com.esendex.sdk.contacts.ContactCollection.Items">
+            <summary>
+            <![CDATA[A System.Collections.Generic.List<com.esendex.sdk.contacts.Contact> instance that contains the contacts.]]>
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactCollection.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactCollection.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.ContactGroupSummary">
+            <summary>
+            Represents a summary of groups associated with a contact.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactGroupSummary.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactGroupSummary.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.ContactGroupSummary.Name">
+            <summary>
+            Gets or sets the name
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.ContactService">
+            <summary>
+            Defines methods to manage contacts.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.ServiceBase">
+            <summary>
+            Represents a base service from which services are derived.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.IContactService">
+            <summary>
+            Defines methods to manage contacts.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.IContactService.CreateContact(com.esendex.sdk.contacts.Contact)">
+            <summary>
+            Creates a com.esendex.sdk.contacts.Contact instance and returns the new com.esendex.sdk.contacts.Contact instance.        
+            </summary>
+            <param name="contact">A com.esendex.sdk.contacts.Contact instance that contains the contact.</param>
+            <returns>A com.esendex.sdk.contacts.Contact instance that contains the contact with an Id assigned.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>        
+        </member>
+        <member name="M:com.esendex.sdk.contacts.IContactService.CreateContacts(com.esendex.sdk.contacts.ContactCollection)">
+            <summary>
+            Adds a com.esendex.sdk.contacts.ContactCollection instance and returns true if the contacts were added successfully; otherwise, false.
+            </summary>
+            <param name="contacts">A com.esendex.sdk.contacts.ContactCollection instance.</param>
+            <returns>true, if the contacts were added successfully; otherwise, false.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>     
+        </member>
+        <member name="M:com.esendex.sdk.contacts.IContactService.DeleteContact(System.Guid)">
+            <summary>
+            Returns true if the contact was successfully deleted; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of a contact.</param>
+            <returns>true, if the contact was successfully deleted; otherwise, false.</returns>        
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.IContactService.UpdateContact(com.esendex.sdk.contacts.Contact)">
+            <summary>
+            Returns true if the contact was successfully updated; otherwise, false.
+            </summary>
+            <param name="contact">A com.esendex.sdk.contacts.Contact instance that contains the contact.</param>
+            <returns>true, if the contact was successfully updated; otherwise, false.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>       
+        </member>
+        <member name="M:com.esendex.sdk.contacts.IContactService.GetContact(System.Guid)">
+            <summary>
+            Gets a com.esendex.sdk.contact.Contact instance containing a contact.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of a contact.</param>
+            <returns>A com.esendex.sdk.contacts.Contact instance that contains the contact.</returns>        
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.IContactService.GetContacts(System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.contact.PagedContactCollection instance containing contacts.
+            </summary>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.contacts.PagedContactCollection instance that contains the contacts.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the ContactService
+            </summary>
+            <param name="username">Your Esendex username.</param>
+            <param name="password">Your Esendex password.</param>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.#ctor(com.esendex.sdk.EsendexCredentials)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.contacts.ContactService
+            </summary>
+            <param name="credentials">A com.esendex.sdk.EsendexCredentials instance that contains access credentials.</param>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.CreateContact(com.esendex.sdk.contacts.Contact)">
+            <summary>
+            Creates a com.esendex.sdk.contacts.Contact instance and returns the new com.esendex.sdk.contacts.Contact instance.
+            </summary>
+            <param name="contact">A com.esendex.sdk.contacts.Contact instance that contains the contact.</param>
+            <returns>A com.esendex.sdk.contacts.Contact instance that contains the contact with an Id assigned.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>        
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.CreateContacts(com.esendex.sdk.contacts.ContactCollection)">
+            <summary>
+            Adds a com.esendex.sdk.contacts.ContactCollection instance and returns true if the contacts were added successfully; otherwise, false.
+            </summary>
+            <param name="contacts">A com.esendex.sdk.contacts.ContactCollection instance.</param>
+            <returns>true, if the contacts were added successfully; otherwise, false.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.DeleteContact(System.Guid)">
+            <summary>
+            Returns true if the contact was successfully deleted; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of a contact.</param>
+            <returns>true, if the contact was successfully deleted; otherwise, false.</returns>        
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.UpdateContact(com.esendex.sdk.contacts.Contact)">
+            <summary>
+            Returns true if the contact was successfully updated; otherwise, false.
+            </summary>
+            <param name="contact">A com.esendex.sdk.contacts.Contact instance that contains the contact.</param>
+            <returns>true, if the contact was successfully updated; otherwise, false.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>      
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.GetContact(System.Guid)">
+            <summary>
+            Gets a com.esendex.sdk.contact.Contact instance containing a contact.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of a contact.</param>
+            <returns>A com.esendex.sdk.contacts.Contact instance that contains the contact.</returns>        
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.contacts.ContactService.GetContacts(System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.contact.PagedContactCollection instance containing contacts.
+            </summary>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.contacts.PagedContactCollection instance that contains the contacts.</returns>        
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.ContactType">
+            <summary>
+             Contains the values of contact types.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.contacts.ContactType.Esendex">
+            <summary>
+            An Esendex contact.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.contacts.ContactType.Mobile">
+            <summary>
+            A contact synchronised from a mobile phone.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.contacts.PagedContactCollection">
+            <summary>
+            Represents a paged collection of contacts.
+            </summary>    
+        </member>
+        <member name="T:com.esendex.sdk.core.PagedCollection`1">
+            <summary>
+            Represents a paged collection of objects which all paged collection are derived.
+            </summary>
+            <typeparam name="T">The type of objects.</typeparam>
+        </member>
+        <member name="T:com.esendex.sdk.core.IPagedCollection`1">
+            <summary>
+            Defines the attributes of a paged result set.
+            </summary>
+            <typeparam name="T">The type of the items contained in the result.</typeparam>
+        </member>
+        <member name="P:com.esendex.sdk.core.IPagedCollection`1.PageNumber">
+            <summary>
+            Gets the currently selected page.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.IPagedCollection`1.PageSize">
+            <summary>
+            Gets the number of items on a page.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.IPagedCollection`1.TotalItems">
+            <summary>
+            Gets the total number of items in the resource.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.PagedCollection`1.#ctor">
+            <summary>
+            <![CDATA[Initialises a new instance of the com.esendex.sdk.core.PagedCollection<T>]]>
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.PagedCollection`1.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.core.PagedCollection`1.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.core.PagedCollection`1.PageNumber">
+            <summary>
+            Gets or sets the page number.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.PagedCollection`1.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.PagedCollection`1.TotalItems">
+            <summary>
+            Gets or sets the total number of items in the paged resource.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.contacts.PagedContactCollection.Contacts">
+            <summary>
+            <![CDATA[A System.Collections.Generic.List<com.esendex.sdk.contacts.Contact> instance that contains the contacts.]]>
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.MessageCollection`1">
+            <summary>
+            Represents a base message collection from which message collections are derived.
+            </summary>
+            <typeparam name="TMessage">The type of message.</typeparam>
+        </member>
+        <member name="P:com.esendex.sdk.core.MessageCollection`1.Messages">
+            <summary>
+            <![CDATA[A System.Collections.Generic.List<TMessage> instance that contains the messages.]]>
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.EsendexCredentials">
+            <summary>
+            Represents authentication details required to access Esendex services.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.EsendexCredentials.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.EsendexCredentials
+            </summary>
+            <param name="username">Your Esendex username.</param>
+            <param name="password">Your Esendex password.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.EsendexCredentials.#ctor(System.Guid)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.EsendexCredentials
+            </summary>
+            <param name="sessionId">A System.Guid instance containing the session id.</param>
+        </member>
+        <member name="M:com.esendex.sdk.EsendexCredentials.#ctor(System.Guid,System.Net.IWebProxy)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.EsendexCredentials
+            </summary>
+            <param name="sessionId">A System.Guid instance containing the session id.</param>
+            <param name="proxy">A System.Net.WebProxy instance that contains proxy information required by the local network.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.EsendexCredentials.#ctor(System.String,System.String,System.Net.IWebProxy)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.EsendexCredentials
+            </summary>
+            <param name="username">A System.String instance that contains the Esendex username.</param>
+            <param name="password">A System.String instance that contains the Esendex password.</param>
+            <param name="proxy">A System.Net.WebProxy instance that contains proxy information required by the local network.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:com.esendex.sdk.EsendexCredentials.Username">
+            <summary>
+            Gets the Esendex username.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.EsendexCredentials.Password">
+            <summary>
+            Gets the Esendex password.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.EsendexCredentials.WebProxy">
+            <summary>
+            Gets the proxy information.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.EsendexCredentials.UseProxy">
+            <summary>
+            Returns true if a System.Net.WebProxy instance was supplied to the constructor; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.EsendexCredentials.UseSessionAuthentication">
+            <summary>
+            Returns true if a System.Guid instance was supplied to the constructor; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.EsendexCredentials.SessionId">
+            <summary>
+            Gets or sets a System.Guid instance containing the session id.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.MessageBody">
+            <summary>
+            Represents the body text of a message.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.ResourceLink">
+            <summary>
+            Represents a summary of a resource
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.ResourceLink.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.core.ResourceLink.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.core.ResourceLink.Id">
+            <summary>
+            Gets or sets the Id
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.ResourceLink.Uri">
+            <summary>
+            Gets or sets the Uri
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.MessageBody.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.core.MessageBody.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.core.MessageBody.BodyText">
+            <summary>
+            A System.String instance containing the text.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.MessageDirection">
+            <summary>
+            Contains the values of message directions.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageDirection.Inbound">
+            <summary>
+            Inbound message
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageDirection.Outbound">
+            <summary>
+            Outbound message
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.Message">
+            <summary>
+            Represents a message.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.Message.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.core.Message
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.Message.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.core.Message.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Id">
+            <summary>
+            Gets or sets the Id.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Uri">
+            <summary>
+            Gets or sets the Uri.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Type">
+            <summary>
+            Gets the message type.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Recipient">
+            <summary>
+            Gets or sets the recipient.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Originator">
+            <summary>
+            Gets or set the originator.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Summary">
+            <summary>
+            Gets or sets the summary.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Body">
+            <summary>
+            Gets or sets the message body.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Direction">
+            <summary>
+            Gets or sets the direction of the message.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Parts">
+            <summary>
+            Gets or sets the number of parts of the message.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Status">
+            <summary>
+            Gets or sets the message status.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.IsPartial">
+            <summary>
+            true if the specified com.esendex.sdk.core.Message is partial; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.Index">
+            <summary>
+            Gets or sets the index.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.Message.AccountReference">
+            <summary>
+            Gets or sets the reference
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.MessageContact">
+            <summary>
+            Represents a summary of contact.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.MessageContact.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.core.MessageHeaderContact
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.core.MessageContact.#ctor(System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.core.MessageHeaderContact
+            </summary>
+            <param name="phoneNumber">A System.String that contains the phone number.</param>
+        </member>
+        <member name="M:com.esendex.sdk.core.MessageContact.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.core.MessageContact.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.core.MessageContact.Id">
+            <summary>
+            Gets or sets the Id.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.MessageContact.Uri">
+            <summary>
+            Gets or sets the Uri.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.MessageContact.DisplayName">
+            <summary>
+            Gets or sets the display name.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.core.MessageContact.PhoneNumber">
+            <summary>
+            Gets or sets the phone number.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.MessageStatus">
+            <summary>
+            Contains the values of a message status.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Submitted">
+            <summary>
+            Submitted
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Sent">
+            <summary>
+            Sent
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Delivered">
+            <summary>
+            Delivered
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Expired">
+            <summary>
+            Expired
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Failed">
+            <summary>
+            Failed
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.FailedAuthorisation">
+            <summary>
+            Failed Authorisation
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Acknowledged">
+            <summary>
+            Acknowledged
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Connecting">
+            <summary>
+            Connecting
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Cancelled">
+            <summary>
+            Cancelled
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Scheduled">
+            <summary>
+            Scheduled
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.PartiallyDelivered">
+            <summary>
+            Partially Delivered
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageStatus.Rejected">
+            <summary>
+            Rejected
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.core.MessageType">
+            <summary>
+            Contains the values of message types.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageType.SMS">
+            <summary>
+            Sms Message.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.core.MessageType.Voice">
+            <summary>
+            Voice Message.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.inbox.IInboxService">
+            <summary>
+            Defines methods to retrieve inbox messages.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.GetMessage(System.Guid)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessage instance containing an inbox message.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessage instance containing an inbox message.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.GetMessages">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.GetMessages(System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.GetMessages(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <param name="accountReference">A System.String instance that contains the account reference.</param>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.GetMessages(System.String)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <param name="accountReference">A System.String instance that contains the account reference.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.MarkMessageAsRead(System.Guid)">
+            <summary>
+            Returns true if the message was successfully marked as read; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>true, if the message was successfully marked as read; otherwise, false.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.MarkMessageAsUnread(System.Guid)">
+            <summary>
+            Returns true if the message was successfully marked as unread; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>true, if the message was successfully marked as read; otherwise, false.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.IInboxService.DeleteMessage(System.Guid)">
+            <summary>
+            Returns true if the message was successfully deleted; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>true, if the message was successfully marked as read; otherwise, false.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.inbox.InboxMessage">
+            <summary>
+            Represents an inbox message.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxMessage.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxMessage.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.inbox.InboxMessage.ReadBy">
+            <summary>
+            Gets or set the username of the user that read the message.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.inbox.InboxMessage.ReadAt">
+            <summary>
+            Gets or sets the System.DateTime at which the message was read at.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.inbox.InboxMessage.ReceivedAt">
+            <summary>
+            Gets or sets the System.DateTime at which the message was received at.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.inbox.InboxMessageCollection">
+            <summary>
+            Represents a collecion of inbox messages.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.inbox.InboxMessageStatus">
+            <summary>
+            Contains the values of an inbox message status.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.inbox.InboxMessageStatus.Read">
+            <summary>
+            Message marked as read.
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.inbox.InboxMessageStatus.Unread">
+            <summary>
+            Message marked as unread.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.inbox.InboxService">
+            <summary>
+            A service to retrieve, mark status and delete inbox messages.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the InboxService
+            </summary>
+            <param name="username">Your Esendex username.</param>
+            <param name="password">Your Esendex password.</param>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.#ctor(com.esendex.sdk.EsendexCredentials)">
+            <summary>
+            Initialises a new instance of the InboxService
+            </summary>
+            <param name="credentials">A com.esendex.sdk.EsendexCredentials instance that contains access credentials.</param>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.GetMessage(System.Guid)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessage instance containing an inbox message.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessage instance containing an inbox message.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.GetMessages">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.GetMessages(System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.GetMessages(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <param name="accountReference">A System.String instance that contains the account reference.</param>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.GetMessages(System.String)">
+            <summary>
+            Gets a com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.
+            </summary>
+            <param name="accountReference">A System.String instance that contains the account reference.</param>
+            <returns>A com.esendex.sdk.inbox.InboxMessageCollection instance containing inbox messages.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.MarkMessageAsRead(System.Guid)">
+            <summary>
+            Returns true if the message was successfully marked as read; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>true, if the message was successfully marked as read; otherwise, false.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.MarkMessageAsUnread(System.Guid)">
+            <summary>
+            Returns true if the message was successfully marked as unread; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>true, if the message was successfully marked as read; otherwise, false.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.inbox.InboxService.DeleteMessage(System.Guid)">
+            <summary>
+            Returns true if the message was successfully deleted; otherwise, false.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of an inbox message.</param>
+            <returns>true, if the message was successfully marked as read; otherwise, false.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.MessageBodyService">
+            <summary>
+            Retrieves message text for a message body
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessageBodyService.LoadBodyText(com.esendex.sdk.core.MessageBody)">
+            <summary>
+            Load and append the text to the given MessageBody
+            </summary>
+            <param name="messageBody"></param>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.VoiceMessageLanguage">
+            <summary>
+            Contains the values of supported voice languages 
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.messaging.VoiceMessageLanguage.en_GB">
+            <summary>
+            English
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.messaging.VoiceMessageLanguage.en_AU">
+            <summary>
+            English (Austrailian)
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.messaging.VoiceMessageLanguage.es_ES">
+            <summary>
+            Spanish
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.messaging.VoiceMessageLanguage.fr_FR">
+            <summary>
+            French
+            </summary>
+        </member>
+        <member name="F:com.esendex.sdk.messaging.VoiceMessageLanguage.de_DE">
+            <summary>
+            German
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.Message">
+            <summary>
+            Represents a base message from which messages are derived.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.Message.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.Message
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.Message.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.Message
+            </summary>
+            <param name="recipients">A System.String instance that contains comma delimited string of recipients.</param>
+            <param name="body">A System.String instance that contains the message body text.</param>
+            <param name="accountReference">A System.String instance that contains the Esendex Account Reference.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.Message.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.Message.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.Message.AccountReference">
+            <summary>
+            Gets the account reference.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.Message.Originator">
+            <summary>
+            Gets or set the originator.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.Message.Recipients">
+            <summary>
+            Gets or sets the recipients.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.Message.Type">
+            <summary>
+            Gets or sets the message type.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.Message.Body">
+            <summary>
+            Gets or sets the message body text.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.Message.ValidityPeriod">
+            <summary>
+            Gets or set the validity period.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.MessagingResult">
+            <summary>
+            Represents a summary of the messages sent
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingResult.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.MessagingResult
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessagingResult.BatchId">
+            <summary>
+            Gets or sets the Batch Id
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessagingResult.MessageIds">
+            <summary>
+            Gets or sets the Message Ids
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.MessageCollection`1">
+            <summary>
+            Represents a base message collection from which message collections are derived.
+            </summary>
+            <typeparam name="TMessage">The type of message.</typeparam>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessageCollection`1.#ctor">
+            <summary>
+            <![CDATA[Initialises a new instance of the com.esendex.sdk.messaging.MessageCollection<TMessage>]]>
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessageCollection`1.#ctor(`0)">
+            <summary>
+            <![CDATA[Initialises a new instance of the com.esendex.sdk.messaging.Message<TMessage>]]>
+            </summary>
+            <param name="message">A message instance derived from com.esendex.sdk.messaging.Message</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessageCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String)">
+            <summary>
+            <![CDATA[Initialises a new instance of the com.esendex.sdk.messaging.Message<TMessage>]]>
+            </summary>
+            <param name="messages"><![CDATA[A System.Collections.Generic.IEnumerable<TMessage> instance that contains the messages.]]></param>
+            <param name="accountReference">A System.String instance that contains the Esendex Account Reference.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="F:com.esendex.sdk.messaging.MessageCollection`1.Items">
+            <summary>
+            <![CDATA[A System.Collections.Generic.List<TMessage> instance that contains the messages.]]>
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessageCollection`1.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessageCollection`1.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessageCollection`1.AccountReference">
+            <summary>
+            Gets or sets the account reference
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessageCollection`1.Originator">
+            <summary>
+            Gets or sets the originator
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessageCollection`1.Type">
+            <summary>
+            Gets or sets the message type
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessageCollection`1.ValidityPeriod">
+            <summary>
+            Gets or sets the validity period
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessageCollection`1.SendAt">
+            <summary>
+            Gets or sets a timestamp for scheduling 
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.sent.SentMessage">
+            <summary>
+            Represents a sent message.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentMessage.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentMessage.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.sent.SentMessage.SubmittedAt">
+            <summary>
+            Gets or sets the System.DateTime at which the message was submitted at.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.sent.SentMessage.SentAt">
+            <summary>
+            Gets or sets the System.DateTime at which the message was sent at.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.sent.SentMessage.DeliveredAt">
+            <summary>
+            Gets or sets the System.DateTime at which the message was delivered at.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.sent.SentMessage.LastStatusAt">
+            <summary>
+            Gets or set the System.DateTime at which the status last changed.
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.sent.SentMessage.Username">
+            <summary>
+            Gets or sets a System.String that contains the username of the sender.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.SmsMessage">
+            <summary>
+            Represents an SMS message
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessage.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.SmsMessage
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessage.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.SmsMessage
+            </summary>
+            <param name="recipients">A System.String instance that contains comma delimited string of recipients.</param>
+            <param name="body">A System.String instance that contains the message body text.</param>
+            <param name="accountReference">A System.String instance that contains the Esendex Account Reference.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessage.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessage.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.SmsMessage.Type">
+            <summary>
+            Gets the message type
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.SmsMessageCollection">
+            <summary>
+            Represents a collection of SMS messages.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessageCollection.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.SmsMessageCollection
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessageCollection.#ctor(com.esendex.sdk.messaging.SmsMessage)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.SmsMessageCollection
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.SmsMessage instance that contains the SMS message.</param>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.SmsMessageCollection.#ctor(System.Collections.Generic.IEnumerable{com.esendex.sdk.messaging.SmsMessage},System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.SmsMessageCollection
+            </summary>
+            <param name="messages"><![CDATA[A System.Collections.Generic.IEnumerable<com.esendex.sdk.messaging.SmsMessage> instance that contains the SMS messages.]]></param>
+            <param name="accountReference">A System.String instance that contain the Esendex Account Reference.</param>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.VoiceMessage">
+            <summary>
+            Represents a collection of Voice message
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessage.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.VoiceMessage
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessage.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.VoiceMessage
+            </summary>
+            <param name="recipients">A System.String instance that contains comma delimited string of recipients.</param>
+            <param name="body">A System.String instance that contains the message body text.</param>
+            <param name="accountReference">A System.String instance that contains the Esendex Account Reference.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessage.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessage.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.VoiceMessage.Language">
+            <summary>
+            Gets or sets the message language
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.VoiceMessage.Retries">
+            <summary>
+            Gets or sets the number of message retries
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.VoiceMessage.Type">
+            <summary>
+            Gets the message type
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.VoiceMessageCollection">
+            <summary>
+            Represents a collection of Voice messages
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessageCollection.#ctor">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.VoiceMessageCollection
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessageCollection.#ctor(com.esendex.sdk.messaging.VoiceMessage)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.VoiceMessageCollection
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.VoiceMessage instance that contains the Voice message.</param>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.VoiceMessageCollection.#ctor(System.Collections.Generic.IEnumerable{com.esendex.sdk.messaging.VoiceMessage},System.String)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.messaging.VoiceMessageCollection
+            </summary>
+            <param name="messages"><![CDATA[A System.Collections.Generic.IEnumerable<com.esendex.sdk.messaging.VoiceMessage> instance that contains the Voice messages.]]></param>
+            <param name="accountReference">A System.String instance that contain the Esendex Account Reference</param>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.VoiceMessageCollection.Language">
+            <summary>
+            Gets or sets the 
+            </summary>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.VoiceMessageCollection.Retries">
+            <summary>
+            Gets of set the number of retries
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.sent.ISentService">
+            <summary>
+            Defines methods to retrieve sent messages.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.sent.ISentService.GetMessage(System.Guid)">
+            <summary>
+            Gets a sent item for a specific message Id.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of a sent message.</param>
+            <returns>A com.esendex.sdk.sent.SentMessage instance that contains the sent message.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.sent.ISentService.GetMessages(System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.sent.SentMessageCollection instance containing sent messages.
+            </summary>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.sent.SentMessageCollection instance that contains the sent messages.</returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.sent.ISentService.GetMessages(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.sent.SentMessageCollection instance containing sent messages.
+            </summary>
+            <param name="accountReference">A System.String instance that contains the account reference.</param>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of items in the page.</param>
+            <returns>A com.esendex.sdk.sent.SentMessageCollection instance that contains the sent messages.</returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.sent.SentMessageCollection">
+            <summary>
+            Represents a collecion of sent messages.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.sent.SentService">
+            <summary>
+            A service to retrieve sent messages.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentService.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the SentService
+            </summary>
+            <param name="username">Your Esendex username.</param>
+            <param name="password">Your Esendex password.</param>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentService.#ctor(com.esendex.sdk.EsendexCredentials)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.sent.SentService
+            </summary>
+            <param name="credentials">A com.esendex.sdk.EsendexCredentials instance that contains access credentials.</param>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentService.GetMessage(System.Guid)">
+            <summary>
+            Gets a sent message for a specific message Id.
+            </summary>
+            <param name="id">A System.Guid instance that contains the Id of a sent message.</param>
+            <returns>A com.esendex.sdk.sent.SentMessage instance that contains the sent message.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentService.GetMessages(System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.sent.SentMessageCollection instance containing sent messages.
+            </summary>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of messages in the page.</param>
+            <returns>A com.esendex.sdk.sent.SentMessageCollection instance that contains the sent messages.</returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.sent.SentService.GetMessages(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets a com.esendex.sdk.sent.SentMessageCollection instance containing sent messages.
+            </summary>
+            <param name="accountReference">A System.String instance that contains the account reference.</param>
+            <param name="pageNumber">The number of the page.</param>
+            <param name="pageSize">The number of messages in the page.</param>
+            <returns>A com.esendex.sdk.sent.SentMessageCollection instance that contains the sent messages.</returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.session.ISessionService">
+            <summary>
+            Defines operations that enable session management.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.session.ISessionService.CreateSession">
+            <summary>
+            Creates a System.Guid instance that contains the session id.
+            </summary>
+            <returns>A System.Guid instance that contains the session id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.session.EsendexSession">
+            <summary>
+            Respresents the session identifier.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.session.EsendexSession.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object are considered equal.
+            </summary>
+            <param name="obj">The System.Object to compare with the current System.Object</param>
+            <returns>true if the specified System.Object is equal to the current System.Object; otherwise, false.</returns>
+        </member>
+        <member name="M:com.esendex.sdk.session.EsendexSession.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current System.Object</returns>
+        </member>
+        <member name="P:com.esendex.sdk.session.EsendexSession.Id">
+            <summary>
+            Gets or sets the session id.
+            </summary>
+        </member>
+        <member name="T:com.esendex.sdk.session.SessionService">
+            <summary>
+            A service to manage session authentication.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.session.SessionService.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the SessionService
+            </summary>
+            <param name="username">Your Esendex username.</param>
+            <param name="password">Your Esendex password.</param>
+        </member>
+        <member name="M:com.esendex.sdk.session.SessionService.#ctor(com.esendex.sdk.EsendexCredentials)">
+            <summary>
+            Initialises a new instance of the com.esendex.sdk.session.SessionService
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.session.SessionService.CreateSession">
+            <summary>
+            Creates a System.Guid instance that contains the session id.
+            </summary>
+            <returns>A System.Guid instance that contains the session id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.IMessagingService">
+            <summary>
+            Defines methods to send messages
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendMessage(com.esendex.sdk.messaging.SmsMessage)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessage instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.SmsMessage instance that contains the SMS message.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendMessage(com.esendex.sdk.messaging.VoiceMessage)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessage instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.VoiceMessage instance that contains the Voice message.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendMessages(com.esendex.sdk.messaging.SmsMessageCollection)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessageCollection instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.SmsMessageCollection instance that contains an SMS message collection.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendMessages(com.esendex.sdk.messaging.VoiceMessageCollection)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessageCollection instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.VoiceMessageCollection instance that contains a Voice message collection.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendScheduledMessage(com.esendex.sdk.messaging.SmsMessage,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessage instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.SmsMessage instance that contains a SMS message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the message should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendScheduledMessage(com.esendex.sdk.messaging.VoiceMessage,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessage instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.VoiceMessage instance that contains a Voice message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the message should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendScheduledMessages(com.esendex.sdk.messaging.SmsMessageCollection,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessageCollection instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.SmsMessageCollection instance that contains a SMS message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the messages should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.IMessagingService.SendScheduledMessages(com.esendex.sdk.messaging.VoiceMessageCollection,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessageCollection instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.VoiceMessageCollection instance that contains a Voice message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the messages should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="T:com.esendex.sdk.messaging.MessagingService">
+            <summary>
+            A service to send messages.
+            </summary>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the MessagingService, defaults to not returning a collection of MessageHeader Ids in the MessagingResult
+            </summary>
+            <param name="username">Your Esendex username.</param>
+            <param name="password">Your Esendex password.</param>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.#ctor(System.Boolean,com.esendex.sdk.EsendexCredentials)">
+            <summary>
+            Initialises a new instance of the MessagingService
+            </summary>
+            <param name="ensureMessageIdsInResult">true, if the service should return a collection of MessageHeader Ids in the MessagingResult; otherwise, false.</param>
+            <param name="credentials">A com.esendex.sdk.EsendexCredentials instance that contains access credentials.</param>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendMessage(com.esendex.sdk.messaging.SmsMessage)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessage instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.SmsMessage instance that contains the SMS message.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendMessage(com.esendex.sdk.messaging.VoiceMessage)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessage instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.VoiceMessage instance that contains the Voice message.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendMessages(com.esendex.sdk.messaging.SmsMessageCollection)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessageCollection instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.SmsMessageCollection instance that contains an SMS message collection.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendMessages(com.esendex.sdk.messaging.VoiceMessageCollection)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessageCollection instance and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.VoiceMessageCollection instance that contains a Voice message collection.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendScheduledMessage(com.esendex.sdk.messaging.SmsMessage,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessage instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.SmsMessage instance that contains a SMS message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the message should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendScheduledMessage(com.esendex.sdk.messaging.VoiceMessage,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessage instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="message">A com.esendex.sdk.messaging.VoiceMessage instance that contains a Voice message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the message should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendScheduledMessages(com.esendex.sdk.messaging.SmsMessageCollection,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.SmsMessageCollection instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.SmsMessageCollection instance that contains a SMS message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the messages should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="M:com.esendex.sdk.messaging.MessagingService.SendScheduledMessages(com.esendex.sdk.messaging.VoiceMessageCollection,System.DateTime)">
+            <summary>
+            Sends a com.esendex.sdk.messaging.VoiceMessageCollection instance scheduled at a System.DateTime and returns a com.esendex.sdk.messaging.MessagingResult instance.
+            </summary>
+            <param name="messages">A com.esendex.sdk.messaging.VoiceMessageCollection instance that contains a Voice message collection.</param>
+            <param name="sendAt">A System.DateTime instance that contains the date and time at which the messages should be sent.</param>
+            <returns>A com.esendex.sdk.messaging.MessagingResult instance that contains the message batch Id.</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+        </member>
+        <member name="P:com.esendex.sdk.messaging.MessagingService.EnsureMessageIdsInResult">
+            <summary>
+            Gets a value indicating whether the service will return a collection of MessageHeader Ids in the MessagingResult.
+            </summary>
+        </member>
+    </members>
+</doc>
