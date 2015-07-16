@@ -20,7 +20,7 @@ namespace com.cellit.SendSMSProvider.V1
         private int _send;
         private int _phone;
         private string _text;
-        private string _from;
+        public static string _from;
 
         #region Add/Remove-Provider
 
@@ -76,12 +76,12 @@ namespace com.cellit.SendSMSProvider.V1
         }
 
 
-        [RuntimeSetting(Frame = "Einstellungen", Label = "Absenderadresse(Für Inbound immer 01771787827)", FieldType = FieldType.TextField, AllowBlank = false, MaxLength = 11)]
-        public string from
-        {
-            get { return _from; }
-            set { _from = value; }
-        }
+        //[RuntimeSetting(Frame = "Einstellungen", Label = "Absenderadresse(Für Inbound immer 01771787827)", FieldType = FieldType.TextField, AllowBlank = false, MaxLength = 11)]
+        //public string from
+        //{
+        //    get { return _from; }
+        //    set { _from = value; }
+        //}
 
 
         private IProvider _anliegen;
@@ -136,14 +136,18 @@ namespace com.cellit.SendSMSProvider.V1
 
         #endregion
 
-
-        // --------------------------------------- Provider-Code --------------------------------------------
-
         #region Provider Code
         // wird augerufen, wenn der Provider vollständig geladen und alle Settings gesetzt wurden
         public void Initialize(object args)
         {
-            SMSGatewayService.V1.OnEvent.Inbound += OnEvent_Inbound;//Eingehende SMS Event Registrieren
+            if(SmSGateway.GetProviderDatas().IsInitialized==true)
+            {
+                SMSGatewayService.V1.SmsGatewayService.smsInbound += OnEvent_Inbound;//Eingehende SMS Event Registrieren
+            }
+            else
+            {
+                SmSGateway.GetProviderEvents().Initialized += SMSGateway_Initialized;        
+            }
             currentcampaign = (ICampaign)this.GetParentProvider().GetParentProvider();
             if (currentcampaign.GetProviderDatas().IsInitialized == true)
             {
@@ -154,14 +158,18 @@ namespace com.cellit.SendSMSProvider.V1
             {
                 currentcampaign.GetProviderEvents().Initialized += campagnInitialized;
             }
+        }
 
-
+        private void SMSGateway_Initialized(object sender, EventArgs e)
+        {
+            SmSGateway.GetProviderEvents().Initialized -= SMSGateway_Initialized;
+            SMSGatewayService.V1.SmsGatewayService.smsInbound += OnEvent_Inbound;
         }
 
         // wird aufgerufen, wenn der Provider nicht mehr benötigt wird
         public void Dispose()
         {
-            SMSGatewayService.V1.OnEvent.Inbound -= OnEvent_Inbound;
+            SMSGatewayService.V1.SmsGatewayService.smsInbound -= OnEvent_Inbound;
         }
 
         //Projekt ID auslesen 
@@ -169,7 +177,6 @@ namespace com.cellit.SendSMSProvider.V1
         {
             string sql = "SELECT Campaign_Reference From Campaigns (Nolock) WHERE Campaign_Id = " + campaignID.ToString();
             System.Data.DataSet ds = this.GetDefaultDatabaseConnection().Select(sql);
-
             return Convert.ToInt32(ds.Tables[0].Rows[0]["Campaign_Reference"]);
         }
 
@@ -233,17 +240,10 @@ namespace com.cellit.SendSMSProvider.V1
                                     result.Add(new object[] { i + 250, "Datenfeld " + (i + 50).ToString() });
                                 }
                             }
-                            //for (int i = 1; i <= 200; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
                         }
                         else
                         {
-                            //for (int i = 1; i <= 50; i++)
-                            //{
-                            //    result.Add(new object[] { i, "Ergebnisfeld " + i.ToString() });
-                            //}
+                         //Do Nothing
                         }
 
                     }
@@ -357,7 +357,7 @@ namespace com.cellit.SendSMSProvider.V1
             string batchid = null;
             try
             {
-                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, from, _onlySend, ttCallProjektID.ToString(), smstransfer - 200, smsRequestText - 200, smsRequestDate - 200).ToString();
+                batchid = _smsGateway.CallbyName("SendSMS", phonenumber, text, _from, _onlySend, ttCallProjektID.ToString(), smstransfer - 200, smsRequestText - 200, smsRequestDate - 200).ToString();
             }
             catch (Exception ex)
             {
@@ -455,6 +455,13 @@ namespace com.cellit.SendSMSProvider.V1
             {
                 get { return SendSMSProvider._onlySend; }
                 set { SendSMSProvider._onlySend = value; }
+            }
+
+            [RuntimeSetting(Frame = "absenderkennung", Label = "Absenderadresse max 11 zeichen", FieldType = FieldType.TextField, AllowBlank = false, MaxLength = 11)]
+            public string from
+            {
+                get { return _from; }
+                set { _from = value; }
             }
 
 
@@ -572,7 +579,7 @@ namespace com.cellit.SendSMSProvider.V1
             #region Runtime-Settings
             // Werte, die bei der Verwendung Auswahl) des Providers für die jeweilige Instanz gesetzt werden können  
             [ScriptVisible(SerializeType = SerializeTypes.Value)]
-            [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für TransferID", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            [RuntimeSetting(Frame = "Antwort einstellungen", Label = "Feld für TransferID", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
             public int smstransfer
             {
                 get { return SendSMSProvider.smstransfer; }
@@ -580,7 +587,7 @@ namespace com.cellit.SendSMSProvider.V1
             }
 
             [ScriptVisible(SerializeType = SerializeTypes.Value)]
-            [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Datum Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            [RuntimeSetting(Frame = "Antwort einstellungen", Label = "Feld für Datum Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
             public int smsRequestDate
             {
                 get { return SendSMSProvider.smsRequestDate; }
@@ -588,7 +595,7 @@ namespace com.cellit.SendSMSProvider.V1
             }
 
             [ScriptVisible(SerializeType = SerializeTypes.Value)]
-            [RuntimeSetting(Frame = "Einstellungen", Label = "Feld für Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            [RuntimeSetting(Frame = "Antwort einstellungen", Label = "Feld für Kunden Antwort", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
             public int smsRequestText
             {
                 get { return SendSMSProvider.smsRequestText; }
@@ -596,7 +603,7 @@ namespace com.cellit.SendSMSProvider.V1
             }
 
             [ScriptVisible(SerializeType = SerializeTypes.Value)]
-            [RuntimeSetting(Frame = "Einstellungen", Label = "Verpasste SMS abrufen", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
+            [RuntimeSetting(Frame = "Antwort einstellungen", Label = "Verpasste SMS abrufen", FieldType = FieldType.ComboBox, Values = "GetFields", AllowBlank = false)]
             public int smsOlder;
 
 
@@ -617,6 +624,7 @@ namespace com.cellit.SendSMSProvider.V1
             public void Initialize(object args)
             {
                 SendSMSProvider._onlySend = false;
+                _from = "01771787827";
             }
 
             // Felder für Einstellung( NUR Datenfelder!)

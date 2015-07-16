@@ -6,7 +6,6 @@ using ttFramework.Provider;
 using com.esendex.sdk.messaging;
 using com.esendex.sdk;
 using com.esendex.sdk.inbox;
-using com.esendex.sdk.utilities;
 using System.Xml.Serialization;
 using System.Web;
 using System.IO;
@@ -134,11 +133,16 @@ namespace com.cellit.SMSGatewayService.V1
        
         //Service Benötigte Events und Methoden
         public event EventHandler ServiceStarted;
+
+        public static event EventHandler smsInbound;
+
         public ServiceState ServiceState
         {
             get { return _serviceState; }
         }
+
         public event EventHandler ServiceStopped;
+
         public void Start(Dictionary<string, object> args)
         {
             isStoping = false;
@@ -156,6 +160,7 @@ namespace com.cellit.SMSGatewayService.V1
             }
 
         }
+
         public void Stopp()
         {
             isStoping = true;
@@ -166,6 +171,7 @@ namespace com.cellit.SMSGatewayService.V1
                 serviceStopped(this, null);
             }
         }
+
         public void ServiceLoop()
         {
             while (!isStoping)
@@ -213,9 +219,8 @@ namespace com.cellit.SMSGatewayService.V1
         {
             string update = null;
             int count = 0;
-            EsendexCredentials loginCredentials;
-            loginCredentials = new EsendexCredentials(_user, _pass);
-            var inboxService = new InboxService(loginCredentials);
+            //EsendexCredentials loginCredentials = new EsendexCredentials(_user, _pass);
+            var inboxService = new InboxService(_user,_pass);
             var inboxMessages = inboxService.GetMessages();
             foreach (var inboxMessage in inboxMessages.Messages)
             {
@@ -225,32 +230,32 @@ namespace com.cellit.SMSGatewayService.V1
                     this.GetDefaultDatabaseConnection().Execute(update);
                     inboxService.MarkMessageAsRead(inboxMessage.Id);
                     count++;
-                    
+
+                }
+                var date = DateTime.Now.AddDays(-14);
+                if (inboxMessage.ReceivedAt < date)
+                {
+                    inboxService.DeleteMessage(inboxMessage.Id);
                 }
             }
             if (count>0)
             {
-                OnEvent.OnInbound();
+                OnInbound();
+            }
+        }
+
+        public  void OnInbound()
+        {
+            EventHandler onInbound = smsInbound;
+            if (onInbound != null)
+            {
+                onInbound(this, EventArgs.Empty);
+
             }
         }
        
     }
-    //Hilfs class für das Inbound Event
-    public static class OnEvent 
-    {
-        public static event EventHandler Inbound;
-
-        public static void OnInbound()
-        {
-           //test= phone[0] .ToString();
-            EventHandler onInbound = Inbound;
-            if (onInbound!=null)
-            {
-                onInbound(typeof(SmsGatewayService),EventArgs.Empty);
-
-            }
-        }
-        
-    }
+    
+   
 
 }
